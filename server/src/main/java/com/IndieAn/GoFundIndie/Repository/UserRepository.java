@@ -76,4 +76,12 @@ public class UserRepository {
 
         return deleteUser;
     }
+
+    // 유저 프로필 이미지 업데이트 입니다.
+    public void UpdateUserImg(User user, String img) {
+        user.setProfilePicture(img);
+        entityManager.persist(user);
+        entityManager.flush();
+        entityManager.close();
+    }
 }
