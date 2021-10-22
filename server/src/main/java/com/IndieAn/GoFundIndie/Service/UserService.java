@@ -4,15 +4,15 @@ import com.IndieAn.GoFundIndie.Domain.DTO.UserSIgnInDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -44,9 +44,13 @@ public class UserService {
         return user;
     }
 
+    // 토큰에 존재하는 email을 통해 DB를 탐색한다.
+    public User FindUserUseEmail(String email) {
+        return userRepository.FindUserByEmail(email);
+    }
+
     // AccessToken과 RefreshToken을 만드는 작업을 수행한다
     public String CreateToken(User user, Long time) {
-        System.out.println(SIGN_KEY);
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -54,8 +58,27 @@ public class UserService {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + Duration.ofSeconds(time).toMillis()))
                 .claim("email", user.getEmail())
-                .claim("password", user.getPassword())
                 .signWith(SignatureAlgorithm.HS256, SIGN_KEY)
                 .compact();
+    }
+
+    // 토큰 유효성 검증
+    public Map<String, String> CheckToken(String token) {
+        HashMap<String, String> msg = new HashMap<>();
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(SIGN_KEY)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            msg.put("email", (String) claims.get("email"));
+            return msg;
+        } catch (ExpiredJwtException e) {
+            msg.put("message", "토큰 유효 시간 만료");
+            return msg;
+        } catch (JwtException e) {
+            msg.put("message", "유효하지 않는 토큰");
+            return msg;
+        }
     }
 }
