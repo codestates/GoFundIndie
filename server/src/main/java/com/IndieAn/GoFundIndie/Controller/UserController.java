@@ -1,18 +1,18 @@
 package com.IndieAn.GoFundIndie.Controller;
 
+import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSIgnInDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -28,7 +28,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "signup")
+    @PostMapping(value = "/signup")
     public ResponseEntity<?> UserSignUp(@RequestBody UserSignUpDTO  userSignUpDTO) {
         try {
             body.clear();
@@ -46,7 +46,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "signin")
+    @PostMapping(value = "/signin")
     public ResponseEntity<?> UserLogin(@RequestBody UserSIgnInDTO userSIgnInDTO, HttpServletResponse response) {
         try {
             body.clear();
@@ -72,5 +72,103 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
+    }
+
+    @GetMapping(value = "/user")
+    public ResponseEntity<?> GetUserInfo(@RequestHeader Map<String, String> requestHeader) {
+        // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
+        // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 응답한다.
+        // 헤더에 토큰이 없으면 응답코드 400을 응답한다.
+        try {
+            body.clear();
+            if(requestHeader.get("authorization") == null) {
+                body.put("message", "올바르지 않은 요청입니다.");
+                return ResponseEntity.badRequest().body(body);
+            }
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("authorization"));
+
+            if(checkToken.get("email") != null) {
+                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                MakeUserInfoRes(user, body);
+
+                return ResponseEntity.ok().body(body);
+            }
+            else {
+                body.put("message", checkToken.get("message"));
+                return ResponseEntity.status(401).body(body);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @PutMapping(value = "/user")
+    public ResponseEntity<?> ModifyUserInfo(@RequestBody UserModifyDTO userModifyDTO, @RequestHeader Map<String, String> requestHeader) {
+        // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
+        // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 데이터 수정 후 응답한다.
+        // 헤더에 토큰이 없으면 응답코드 400을 응답한다.
+        try {
+            body.clear();
+            if(requestHeader.get("authorization") == null) {
+                body.put("message", "올바르지 않은 요청입니다.");
+                return ResponseEntity.badRequest().body(body);
+            }
+
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("authorization"));
+            if(checkToken.get("email") != null) {
+                User user = userService.ModifyUserData(userModifyDTO, checkToken.get("email"));
+                MakeUserInfoRes(user, body);
+                return ResponseEntity.ok().body(body);
+            }
+            else {
+                body.put("message", checkToken.get("message"));
+                return ResponseEntity.status(401).body(body);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @DeleteMapping(value = "/user")
+    public ResponseEntity<?> DeleteUserinfo(@RequestHeader Map<String, String> requestHeader, HttpServletResponse response) {
+        // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
+        // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 DB 데이터 삭제 후 응답한다.
+        // 헤더에 토큰이 없으면 응답코드 400을 응답한다.
+        try {
+            body.clear();
+            if(requestHeader.get("authorization") == null) {
+                body.put("message", "올바르지 않은 요청입니다.");
+                return ResponseEntity.badRequest().body(body);
+            }
+
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("authorization"));
+            if(checkToken.get("email") != null) {
+                userService.DeleteUserData(checkToken.get("email"));
+                // 유저 정보가 삭제되면 클라이언트에 refresh token 키 값을 가진 쿠기가 제거돼야 한다.
+                Cookie cookie = new Cookie("refreshToken", null);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+                return ResponseEntity.ok().body("");
+            }
+            else {
+                body.put("message", checkToken.get("message"));
+                return ResponseEntity.status(401).body(body);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    // 유저 정보를 바디로 보여주는 응답 형식에 맞춰 메시지를 만든다.
+    private void MakeUserInfoRes(User user, HashMap<String, Object> map) {
+        map.put("id", user.getId());
+        map.put("admin_role", user.isAdminRole());
+        map.put("email", user.getEmail());
+        map.put("profile_picture", user.getProfilePicture());
+        map.put("nickname",  user.getNickname());
+        map.put("total_donation", user.getTotalDonation());
     }
 }
