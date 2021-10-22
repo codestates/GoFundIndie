@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Controller;
 
+import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSIgnInDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
@@ -89,12 +90,7 @@ public class UserController {
 
             if(checkToken.get("email") != null) {
                 User user = userService.FindUserUseEmail(checkToken.get("email"));
-                body.put("id", user.getId());
-                body.put("admin_role", user.isAdminRole());
-                body.put("email", user.getEmail());
-                body.put("profile_picture", user.getProfilePicture());
-                body.put("nickname",  user.getNickname());
-                body.put("total_donation", user.getTotalDonation());
+                MakeUserInfoRes(user, body);
 
                 return ResponseEntity.ok().body(body);
             }
@@ -105,5 +101,43 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
+    }
+
+    @PutMapping(value = "user")
+    public ResponseEntity<?> ModifyUserInfo(@RequestBody UserModifyDTO userModifyDTO, @RequestHeader Map<String, String> requestHeader) {
+        // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
+        // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 데이터 수정 후 응답한다.
+        // 헤더에 토큰이 없으면 응답코드 400을 응답한다.
+        try {
+            body.clear();
+            if(requestHeader.get("authorization") == null) {
+                body.put("message", "올바르지 않은 요청입니다.");
+                return ResponseEntity.badRequest().body(body);
+            }
+
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("authorization"));
+            if(checkToken.get("email") != null) {
+                User user = userService.ModifyUserData(userModifyDTO, checkToken.get("email"));
+                MakeUserInfoRes(user, body);
+                return ResponseEntity.ok().body(body);
+            }
+            else {
+                body.put("message", checkToken.get("message"));
+                return ResponseEntity.status(401).body(body);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    // 유저 정보를 바디로 보여주는 응답 형식에 맞춰 메시지를 만든다.
+    private void MakeUserInfoRes(User user, HashMap<String, Object> map) {
+        map.put("id", user.getId());
+        map.put("admin_role", user.isAdminRole());
+        map.put("email", user.getEmail());
+        map.put("profile_picture", user.getProfilePicture());
+        map.put("nickname",  user.getNickname());
+        map.put("total_donation", user.getTotalDonation());
     }
 }

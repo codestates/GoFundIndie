@@ -27,7 +27,7 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(name = "created_at", columnDefinition = "datetime default now()")
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 

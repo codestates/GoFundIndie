@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Repository;
 
+import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -34,6 +36,7 @@ public class UserRepository {
         if(userSignUpDTO.getProfilePic() != null) {
             user.setProfilePicture(userSignUpDTO.getProfilePic());
         }
+        user.setCreatedAt(new Date());
         entityManager.persist(user);
 
         entityManager.flush();
@@ -51,5 +54,15 @@ public class UserRepository {
         // 리스트가 비어있다면 null을 리턴한다.
         if(userList.size() == 0) return null;
         return userList.get(0);
+    }
+
+    // 서비스에서 email을 통해 해당 유저의 id를 알 수 있으며, 수정 정보를 토대로 DB 유저정보를 수정한다.
+    public User ModifyUser(UserModifyDTO userModifyDTO, long userId) {
+        User modifyUser = entityManager.find(User.class, userId);
+        if(userModifyDTO.getNickname() != null) modifyUser.setNickname(userModifyDTO.getNickname());
+        if(userModifyDTO.getPassword() != null) modifyUser.setPassword(userModifyDTO.getPassword());
+        if(userModifyDTO.getProfilePic() != null) modifyUser.setProfilePicture(userModifyDTO.getProfilePic());
+
+        return modifyUser;
     }
 }
