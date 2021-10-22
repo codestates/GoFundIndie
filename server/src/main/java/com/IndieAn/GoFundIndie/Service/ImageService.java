@@ -97,6 +97,7 @@ public class ImageService {
         }
     }
 
+    //S3 file delete
     private void delete(String key) {
         try {
             DeleteObjectRequest dor = new DeleteObjectRequest(bucket, key);

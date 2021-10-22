@@ -36,6 +36,7 @@ public class ImageController {
         if (path.equals("user") && pathId == null) {
             //token expired 401
 //            헤더에서 user 값 추출
+
             // Test User
             User user = entityManager.find(User.class, 1L);
 
@@ -129,6 +130,7 @@ public class ImageController {
                                          @PathVariable(value = "path") String path,
                                          @PathVariable(value = "path_id", required = false) Long pathId) {
         if (path.equals("user") && pathId == null) {
+            //header 에서 유저 검증
             User user = entityManager.find(User.class, 1L);
 
             if(imageService.deleteUserImage(user)){
@@ -141,6 +143,7 @@ public class ImageController {
             }
         } else {
             switch (path) {
+                //header에서 관리자인지 검증 필요
                 case "still":
                     if(imageService.deleteStill(pathId)){
                         body.clear();
