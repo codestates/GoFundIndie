@@ -41,4 +41,15 @@ public class UserRepository {
 
         return user;
     }
+
+    // email을 기준으로 User 데이터를 불러온다.
+    public User FindUserByEmail(String email) {
+        List<User> userList = entityManager
+                .createQuery("SELECT u FROM User AS u WHERE u.email='" + email + "'", User.class)
+                .getResultList();
+        entityManager.close();
+        // 리스트가 비어있다면 null을 리턴한다.
+        if(userList.size() == 0) return null;
+        return userList.get(0);
+    }
 }
