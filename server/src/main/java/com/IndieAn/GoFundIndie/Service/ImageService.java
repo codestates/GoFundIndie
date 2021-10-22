@@ -42,19 +42,19 @@ public class ImageService {
     private String dir;
 
     @Value("#{info['gofundindie.s3.bucket']}")
-    private final String bucket;
+    private String bucket;
 
     @Value("#{info['dir.movie']}")
-    private final String DIR_MOVIE;
+    private String DIR_MOVIE;
 
     @Value("#{info['dir.movie.poster']}")
-    private final String DIR_MOVIE_POSTER;
+    private String DIR_MOVIE_POSTER;
 
     @Value("#{info['dir.user']}")
-    private final String DIR_USER;
+    private String DIR_USER;
 
     @Value("#{info['dir.user.profile']}")
-    private final String DIR_USER_PROFILE;
+    private String DIR_USER_PROFILE;
 
     //convert multipart file -> file
     private Optional<File> convert(MultipartFile file) throws IOException {
