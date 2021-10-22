@@ -6,13 +6,12 @@ import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -68,6 +67,40 @@ public class UserController {
                 body.put("accessToken", userService.CreateToken(user, ACCESS_TIME));
                 body.put("refreshToken", cookie.getValue());
                 return ResponseEntity.ok().body(body);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @GetMapping(value = "/user")
+    public ResponseEntity<?> GetUserInfo(@RequestHeader Map<String, String> requestHeader) {
+        // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
+        // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 응답한다.
+        // 헤더에 토큰이 없으면 응답코드 400을 응답한다.
+        try {
+            body.clear();
+            if(requestHeader.get("authorization") == null) {
+                body.put("message", "올바르지 않은 요청입니다.");
+                return ResponseEntity.badRequest().body(body);
+            }
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("authorization"));
+
+            if(checkToken.get("email") != null) {
+                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                body.put("id", user.getId());
+                body.put("admin_role", user.isAdminRole());
+                body.put("email", user.getEmail());
+                body.put("profile_picture", user.getProfilePicture());
+                body.put("nickname",  user.getNickname());
+                body.put("total_donation", user.getTotalDonation());
+
+                return ResponseEntity.ok().body(body);
+            }
+            else {
+                body.put("message", checkToken.get("message"));
+                return ResponseEntity.status(401).body(body);
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
