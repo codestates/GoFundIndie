@@ -1,8 +1,13 @@
 package com.IndieAn.GoFundIndie.Service;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
+import com.IndieAn.GoFundIndie.Domain.Entity.Casting;
+import com.IndieAn.GoFundIndie.Domain.Entity.Still;
+import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
+import com.IndieAn.GoFundIndie.Repository.CastingRepository;
 import com.IndieAn.GoFundIndie.Repository.ImageRepository;
+import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -25,6 +30,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
+    private final CastingRepository castingRepository;
+    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
     private final AmazonS3Client amazonS3Client;
@@ -87,16 +94,19 @@ public class ImageService {
         }
     }
 
-    public String uploadUserImage(MultipartFile file, Long userId, String dir, String USER_PROFILE) {
+    public String uploadUserImage(MultipartFile file, User user, String dir, String USER_PROFILE) {
 //        user = userRepository.findUserId(userId);
+        result = user.getProfilePicture();
 
-//        if(user == null) return "NullPointException";
+        if(user == null) return "NullPointException";
 
-//        if(user.getPosterImg() != null){
-//            delete(dir + "/" + USER_PROFILE);
-//        }
+        if(result != null){
+            delete(result.substring(result.lastIndexOf("/" + 1)));
+        }
 
-        return uploadStandBy(file, dir, USER_PROFILE);
+        return uploadStandBy(file, dir,
+                USER_PROFILE + file.getContentType()
+                        .substring(file.getContentType().lastIndexOf("/" + 1)));
     }
 
     public String uploadStillImage(MultipartFile file, Long boardId, String dir) {
@@ -122,22 +132,83 @@ public class ImageService {
         result = uploadStandBy(file, dir, UUID.randomUUID() + "-" + file.getOriginalFilename());
 
         //add DB casting info
-        imageRepository.addCastingInfo(board, result);
+        castingRepository.addCastingInfo(board, result);
 
         return result;
     }
 
     public String uploadPosterImage(MultipartFile file, Long boardId, String dir, String MOVIE_POSTER){
         board = boardRepository.findBoardId(boardId);
+        result = board.getPosterImg();
 
         //board valid check fail
         if(board == null) return "NullPointException";
 
-        if(board.getPosterImg() != null){
-            delete(dir + "/" + MOVIE_POSTER);
+        if(result != null){
+            delete(result.substring(result.lastIndexOf("/" + 1)));
         }
 
-        //only one poster image is possible
-        return uploadStandBy(file, dir, MOVIE_POSTER);
+        result = uploadStandBy(file, dir,
+                MOVIE_POSTER + file.getContentType()
+                        .substring(file.getContentType().lastIndexOf("/" + 1)));
+
+        boardRepository.updateBoardImg(board, result);
+
+        return result;
+    }
+
+    public boolean deleteUserImage(User user) {
+        result = user.getProfilePicture();
+
+        if(user == null) return false;
+
+        if(result != null) {
+            delete(result.substring(result.lastIndexOf("/" + 1)));
+            userRepository.UpdateUserImg(user, null);
+        }
+
+        return true;
+    }
+
+    public boolean deleteStill(Long id) {
+        Still still = imageRepository.findStillById(id);
+
+        if(still == null) return false;
+
+        //S3 delete
+        result = still.getImage();
+        delete(result.substring(result.lastIndexOf("/" + 1)));
+
+        //DB delete
+        imageRepository.deleteStill(still);
+
+        return true;
+    }
+
+    public boolean deleteCastingImage(Long id) {
+        Casting casting = castingRepository.findCastingById(id);
+
+        if(casting == null) return false;
+
+        //S3 delete
+        result = casting.getImage();
+        delete(result.substring(result.lastIndexOf("/" + 1)));
+
+        return true;
+    }
+
+    public boolean deletePosterImage(Long id) {
+        board = boardRepository.findBoardId(id);
+        result = board.getPosterImg();
+
+        //board valid check fail
+        if(board == null) return false;
+
+        if(result != null) {
+            delete(result.substring(result.lastIndexOf("/" + 1)));
+            boardRepository.updateBoardImg(board,null);
+        }
+
+        return true;
     }
 }

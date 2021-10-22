@@ -22,4 +22,11 @@ public class BoardRepository {
             return null;
         }
     }
+
+    public void updateBoardImg(Board board, String img) {
+        board.setPosterImg(img);
+        entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
+    }
 }

@@ -52,4 +52,11 @@ public class UserRepository {
         if(userList.size() == 0) return null;
         return userList.get(0);
     }
+
+    public void UpdateUserImg(User user, String img) {
+        user.setProfilePicture(img);
+        entityManager.persist(user);
+        entityManager.flush();
+        entityManager.close();
+    }
 }
