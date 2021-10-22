@@ -21,11 +21,6 @@ public class ImageController {
     private final ImageRepository imageRepository;
     private final EntityManager entityManager;
 
-    private final static String MOVIE_DIR = "movie";
-    private final static String MOVIE_POSTER = "move-poster";
-    private final static String USER_DIR = "user";
-    private final static String USER_PROFILE = "user-profile";
-
     private final HashMap<String, Object> body = new HashMap<>();
 
     //image dir result
@@ -44,7 +39,7 @@ public class ImageController {
             // Test User
             User user = entityManager.find(User.class, 1L);
 
-            result = imageService.uploadUserImage(image, user, USER_DIR + "/" + user.getId(), USER_PROFILE);
+            result = imageService.uploadUserImage(image, user);
 
             //board valid check fail
             if(result.equals("NullPointException")) {
@@ -65,7 +60,7 @@ public class ImageController {
         } else {
             switch (path) {
                 case "still":
-                    result = imageService.uploadStillImage(image, pathId, MOVIE_DIR + "/" + pathId.toString() + "/still");
+                    result = imageService.uploadStillImage(image, pathId);
 
                     //board valid check fail
                     if (result.equals("NullPointException")) {
@@ -84,7 +79,7 @@ public class ImageController {
                     body.put("dir", result);
                     return ResponseEntity.status(201).body(body);
                 case "casting":
-                    result = imageService.uploadCastingImage(image, pathId, MOVIE_DIR + "/" + pathId.toString() + "/casting");
+                    result = imageService.uploadCastingImage(image, pathId);
 
                     //board valid check fail
                     if (result.equals("NullPointException")) {
@@ -103,7 +98,7 @@ public class ImageController {
                     body.put("dir", result);
                     return ResponseEntity.status(201).body(body);
                 case "board":
-                    result = imageService.uploadPosterImage(image, pathId, MOVIE_DIR + "/" + pathId.toString(), MOVIE_POSTER);
+                    result = imageService.uploadPosterImage(image, pathId);
 
                     //board valid check fail
                     if (result.equals("NullPointException")) {

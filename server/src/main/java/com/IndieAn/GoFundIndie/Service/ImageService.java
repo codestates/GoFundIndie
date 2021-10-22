@@ -39,9 +39,22 @@ public class ImageService {
 
     private Board board = null;
     private String result;
+    private String dir;
 
     @Value("#{info['gofundindie.s3.bucket']}")
-    private String bucket;
+    private final String bucket;
+
+    @Value("#{info['dir.movie']}")
+    private final String DIR_MOVIE;
+
+    @Value("#{info['dir.movie.poster']}")
+    private final String DIR_MOVIE_POSTER;
+
+    @Value("#{info['dir.user']}")
+    private final String DIR_USER;
+
+    @Value("#{info['dir.user.profile']}")
+    private final String DIR_USER_PROFILE;
 
     //convert multipart file -> file
     private Optional<File> convert(MultipartFile file) throws IOException {
@@ -94,26 +107,30 @@ public class ImageService {
         }
     }
 
-    public String uploadUserImage(MultipartFile file, User user, String dir, String USER_PROFILE) {
+    public String uploadUserImage(MultipartFile file, User user) {
 //        user = userRepository.findUserId(userId);
         result = user.getProfilePicture();
 
         if(user == null) return "NullPointException";
 
+        dir = DIR_USER + "/" + user.getId();
+
         if(result != null){
-            delete(result.substring(result.lastIndexOf("/" + 1)));
+            delete(dir + "/" + result.substring(result.lastIndexOf("/" + 1)));
         }
 
         return uploadStandBy(file, dir,
-                USER_PROFILE + file.getContentType()
+                DIR_USER_PROFILE + file.getContentType()
                         .substring(file.getContentType().lastIndexOf("/" + 1)));
     }
 
-    public String uploadStillImage(MultipartFile file, Long boardId, String dir) {
+    public String uploadStillImage(MultipartFile file, Long boardId) {
         board = boardRepository.findBoardId(boardId);
 
         //board valid check fail
         if(board == null) return "NullPointException";
+
+        dir = DIR_MOVIE + "/" + boardId + "/still";
 
         result = uploadStandBy(file, dir, UUID.randomUUID() + "-" + file.getOriginalFilename());
 
@@ -123,11 +140,13 @@ public class ImageService {
         return result;
     }
 
-    public String uploadCastingImage(MultipartFile file, Long boardId, String dir) {
+    public String uploadCastingImage(MultipartFile file, Long boardId) {
         board = boardRepository.findBoardId(boardId);
 
         //board valid check fail
         if(board == null) return "NullPointException";
+
+        dir = DIR_MOVIE + "/" + boardId + "/casting";
 
         result = uploadStandBy(file, dir, UUID.randomUUID() + "-" + file.getOriginalFilename());
 
@@ -137,19 +156,21 @@ public class ImageService {
         return result;
     }
 
-    public String uploadPosterImage(MultipartFile file, Long boardId, String dir, String MOVIE_POSTER){
+    public String uploadPosterImage(MultipartFile file, Long boardId){
         board = boardRepository.findBoardId(boardId);
         result = board.getPosterImg();
 
         //board valid check fail
         if(board == null) return "NullPointException";
 
+        dir = DIR_MOVIE + "/" + boardId;
+
         if(result != null){
-            delete(result.substring(result.lastIndexOf("/" + 1)));
+            delete(dir + "/" + result.substring(result.lastIndexOf("/" + 1)));
         }
 
         result = uploadStandBy(file, dir,
-                MOVIE_POSTER + file.getContentType()
+                DIR_MOVIE_POSTER + file.getContentType()
                         .substring(file.getContentType().lastIndexOf("/" + 1)));
 
         boardRepository.updateBoardImg(board, result);
@@ -163,7 +184,7 @@ public class ImageService {
         if(user == null) return false;
 
         if(result != null) {
-            delete(result.substring(result.lastIndexOf("/" + 1)));
+            delete(DIR_USER + "/" + user.getId() + "/" + result.substring(result.lastIndexOf("/" + 1)));
             userRepository.UpdateUserImg(user, null);
         }
 
@@ -176,8 +197,9 @@ public class ImageService {
         if(still == null) return false;
 
         //S3 delete
+        dir = DIR_MOVIE + "/" + still.getBoardId().getId() + "/still/";
         result = still.getImage();
-        delete(result.substring(result.lastIndexOf("/" + 1)));
+        delete(dir + result.substring(result.lastIndexOf("/" + 1)));
 
         //DB delete
         imageRepository.deleteStill(still);
@@ -191,8 +213,9 @@ public class ImageService {
         if(casting == null) return false;
 
         //S3 delete
+        dir = DIR_MOVIE + "/" + casting.getBoardId().getId() + "/casting/";
         result = casting.getImage();
-        delete(result.substring(result.lastIndexOf("/" + 1)));
+        delete(dir + result.substring(result.lastIndexOf("/" + 1)));
 
         return true;
     }
@@ -204,8 +227,10 @@ public class ImageService {
         //board valid check fail
         if(board == null) return false;
 
+        dir = DIR_MOVIE + "/" + id + "/";
+
         if(result != null) {
-            delete(result.substring(result.lastIndexOf("/" + 1)));
+            delete(dir + result.substring(result.lastIndexOf("/" + 1)));
             boardRepository.updateBoardImg(board,null);
         }
 
