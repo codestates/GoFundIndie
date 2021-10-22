@@ -39,6 +39,11 @@ public class UserService {
         return userRepository.ModifyUser(userModifyDTO, userRepository.FindUserByEmail(email).getId());
     }
 
+    // 유저 email을 통해 DB에 해당 email을 가진 엔티티를 삭제하는 서비스 기능
+    public User DeleteUserData(String email) {
+        return userRepository.DeleteUser(userRepository.FindUserByEmail(email).getId());
+    }
+
     // 로그인 정보를 기준으로 email과 password를 확인해 유저정보를 찾는다
     public User FindUser(UserSIgnInDTO userSIgnInDTO) {
         User user = userRepository.FindUserByEmail(userSIgnInDTO.getEmail());
