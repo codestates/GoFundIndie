@@ -65,4 +65,15 @@ public class UserRepository {
 
         return modifyUser;
     }
+
+    // 서비스에서 email을 통해 해당 유저의 id를 알 수 있으며, 수정 정보를 토대로 DB 유저정보를 삭제한다.
+    public User DeleteUser(long userId) {
+        User deleteUser = entityManager.find(User.class, userId);
+        entityManager.remove(deleteUser);
+
+        entityManager.flush();
+        entityManager.close();
+
+        return deleteUser;
+    }
 }
