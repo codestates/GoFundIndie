@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,5 +93,23 @@ public class UserService {
             msg.put("message", "유효하지 않는 토큰");
             return msg;
         }
+    }
+
+    // 쿠키에서 해당 토큰 값을 찾기 위한 메소드
+    public String getStringCookie(Cookie[] cookies, String cookiesResult, String token) {
+        for(Cookie i : cookies) {
+            if(i.getName().equals(token)) {
+                cookiesResult = i.getValue();
+                break;
+            }
+        }
+        return cookiesResult;
+    }
+
+    // 해당 토큰을 만료시키는 메소드
+    public void ExpirationToken(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie(token, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
     }
 }
