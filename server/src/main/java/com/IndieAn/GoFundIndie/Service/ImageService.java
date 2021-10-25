@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -94,6 +95,8 @@ public class ImageService {
             return upload(file, dirName, oriFileName);
         } catch (IOException e) {
             return "IOException";
+        } catch (MultipartException e) {
+            return "MultipartException";
         }
     }
 
@@ -117,12 +120,16 @@ public class ImageService {
         dir = DIR_USER + "/" + user.getId();
 
         if(result != null){
-            delete(dir + "/" + result.substring(result.lastIndexOf("/" + 1)));
+            delete(dir + "/" + result.substring(result.lastIndexOf("/") + 1));
         }
 
-        return uploadStandBy(file, dir,
-                DIR_USER_PROFILE + file.getContentType()
-                        .substring(file.getContentType().lastIndexOf("/" + 1)));
+        result = uploadStandBy(file, dir,
+                DIR_USER_PROFILE + "." + file.getContentType()
+                        .substring(file.getContentType().lastIndexOf("/") + 1));
+
+        userRepository.UpdateUserImg(user, result);
+
+        return result;
     }
 
     public String uploadStillImage(MultipartFile file, Long boardId) {
@@ -167,12 +174,12 @@ public class ImageService {
         dir = DIR_MOVIE + "/" + boardId;
 
         if(result != null){
-            delete(dir + "/" + result.substring(result.lastIndexOf("/" + 1)));
+            delete(dir + "/" + result.substring(result.lastIndexOf("/") + 1));
         }
 
         result = uploadStandBy(file, dir,
-                DIR_MOVIE_POSTER + file.getContentType()
-                        .substring(file.getContentType().lastIndexOf("/" + 1)));
+                DIR_MOVIE_POSTER + "." + file.getContentType()
+                        .substring(file.getContentType().lastIndexOf("/") + 1));
 
         boardRepository.updateBoardImg(board, result);
 
@@ -185,7 +192,7 @@ public class ImageService {
         if(user == null) return false;
 
         if(result != null) {
-            delete(DIR_USER + "/" + user.getId() + "/" + result.substring(result.lastIndexOf("/" + 1)));
+            delete(DIR_USER + "/" + user.getId() + "/" + result.substring(result.lastIndexOf("/") + 1));
             userRepository.UpdateUserImg(user, null);
         }
 
@@ -200,7 +207,7 @@ public class ImageService {
         //S3 delete
         dir = DIR_MOVIE + "/" + still.getBoardId().getId() + "/still/";
         result = still.getImage();
-        delete(dir + result.substring(result.lastIndexOf("/" + 1)));
+        delete(dir + result.substring(result.lastIndexOf("/") + 1));
 
         //DB delete
         imageRepository.deleteStill(still);
@@ -216,7 +223,7 @@ public class ImageService {
         //S3 delete
         dir = DIR_MOVIE + "/" + casting.getBoardId().getId() + "/casting/";
         result = casting.getImage();
-        delete(dir + result.substring(result.lastIndexOf("/" + 1)));
+        delete(dir + result.substring(result.lastIndexOf("/") + 1));
 
         return true;
     }
@@ -231,7 +238,7 @@ public class ImageService {
         dir = DIR_MOVIE + "/" + id + "/";
 
         if(result != null) {
-            delete(dir + result.substring(result.lastIndexOf("/" + 1)));
+            delete(dir + result.substring(result.lastIndexOf("/") + 1));
             boardRepository.updateBoardImg(board,null);
         }
 

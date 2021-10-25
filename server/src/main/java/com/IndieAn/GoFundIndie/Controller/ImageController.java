@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -23,109 +24,114 @@ public class ImageController {
 
     private final HashMap<String, Object> body = new HashMap<>();
 
-    //image dir result
-    private String result;
-
-    @PostMapping("/image/{path}/{path_id}")
+    @PostMapping(value = {"/image/{path}/{path_id}", "/image/{path}"})
     public ResponseEntity<?> UploadImage(@RequestHeader Map<String, String> header,
                                          @PathVariable(value = "path") String path,
                                          @PathVariable(value = "path_id", required = false) Long pathId,
                                          @RequestPart(value = "upload") MultipartFile image) {
 
         //TODO String result; 클래스 안 선언 말고 / 메소드 선언 Garbage Collector 로 안 없애는지??
-        if (path.equals("user") && pathId == null) {
-            //token expired 401
+        //image dir result
+        try {
+            String result;
+            if (path.equals("user") && pathId == null) {
+                //token expired 401
 //            헤더에서 user 값 추출
 
-            // Test User
-            User user = entityManager.find(User.class, 1L);
+                // Test User
+                User user = entityManager.find(User.class, 1L);
 
-            result = imageService.uploadUserImage(image, user);
+                result = imageService.uploadUserImage(image, user);
 
-            //board valid check fail
-            if(result.equals("NullPointException")) {
-                body.clear();
-                body.put("message", "can not find user");
-                return ResponseEntity.status(404).body(body);
-
-            //image file bad request
-            } else if(result.equals("IOException")) {
-                body.clear();
-                body.put("message", "bad request");
-                return ResponseEntity.status(400).body(body);
-            }
-
-            body.clear();
-            body.put("dir", result);
-            return ResponseEntity.status(201).body(body);
-        } else {
-            switch (path) {
-                case "still":
-                    result = imageService.uploadStillImage(image, pathId);
-
-                    //board valid check fail
-                    if (result.equals("NullPointException")) {
-                        body.clear();
-                        body.put("message", "can not find board");
-                        return ResponseEntity.status(404).body(body);
-
-                        //image file bad request
-                    } else if (result.equals("IOException")) {
-                        body.clear();
-                        body.put("message", "bad request");
-                        return ResponseEntity.status(400).body(body);
-                    }
-
+                //board valid check fail
+                if(result.equals("NullPointException")) {
                     body.clear();
-                    body.put("dir", result);
-                    return ResponseEntity.status(201).body(body);
-                case "casting":
-                    result = imageService.uploadCastingImage(image, pathId);
+                    body.put("message", "can not find user");
+                    return ResponseEntity.status(404).body(body);
 
-                    //board valid check fail
-                    if (result.equals("NullPointException")) {
-                        body.clear();
-                        body.put("message", "can not find board");
-                        return ResponseEntity.status(404).body(body);
-
-                        //image file bad request
-                    } else if (result.equals("IOException")) {
-                        body.clear();
-                        body.put("message", "bad request");
-                        return ResponseEntity.status(400).body(body);
-                    }
-
-                    body.clear();
-                    body.put("dir", result);
-                    return ResponseEntity.status(201).body(body);
-                case "board":
-                    result = imageService.uploadPosterImage(image, pathId);
-
-                    //board valid check fail
-                    if (result.equals("NullPointException")) {
-                        body.clear();
-                        body.put("message", "can not find board");
-                        return ResponseEntity.status(404).body(body);
-
-                        //image file bad request
-                    } else if (result.equals("IOException")) {
-                        body.clear();
-                        body.put("message", "bad request");
-                        return ResponseEntity.status(400).body(body);
-                    }
-
-                    body.clear();
-                    body.put("dir", result);
-                    return ResponseEntity.status(201).body(body);
-                default:
+                    //image file bad request
+                } else if(result.equals("IOException")) {
                     body.clear();
                     body.put("message", "bad request");
                     return ResponseEntity.status(400).body(body);
+                }
+
+                body.clear();
+                body.put("dir", result);
+                return ResponseEntity.status(201).body(body);
+            } else {
+                switch (path) {
+                    case "still":
+                        result = imageService.uploadStillImage(image, pathId);
+
+                        //board valid check fail
+                        if (result.equals("NullPointException")) {
+                            body.clear();
+                            body.put("message", "can not find board");
+                            return ResponseEntity.status(404).body(body);
+
+                            //image file bad request
+                        } else if (result.equals("IOException")) {
+                            body.clear();
+                            body.put("message", "bad request");
+                            return ResponseEntity.status(400).body(body);
+                        }
+
+                        body.clear();
+                        body.put("dir", result);
+                        return ResponseEntity.status(201).body(body);
+                    case "casting":
+                        result = imageService.uploadCastingImage(image, pathId);
+
+                        //board valid check fail
+                        if (result.equals("NullPointException")) {
+                            body.clear();
+                            body.put("message", "can not find board");
+                            return ResponseEntity.status(404).body(body);
+
+                            //image file bad request
+                        } else if (result.equals("IOException")) {
+                            body.clear();
+                            body.put("message", "bad request");
+                            return ResponseEntity.status(400).body(body);
+                        }
+
+                        body.clear();
+                        body.put("dir", result);
+                        return ResponseEntity.status(201).body(body);
+                    case "board":
+                        result = imageService.uploadPosterImage(image, pathId);
+
+                        //board valid check fail
+                        if (result.equals("NullPointException")) {
+                            body.clear();
+                            body.put("message", "can not find board");
+                            return ResponseEntity.status(404).body(body);
+
+                            //image file bad request
+                        } else if (result.equals("IOException")) {
+                            body.clear();
+                            body.put("message", "bad request");
+                            return ResponseEntity.status(400).body(body);
+                        }
+
+                        body.clear();
+                        body.put("dir", result);
+                        return ResponseEntity.status(201).body(body);
+                    default:
+                        body.clear();
+                        body.put("message", "bad request");
+                        return ResponseEntity.status(400).body(body);
+                }
             }
+        } catch (MultipartException e) {
+            body.clear();
+            body.put("message", "bad request : file missing");
+            return ResponseEntity.status(400).body(body);
         }
     }
 
-    @DeleteMapping("/image/{path}/{path_id}")
+    @DeleteMapping(value = {"/image/{path}/{path_id}", "/image/{path}"})
     public ResponseEntity<?> DeleteImage(@RequestHeader Map<String, String> header,
                                          @PathVariable(value = "path") String path,
                                          @PathVariable(value = "path_id", required = false) Long pathId) {
