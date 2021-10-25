@@ -38,7 +38,10 @@ export default function Login({
         },
         withCredentials: true,
       }).then((res) => {
-        console.log(res);
+        const { accessToken } = res.headers;
+        localStorage.setItem("accessToken", accessToken);
+        console.log(accessToken);
+
         alert("로그인에 성공하였습니다");
         handleLoginModal();
         handleLoginStatus();
