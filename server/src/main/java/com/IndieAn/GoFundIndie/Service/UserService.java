@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Service;
 
+import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSIgnInDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
@@ -31,6 +32,16 @@ public class UserService {
         // 같은 email이 존재하면 null을 리턴
         if(userRepository.FindUserByEmail(userSignUpDTO.getEmail()) != null) return null;
         return userRepository.CreateUser(userSignUpDTO);
+    }
+
+    // 유저 정보를 확인하고 해당 유저의 정보를 수정하는 서비스 기능
+    public User ModifyUserData(UserModifyDTO userModifyDTO, String email) {
+        return userRepository.ModifyUser(userModifyDTO, userRepository.FindUserByEmail(email).getId());
+    }
+
+    // 유저 email을 통해 DB에 해당 email을 가진 엔티티를 삭제하는 서비스 기능
+    public User DeleteUserData(String email) {
+        return userRepository.DeleteUser(userRepository.FindUserByEmail(email).getId());
     }
 
     // 로그인 정보를 기준으로 email과 password를 확인해 유저정보를 찾는다
