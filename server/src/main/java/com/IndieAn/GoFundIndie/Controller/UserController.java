@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
     private final UserService userService;
     private final HashMap<String, Object> body = new HashMap<>();
@@ -85,19 +86,19 @@ public class UserController {
         try {
             body.clear();
             // 쿠키에 키 값이 "accessToken"인 쿠키에 값을 찾아낸다.
-            cookiesResult = getStringCookie(cookies, cookiesResult, "accessToken");
+            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "accessToken");
 
             if(cookiesResult.equals("")) {
                 body.put("message", "logout fail");
                 return ResponseEntity.badRequest().body(body);
             }
 
-            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            // 쿠키에 존재하는 토큰을 가지고 유효성 검증을 한다.
             Map<String, String> checkToken = userService.CheckToken(cookiesResult);
             if(checkToken.get("email") != null) {
                 // 유저 정보가 확인되면 token 키 값을 가진 쿠기가 제거돼야 한다.
-                ExpirationToken(response, "accessToken");
-                ExpirationToken(response, "refreshToken");
+                userService.ExpirationToken(response, "accessToken");
+                userService.ExpirationToken(response, "refreshToken");
                 return ResponseEntity.ok().body("");
             }
             else {
@@ -118,13 +119,13 @@ public class UserController {
         String cookiesResult = "";
         try {
             body.clear();
-            cookiesResult = getStringCookie(cookies, cookiesResult, "accessToken");
+            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "accessToken");
 
             if(cookiesResult.equals("")) {
                 body.put("message", "올바르지 않은 요청입니다.");
                 return ResponseEntity.badRequest().body(body);
             }
-            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            // 쿠키에 존재하는 토큰을 가지고 유효성 검증을 한다.
             Map<String, String> checkToken = userService.CheckToken(cookiesResult);
 
             if(checkToken.get("email") != null) {
@@ -151,14 +152,14 @@ public class UserController {
         String cookiesResult = "";
         try {
             body.clear();
-            cookiesResult = getStringCookie(cookies, cookiesResult, "accessToken");
+            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "accessToken");
 
             if(cookiesResult.equals("")) {
                 body.put("message", "올바르지 않은 요청입니다.");
                 return ResponseEntity.badRequest().body(body);
             }
 
-            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            // 쿠키에 존재하는 토큰을 가지고 유효성 검증을 한다.
             Map<String, String> checkToken = userService.CheckToken(cookiesResult);
             if(checkToken.get("email") != null) {
                 User user = userService.ModifyUserData(userModifyDTO, checkToken.get("email"));
@@ -183,20 +184,20 @@ public class UserController {
         String cookiesResult = "";
         try {
             body.clear();
-            cookiesResult = getStringCookie(cookies, cookiesResult, "accessToken");
+            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "accessToken");
 
             if(cookiesResult.equals("")) {
                 body.put("message", "올바르지 않은 요청입니다.");
                 return ResponseEntity.badRequest().body(body);
             }
 
-            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            // 쿠키에 존재하는 토큰을 가지고 유효성 검증을 한다.
             Map<String, String> checkToken = userService.CheckToken(cookiesResult);
             if(checkToken.get("email") != null) {
                 userService.DeleteUserData(checkToken.get("email"));
-                // 유저 정보가 삭제되면 클라이언트에 refresh token 키 값을 가진 쿠기가 제거돼야 한다.
-                ExpirationToken(response, "accessToken");
-                ExpirationToken(response, "refreshToken");
+                // 유저 정보가 삭제되면 클라이언트에 token 키 값을 가진 쿠기가 제거돼야 한다.
+                userService.ExpirationToken(response, "accessToken");
+                userService.ExpirationToken(response, "refreshToken");
                 return ResponseEntity.ok().body("");
             }
             else {
@@ -206,24 +207,6 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
-    }
-
-    // 쿠키에서 해당 토큰 값을 찾기 위한 메소드
-    private String getStringCookie(Cookie[] cookies, String cookiesResult, String token) {
-        for(Cookie i : cookies) {
-            if(i.getName().equals(token)) {
-                cookiesResult = i.getValue();
-                break;
-            }
-        }
-        return cookiesResult;
-    }
-
-    // 해당 토큰을 만료시키는 메소드
-    private void ExpirationToken(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie(token, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
     }
 
     // 유저 정보를 바디로 보여주는 응답 형식에 맞춰 메시지를 만든다.
