@@ -30,6 +30,9 @@ public class Comment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean spoiler;
+
     public Comment() {}
 
     public long getId() {
@@ -86,5 +89,13 @@ public class Comment {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isSpoiler() {
+        return spoiler;
+    }
+
+    public void setSpoiler(boolean spoiler) {
+        this.spoiler = spoiler;
     }
 }
