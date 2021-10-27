@@ -42,9 +42,9 @@ export default function Header() {
         <div className={styles.header__div__wrapper}>
           <div className={styles.header__div}>
             <ul className={styles.header__ul}>
-              <li>
+              <li className={styles.header__ul__logo}>
                 <Link href="/">
-                  <Image src={gofundIcon} width="180" height="70" />
+                  <Image src={gofundIcon} width="220" height="40" />
                 </Link>
               </li>
               <li>
@@ -60,7 +60,12 @@ export default function Header() {
                 </Link>
               </li>
               <li className={styles.header__div__link}>
-                <input type="text" required />
+                <div className={styles.header__searchbar}>
+                  <input
+                    type="text"
+                    placeholder="컨텐츠, 인물, 장르를 검색해보세요"
+                  />
+                </div>
               </li>
               <li className={styles.header__div__link}>
                 <Link href="/signup">
@@ -71,9 +76,9 @@ export default function Header() {
                 {userLoginStatus ? (
                   <button onClick={Signout}>로그아웃</button>
                 ) : (
-                  <button onClick={() => setLoginModalOpen(!loginModalOpen)}>
+                  <a onClick={() => setLoginModalOpen(!loginModalOpen)}>
                     로그인
-                  </button>
+                  </a>
                 )}
               </li>
             </ul>
