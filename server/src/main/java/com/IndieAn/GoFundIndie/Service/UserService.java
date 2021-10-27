@@ -66,13 +66,28 @@ public class UserService {
     public String CreateToken(User user, Long time) {
         Date now = new Date();
         return Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setIssuer("fresh")
-                .setIssuedAt(now)
+                .setSubject(user.getEmail())
+                .setHeader(createHeader())
+                .setClaims(createClaims(user))
                 .setExpiration(new Date(now.getTime() + Duration.ofSeconds(time).toMillis()))
-                .claim("email", user.getEmail())
                 .signWith(SignatureAlgorithm.HS256, SIGN_KEY)
                 .compact();
+    }
+
+    // 토큰의 header를 만드는 메소드
+    private static Map<String, Object> createHeader() {
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS256");
+        return header;
+    }
+
+    // 토큰의 claim을 만드는 메소드
+    private static Map<String, Object> createClaims(User user) {
+        // 공개 클레임에 사용자의 이메일을 설정하여 정보를 조회할 수 있다.
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", user.getEmail());
+        return claims;
     }
 
     // 토큰 유효성 검증
@@ -87,10 +102,10 @@ public class UserService {
             msg.put("email", (String) claims.get("email"));
             return msg;
         } catch (ExpiredJwtException e) {
-            msg.put("message", "토큰 유효 시간 만료");
+            msg.put("code", "4101");
             return msg;
         } catch (JwtException e) {
-            msg.put("message", "유효하지 않는 토큰");
+            msg.put("code", "4100");
             return msg;
         }
     }

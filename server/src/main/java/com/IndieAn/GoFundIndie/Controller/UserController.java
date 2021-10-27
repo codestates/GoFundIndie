@@ -54,8 +54,8 @@ public class UserController {
         try {
             body.clear();
             // id와 password 를 기준으로 DB에 일치하는 유저 데이터를 불러온다.
-            // 유저 데이터에 email과 password를 토큰에 담아 accesstoken과 refreshToken을 생성한다.
-            // token은 쿠키(key -> accessToken, key -> refreshToken)에 담겨 전달한다.
+            // 유저 데이터에 email을 토큰에 담아 accesstoken과 refreshToken을 생성한다.
+            // accessToken은 클라이언트에서 관리할 수 있게 body에, refreshToken은 쿠키에 담겨 전달한다.
             User user = userService.FindUser(userSIgnInDTO);
 
             if(user == null) {
