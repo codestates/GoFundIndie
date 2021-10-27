@@ -122,6 +122,17 @@ public class UserService {
         return cookiesResult;
     }
 
+    // 유저 정보를 바디로 보여주는 응답 형식에 맞춰 메시지를 만든다.
+    public void MakeUserInfoRes(User user, HashMap<String, Object> map) {
+        map.put("id", user.getId());
+        map.put("admin_role", user.isAdminRole());
+        map.put("email", user.getEmail());
+        map.put("profile_picture", user.getProfilePicture());
+        map.put("nickname",  user.getNickname());
+        map.put("total_donation", user.getTotalDonation());
+        map.put("ad_agree", user.isAdAgree());
+    }
+
     // 해당 토큰을 만료시키는 메소드
     public void ExpirationToken(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(token, null);

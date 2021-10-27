@@ -141,31 +141,31 @@ public class UserController {
     }
 
     @GetMapping(value = "/user")
-    public ResponseEntity<?> GetUserInfo(HttpServletRequest request) {
+    public ResponseEntity<?> GetUserInfo(@RequestHeader Map<String, String> requestHeader) {
         // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
         // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 응답한다.
-        // 쿠키에 토큰이 없으면 응답코드 400을 응답한다.
-        Cookie[] cookies = request.getCookies();
-        String cookiesResult = "";
+        // 헤더에 토큰이 없으면 응답코드 400을 응답한다.
         try {
             body.clear();
-            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "accessToken");
+            data.clear();
 
-            if(cookiesResult.equals("")) {
-                body.put("message", "올바르지 않은 요청입니다.");
+            if(requestHeader.get("accesstoken") == null) {
+                body.put("code", 4000);
                 return ResponseEntity.badRequest().body(body);
             }
-            // 쿠키에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(cookiesResult);
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
 
+            // token에 email정보가 있다면 정보를 가져오는 과정을 제대로 거친다.
             if(checkToken.get("email") != null) {
                 User user = userService.FindUserUseEmail(checkToken.get("email"));
-                MakeUserInfoRes(user, body);
-
+                userService.MakeUserInfoRes(user, data);
+                body.put("code", 2000);
+                body.put("data", data);
                 return ResponseEntity.ok().body(body);
             }
             else {
-                body.put("message", checkToken.get("message"));
+                body.put("code", checkToken.get("code"));
                 return ResponseEntity.status(401).body(body);
             }
         } catch (Exception e) {
@@ -193,7 +193,7 @@ public class UserController {
             Map<String, String> checkToken = userService.CheckToken(cookiesResult);
             if(checkToken.get("email") != null) {
                 User user = userService.ModifyUserData(userModifyDTO, checkToken.get("email"));
-                MakeUserInfoRes(user, body);
+                userService.MakeUserInfoRes(user, body);
                 return ResponseEntity.ok().body(body);
             }
             else {
@@ -237,15 +237,5 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
-    }
-
-    // 유저 정보를 바디로 보여주는 응답 형식에 맞춰 메시지를 만든다.
-    private void MakeUserInfoRes(User user, HashMap<String, Object> map) {
-        map.put("id", user.getId());
-        map.put("admin_role", user.isAdminRole());
-        map.put("email", user.getEmail());
-        map.put("profile_picture", user.getProfilePicture());
-        map.put("nickname",  user.getNickname());
-        map.put("total_donation", user.getTotalDonation());
     }
 }
