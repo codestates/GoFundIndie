@@ -28,4 +28,8 @@ public class CommentService {
         }
         return commentRepository.AddComment(commentInputDTO);
     }
+
+    public List<Comment> getCommentsData(long boardId) {
+        return commentRepository.FindCommentListByBoardId(boardId);
+    }
 }

@@ -21,9 +21,9 @@ public class UserController {
     private final UserService userService;
     private final HashMap<String, Object> body = new HashMap<>();
     // accessToken 유효 시간
-    private final static Long ACCESS_TIME = 1000 * 60 * 60 * 24L;
+    private final static Long ACCESS_TIME = 1000 * 60 * 30L;
     // refreshToken 유효 시간
-    private final static Long REFRESH_TIME = 1000 * 60 * 60 * 180L;
+    private final static Long REFRESH_TIME = 1000 * 60 * 60 * 24L;
 
     @Autowired
     public UserController(UserService userService) {
@@ -38,11 +38,12 @@ public class UserController {
             User user = userService.CreateUserData(userSignUpDTO);
 
             if(user == null) {
-                body.put("message", "올바른 요청이 아닙니다.");
+                body.put("code", 4002);
                 return ResponseEntity.badRequest().body(body);
             }
 
-            return ResponseEntity.ok().body("");
+            body.put("code", 2000);
+            return ResponseEntity.ok().body(body);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }

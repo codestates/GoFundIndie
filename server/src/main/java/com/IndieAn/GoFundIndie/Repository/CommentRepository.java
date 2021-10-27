@@ -27,6 +27,11 @@ public class CommentRepository {
         return entityManager.createQuery("SELECT c FROM Comment as c", Comment.class).getResultList();
     }
 
+    // DB Comment 테이블에서 해당 board id를 가진 코멘트들을 리턴한다.
+    public List<Comment> FindCommentListByBoardId(long boardId) {
+        return entityManager.createQuery("SELECT c FROM Comment as c where c.board_id = '"+ boardId +"'", Comment.class).getResultList();
+    }
+
     // DB Comment 테이블에 매개변수 commentInputDTO의 데이터를 사용하여 Comment 정보를 저장한다.
     public Comment AddComment(CommentInputDTO commentInputDTO) {
         Comment comment = new Comment();

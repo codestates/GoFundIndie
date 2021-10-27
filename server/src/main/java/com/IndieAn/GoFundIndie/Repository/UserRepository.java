@@ -37,6 +37,7 @@ public class UserRepository {
             user.setProfilePicture(userSignUpDTO.getProfilePic());
         }
         user.setCreatedAt(new Date());
+        user.setAdAgree(userSignUpDTO.isAdAgree());
         entityManager.persist(user);
 
         entityManager.flush();
