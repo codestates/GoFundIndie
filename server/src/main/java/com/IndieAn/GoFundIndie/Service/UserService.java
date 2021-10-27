@@ -133,4 +133,9 @@ public class UserService {
     public RefreshToken AddRefreshToken(String email, String refreshToken) {
         return userRepository.AddRefreshTokenDB(email, refreshToken);
     }
+
+    // 해당 이메일과 refreshToken을 DB에 제거한다
+    public RefreshToken DeleteRefreshToken(String email, String refreshToken) {
+        return userRepository.DeleteRefreshTokenDB(email, refreshToken);
+    }
 }

@@ -95,32 +95,44 @@ public class UserController {
     }
 
     @PostMapping(value = "/signout")
-    public ResponseEntity<?> UserSignOut(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> UserSignOut(@RequestHeader Map<String, String> requestHeader, HttpServletRequest request, HttpServletResponse response) {
         // 토큰 유효성 검사 후 유저를 로그아웃 시킨다.
         // access token 이 유효하면 모든 토큰을 만료시킨다.
-        // 쿠키에 토큰이 없으면 응답코드 400을 응답한다.
         Cookie[] cookies = request.getCookies();
         String cookiesResult = "";
         try {
             body.clear();
-            // 쿠키에 키 값이 "accessToken"인 쿠키에 값을 찾아낸다.
-            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "accessToken");
-
-            if(cookiesResult.equals("")) {
-                body.put("message", "logout fail");
+            // 헤더에 토큰이 없거나 refresh token이 없으면 응답코드 400을 응답한다.
+            if(requestHeader.get("accesstoken") == null || cookies == null) {
+                body.put("code", 4000);
                 return ResponseEntity.badRequest().body(body);
             }
 
             // 쿠키에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(cookiesResult);
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+            // token에 email정보가 있다면 탈퇴 과정을 제대로 거친다.
             if(checkToken.get("email") != null) {
                 // 유저 정보가 확인되면 token 키 값을 가진 쿠기가 제거돼야 한다.
-                userService.ExpirationToken(response, "accessToken");
+                // DB에 있는 유저 email과 refreshToken 값이 제거돼야 한다.
+                // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
+                cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
+
+                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
+
+                // refresh token ID를 찾을 수 없을 때 응답을 해준다.
+                if(rt == null) {
+                    body.put("code", 4407);
+                    return ResponseEntity.status(404).body(body);
+                }
+                // 모두 잘 처리됐다면 refresh token을 만료시킨다.
                 userService.ExpirationToken(response, "refreshToken");
-                return ResponseEntity.ok().body("");
+                body.put("code", 2000);
+                return ResponseEntity.ok().body(body);
             }
+            // 토큰에 email 정보가 없다면 그에 맞는 오류 응답을 낸다.
             else {
-                body.put("message", checkToken.get("message"));
+                body.put("code", checkToken.get("code"));
                 return ResponseEntity.status(401).body(body);
             }
         } catch (Exception e) {
