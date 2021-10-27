@@ -19,7 +19,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageService imageService;
-    private final ImageRepository imageRepository;
     private final EntityManager entityManager;
 
     private final HashMap<String, Object> body = new HashMap<>();

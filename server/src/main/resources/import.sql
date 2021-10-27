@@ -1,7 +1,7 @@
 --Test Dummy Data
 --User
 INSERT INTO `user` (admin_role,banned,email,password,nickname) VALUES (true, false, "admin1@admin.com", "1234", "관리자 1호");
-INSERT INTO `user` (admin_role,banned,email,password,nickname) VALUES (true, false, "admin2@admin.com", "5678", "관리자 2호");
+INSERT INTO `user` (admin_role,banned,email,password,nickname) VALUES (true, false, "admin2@admin.com", "1234", "관리자 2호");
 
 INSERT INTO `user` (email,password,nickname,total_donation) VALUES ("test1@gofundindie.com", "1111", "김하나", 100);
 INSERT INTO `user` (email,password,nickname,total_donation) VALUES ("test2@gofundindie.com", "2222", "이둘", 2000);
@@ -11,6 +11,11 @@ INSERT INTO `user` (email,password,nickname,total_donation) VALUES ("test5@gofun
 INSERT INTO `user` (email,password,nickname,total_donation) VALUES ("askdjaskjd@gofundindie.com", "6666", "김여섯", 0);
 INSERT INTO `user` (email,password,nickname,total_donation) VALUES ("qwerasdf4567@gofundindie.com", "7777", "조일곱", 17000);
 INSERT INTO `user` (email,password,nickname,total_donation) VALUES ("mansoor@gofundindie.com", "8888", "만수르", 50000000);
+
+INSERT INTO `user` (email,password,nickname) VALUES ("mansoor@gofundindie.com", "1234", "스포왕");
+
+INSERT INTO `user` (email,password,nickname,ad_agree) VALUES ("mansoor@gofundindie.com", "1234", "광고 거부맨", false);
+INSERT INTO `user` (email,password,nickname,ad_agree) VALUES ("mansoor@gofundindie.com", "1234", "광고 거부걸", false);
 
 --Board
 INSERT INTO `board` (id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (1,false,"테스트용 보드 입니다","제작사","배급사",null,null,0,now(),120,1,"테스트를 하기위한 더미데이터",true);
@@ -86,6 +91,10 @@ INSERT INTO `chat` (user_id_1, user_id_2) VALUES (3,4);
 INSERT INTO `chat` (user_id_1, user_id_2) VALUES (5,6);
 
 --Comment
+insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 2, "할아버지가 범인임 할아버지가 범인임", true);
+insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 3, "할아버지가 범인임 할아버지가 범인임", true);
+insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 4, "할아버지가 범인임 할아버지가 범인임", true);
+
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 4, 0, "5점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 4, 0, "4점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 4, 0, "3점 드립니다");
@@ -94,8 +103,15 @@ insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 7, 
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (0, 8, 4, 0, "0점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 9, 4, 0, "1점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (2, 10, 4, 0, "2점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 2, 2, 1000, "영화 재밌어서 돈 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 2, 2, 20000, "좋은 영화 많이 만들어 주세요");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 2, 100, "영화 재밌어서 돈 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 4, 2, 2000, "좋은 영화 많이 만들어 주세요");
+
+insert into `comment` (rating, user_id, board_id) values (1,3,3);
+insert into `comment` (rating, user_id, board_id) values (1,4,3);
+insert into `comment` (rating, user_id, board_id) values (1,5,3);
+insert into `comment` (rating, user_id, board_id) values (1,6,5);
+insert into `comment` (rating, user_id, board_id) values (1,7,5);
+insert into `comment` (rating, user_id, board_id) values (1,8,5);
 
 --CommentRating
 insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 3, 1);

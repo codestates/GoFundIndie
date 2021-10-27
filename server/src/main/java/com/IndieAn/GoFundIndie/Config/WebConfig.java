@@ -13,10 +13,13 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("#{info['gofund.url2']}")
     private String url2;
 
+    @Value("#{info['gofund.url3']}")
+    private String url3;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(url1, url2)
+                .allowedOrigins(url1, url2, url3)
                 .allowedMethods("GET", "POST", "DELETE", "PATCH", "PUT")
                 .allowCredentials(true);
     }

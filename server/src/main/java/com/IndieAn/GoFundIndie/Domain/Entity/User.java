@@ -34,6 +34,9 @@ public class User {
     @Column(name = "total_donation", columnDefinition = "integer default 0")
     private int totalDonation;
 
+    @Column(name = "ad_agree", columnDefinition = "boolean default true")
+    private boolean adAgree;
+
     public User() {}
 
     public long getId() {
@@ -106,5 +109,13 @@ public class User {
 
     public void setTotalDonation(int totalDonation) {
         this.totalDonation = totalDonation;
+    }
+
+    public boolean isAdAgree() {
+        return adAgree;
+    }
+
+    public void setAdAgree(boolean adAgree) {
+        this.adAgree = adAgree;
     }
 }

@@ -9,6 +9,10 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_id")
+    private User userId;
+
     @Column(name = "is_approve", columnDefinition = "boolean default false")
     private boolean isApprove;
 
@@ -152,5 +156,13 @@ public class Board {
 
     public void setInfoSubtitle(boolean infoSubtitle) {
         this.infoSubtitle = infoSubtitle;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 }
