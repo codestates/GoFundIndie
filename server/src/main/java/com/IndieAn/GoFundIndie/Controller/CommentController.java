@@ -7,14 +7,12 @@ import com.IndieAn.GoFundIndie.Service.CommentService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,10 +48,10 @@ public class CommentController {
                 // 토큰으로 얻은 email의 pk와 입력으로 들어온 user의 pk가 다르다면 400 응답을 한다.
                 if(user.getId() != commentInputDTO.getUserId()) {
                     body.put("message", "Unauthorized!! An access token is required");
-                    return ResponseEntity.badRequest().body(body);
+                    return ResponseEntity.status(401).body(body);
                 }
 
-                // comment를 다는 기능을 한다. ** 나중에 board가 완료되면 board 관련하여 수정할 것**
+                // comment를 작성하는 기능을 한다.
                 Comment comment = commentService.AddCommentData(commentInputDTO);
                 // 이미 comment 해당 board에 작성했다면 작성할 수 없다.
                 if(comment == null) {
@@ -67,6 +65,18 @@ public class CommentController {
                 body.put("message", checkToken.get("message"));
                 return ResponseEntity.status(401).body(body);
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @GetMapping(value = "/comment")
+    public ResponseEntity<?> GetCommentList(@RequestParam(name = "board_id") long boardId) {
+        try {
+            // *** boardId로 해당 보드가 DB에 존재하는지 확인하는 메소드 필요. Board가 완료되면 작성할것 ***
+            List<Comment> commentList = commentService.getCommentsData(boardId);
+            body.put("comments", commentList);
+            return ResponseEntity.ok().body(body);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
