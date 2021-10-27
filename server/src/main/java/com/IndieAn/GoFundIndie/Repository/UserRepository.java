@@ -2,6 +2,7 @@ package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.RefreshToken;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -84,5 +85,24 @@ public class UserRepository {
         entityManager.persist(user);
         entityManager.flush();
         entityManager.close();
+    }
+
+    // DB에 email과 refreshToken쌍을 저장한다.
+    public RefreshToken AddRefreshTokenDB(String email, String refreshToken) {
+        List<RefreshToken> list = entityManager.createQuery("SELECT r FROM RefreshToken as r",  RefreshToken.class).getResultList();
+        for(RefreshToken rt : list) {
+            if(rt.getEmail().equals(email)) return null;
+        }
+
+        RefreshToken token = new RefreshToken();
+        token.setEmail(email);
+        token.setRefreshToken(refreshToken);
+
+        entityManager.persist(token);
+
+        entityManager.flush();
+        entityManager.close();
+
+        return token;
     }
 }

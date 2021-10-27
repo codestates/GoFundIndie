@@ -3,6 +3,7 @@ package com.IndieAn.GoFundIndie.Service;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSIgnInDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.RefreshToken;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import io.jsonwebtoken.*;
@@ -48,7 +49,7 @@ public class UserService {
 
     // 로그인 정보를 기준으로 email과 password를 확인해 유저정보를 찾는다
     public User FindUser(UserSIgnInDTO userSIgnInDTO) {
-        User user = userRepository.FindUserByEmail(userSIgnInDTO.getEmail());
+        User user = FindUserUseEmail(userSIgnInDTO.getEmail());
         // user가 없거나 비밀번호가 틀렸다면 null을 리턴한다.
         if(user == null || !user.getPassword().equals(userSIgnInDTO.getPassword())) {
             return null;
@@ -126,5 +127,10 @@ public class UserService {
         Cookie cookie = new Cookie(token, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+    }
+
+    // 해당 이메일과 refreshToken을 DB에 저장한다
+    public RefreshToken AddRefreshToken(String email, String refreshToken) {
+        return userRepository.AddRefreshTokenDB(email, refreshToken);
     }
 }

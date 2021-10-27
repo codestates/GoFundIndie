@@ -3,6 +3,7 @@ package com.IndieAn.GoFundIndie.Controller;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSIgnInDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.RefreshToken;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final HashMap<String, Object> body = new HashMap<>();
+    private final HashMap<String, Object> data = new HashMap<>();
     // accessToken 유효 시간
     private final static Long ACCESS_TIME = 1000 * 60 * 30L;
     // refreshToken 유효 시간
@@ -53,23 +55,38 @@ public class UserController {
     public ResponseEntity<?> UserLogin(@RequestBody UserSIgnInDTO userSIgnInDTO, HttpServletResponse response) {
         try {
             body.clear();
+            data.clear();
             // id와 password 를 기준으로 DB에 일치하는 유저 데이터를 불러온다.
             // 유저 데이터에 email을 토큰에 담아 accesstoken과 refreshToken을 생성한다.
             // accessToken은 클라이언트에서 관리할 수 있게 body에, refreshToken은 쿠키에 담겨 전달한다.
             User user = userService.FindUser(userSIgnInDTO);
 
-            if(user == null) {
-                body.put("message", "email이나 비밀번호가 올바르지 않습니다");
+            // 해당 이메일이 없다면 code 4003 응답
+            if(userService.FindUserUseEmail(userSIgnInDTO.getEmail()) == null) {
+                body.put("code", 4003);
+                return ResponseEntity.badRequest().body(body);
+            }
+            // 해당 비밀번호가 다르다면 code 4001 응답
+            else if(user == null) {
+                body.put("code", 4001);
                 return ResponseEntity.badRequest().body(body);
             }
             else {
-                // 유저가 DB에 존재한다면 accessToken과 refreshToken을 발급하여 쿠키에 저장하여 보내준다.
-                Cookie at_cookie = new Cookie("accessToken", userService.CreateToken(user, ACCESS_TIME));
+                // 유저가 DB에 존재한다면 refreshToken을 발급하여 쿠키에 저장하여 보내준다.
                 Cookie rt_cookie = new Cookie("refreshToken", userService.CreateToken(user, REFRESH_TIME));
-                response.addCookie(at_cookie);
                 response.addCookie(rt_cookie);
+                // key로 유저 email을 갖고 value로 refresh 값을 갖는 정보를 DB에 저장한다.
+                RefreshToken refreshToken = userService.AddRefreshToken(user.getEmail(), rt_cookie.getValue());
+                // refreshToken 값이 null이면 이미 해당 email에 refreshToken이 발급되어있다. 즉, 어디에서 로그인 되어있다는 것이다.
+                if(refreshToken == null) {
+                    body.put("code", 4012);
+                    return ResponseEntity.badRequest().body(body);
+                }
 
-                body.put("id", user.getId());
+                // accessToken은 응답 바디로 넘겨준다.
+                body.put("code", 2000);
+                data.put("accessToken",  userService.CreateToken(user, ACCESS_TIME));
+                body.put("data", data);
                 return ResponseEntity.ok().body(body);
             }
         } catch (Exception e) {
