@@ -1,7 +1,10 @@
 package com.IndieAn.GoFundIndie.Domain.Entity;
 
+<<<<<<< HEAD
 import com.IndieAn.GoFundIndie.Resolvers.User.UserGraphQLDTO;
 
+=======
+>>>>>>> 4b52c78 (rollback)
 import javax.persistence.*;
 import java.util.Date;
 
@@ -29,7 +32,11 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+<<<<<<< HEAD
     @Column(name = "created_at", columnDefinition = "datetime default now()")
+=======
+    @Column(name = "created_at")
+>>>>>>> 4b52c78 (rollback)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -120,6 +127,7 @@ public class User {
     public void setAdAgree(boolean adAgree) {
         this.adAgree = adAgree;
     }
+<<<<<<< HEAD
 
     public static User from(UserGraphQLDTO dto) {
         User user = new User();
@@ -140,4 +148,6 @@ public class User {
 
         return user;
     }
+=======
+>>>>>>> 4b52c78 (rollback)
 }
