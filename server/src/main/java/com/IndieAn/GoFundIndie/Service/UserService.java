@@ -162,4 +162,16 @@ public class UserService {
     public RefreshToken DeleteRefreshToken(String email, String refreshToken) {
         return userRepository.DeleteRefreshTokenDB(email, refreshToken);
     }
+
+    // 해당 이메일에 refreshToken이 있는지 탐색한다.
+    public RefreshToken FindRefreshToken(String email, String cookiesResult) {
+        // email과 refresh token 값이 일치하는 엔티티가 있다면 리턴한다.
+        for(RefreshToken rt : userRepository.FindRefreshTokenList()) {
+            if(email.equals(rt.getEmail()) && cookiesResult.equals(rt.getRefreshToken())) {
+                return rt;
+            }
+        }
+        // 없다면 null을 리턴한다.
+        return null;
+    }
 }

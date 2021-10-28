@@ -88,6 +88,11 @@ public class UserRepository {
         entityManager.close();
     }
 
+    // DB User 테이블에 모든 유저 정보를 리턴한다.
+    public List<RefreshToken> FindRefreshTokenList() {
+        return entityManager.createQuery("SELECT r FROM RefreshToken as r",  RefreshToken.class).getResultList();
+    }
+
     // DB에 email과 refreshToken쌍을 저장한다.
     public RefreshToken AddRefreshTokenDB(String email, String refreshToken) {
 
