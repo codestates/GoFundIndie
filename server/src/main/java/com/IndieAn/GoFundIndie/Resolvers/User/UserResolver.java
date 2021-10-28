@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserResolver implements GraphQLQueryResolver {
 
+    // 원래는 UserRepository 에서 하는게 맞는데 예제라서 그냥 여기에 썼습니다
     private final EntityManager em;
 
     public UserGraphQLDTO FindUserId(Long id) {
