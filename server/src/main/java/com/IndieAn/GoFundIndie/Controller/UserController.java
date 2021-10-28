@@ -76,7 +76,7 @@ public class UserController {
             }
 
             body.put("code", 2000);
-            return ResponseEntity.ok().body(body);
+            return ResponseEntity.status(201).body(body);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
@@ -285,7 +285,52 @@ public class UserController {
                 return ResponseEntity.ok().body(body);
             }
             else {
-                body.put("message", checkToken.get("message"));
+                body.put("code", checkToken.get("code"));
+                return ResponseEntity.status(401).body(body);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @GetMapping(value = "/reissuance")
+    public ResponseEntity<?> ReissueAccessToken(HttpServletRequest request) {
+        // access token이 만료됐을 때, refresh token을 검증해 새로운 access token을 발급받는다.
+        Cookie[] cookies = request.getCookies();
+        String cookiesResult = "";
+        try {
+            body.clear();
+            data.clear();
+
+            // 쿠키에 refresh token이 없으면 응답코드 400을 응답한다.
+            if(cookies == null || userService.getStringCookie(cookies, cookiesResult, "refreshToken").equals("")) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
+            // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
+            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
+            // 쿠키에 존재하는 refresh token을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(cookiesResult);
+
+            if(checkToken.get("email") != null) {
+                // 해당 refresh token이 가지고 있는 email로 다시 access token을 발급한다.
+                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                RefreshToken rt = userService.FindRefreshToken(user.getEmail(), cookiesResult);
+
+                // refresh token를 찾을 수 없을 때 응답을 해준다.
+                if(rt == null) {
+                    body.put("code", 4407);
+                    return ResponseEntity.status(404).body(body);
+                }
+                // accessToken은 응답 바디로 넘겨준다.
+                body.put("code", 2000);
+                data.put("accessToken",  userService.CreateToken(user, ACCESS_TIME));
+                body.put("data", data);
+                return ResponseEntity.ok().body(body);
+            }
+            // 토큰에 email 정보가 없다면 그에 맞는 오류 응답을 낸다.
+            else {
+                body.put("code", checkToken.get("code"));
                 return ResponseEntity.status(401).body(body);
             }
         } catch (Exception e) {
