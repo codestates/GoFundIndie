@@ -1,0 +1,24 @@
+type user {
+    id: Int
+    adminRole: Boolean
+    banned: Boolean
+    email: String
+    password: String
+    profilePicture: String
+    nickname: String
+    createdAt: String
+    totalDonation: Int
+    adAgree: Boolean
+}
+
+input userInput {
+    adminRole: Boolean
+    banned: Boolean
+    email: String!
+    password: String!
+    profilePicture: String
+    nickname: String!
+    createdAt: String
+    totalDonation: Int
+    adAgree: Boolean
+}
