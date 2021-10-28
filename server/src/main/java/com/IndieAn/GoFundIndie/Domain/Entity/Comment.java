@@ -1,7 +1,9 @@
 package com.IndieAn.GoFundIndie.Domain.Entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Comment {
@@ -26,14 +28,36 @@ public class Comment {
     @Column(length = 2000)
     private String body;
 
-    @Column(name = "created_at", columnDefinition = "datetime default now()")
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Column(columnDefinition = "boolean default false")
     private boolean spoiler;
 
+    @OneToMany(mappedBy = "commentId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CommentReport>  commentReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "commentId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CommentRating> commentRatings = new ArrayList<>();
+
     public Comment() {}
+
+    public List<CommentReport> getCommentReports() {
+        return commentReports;
+    }
+
+    public void setCommentReports(List<CommentReport> commentReports) {
+        this.commentReports = commentReports;
+    }
+
+    public List<CommentRating> getCommentRatings() {
+        return commentRatings;
+    }
+
+    public void setCommentRatings(List<CommentRating> commentRatings) {
+        this.commentRatings = commentRatings;
+    }
 
     public long getId() {
         return id;
