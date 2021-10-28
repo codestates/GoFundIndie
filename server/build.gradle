@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.5'
+	id 'org.springframework.boot' version '2.5.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -20,8 +20,6 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
@@ -32,10 +30,15 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.google.code.gson:gson:2.8.6'
 
+	// AWS
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
+
 	// graphQL
-	implementation 'com.graphql-java:graphql-java:16.2'
-//	implementation 'com.graphql-java:graphql-java-spring-boot-starter-webmvc:1.0'
-	implementation 'com.google.guava:guava:31.0.1-jre'
+	implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:12.0.0'
+	implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:11.1.0'
+	implementation 'com.graphql-java-kickstart:graphql-java-tools:12.0.0'
+	testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:12.0.0'
 }
 
 dependencyManagement {
