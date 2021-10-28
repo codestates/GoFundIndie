@@ -1,6 +1,8 @@
 package com.IndieAn.GoFundIndie.Domain.Entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Genre {
@@ -11,7 +13,18 @@ public class Genre {
     @Column(nullable = false)
     private String name;
 
+    @OneToMany(mappedBy = "genreId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<BoardGenre> boardGenres = new ArrayList<>();
+
     public Genre() {}
+
+    public List<BoardGenre> getBoardGenres() {
+        return boardGenres;
+    }
+
+    public void setBoardGenres(List<BoardGenre> boardGenres) {
+        this.boardGenres = boardGenres;
+    }
 
     public long getId() {
         return id;

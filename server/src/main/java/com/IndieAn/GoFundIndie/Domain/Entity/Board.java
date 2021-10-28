@@ -1,7 +1,9 @@
 package com.IndieAn.GoFundIndie.Domain.Entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Board {
@@ -52,7 +54,73 @@ public class Board {
     @Column(name = "info_subtitle", nullable = false)
     private boolean infoSubtitle;
 
+    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<BoardLike> boardLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<BoardReport> boardReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Still> stills = new ArrayList<>();
+
+    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<BoardGenre> boardGenres = new ArrayList<>();
+
+    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Casting> castings = new ArrayList<>();
+
     public Board() {}
+
+    public List<BoardLike> getBoardLikes() {
+        return boardLikes;
+    }
+
+    public void setBoardLikes(List<BoardLike> boardLikes) {
+        this.boardLikes = boardLikes;
+    }
+
+    public List<BoardReport> getBoardReports() {
+        return boardReports;
+    }
+
+    public void setBoardReports(List<BoardReport> boardReports) {
+        this.boardReports = boardReports;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Still> getStills() {
+        return stills;
+    }
+
+    public void setStills(List<Still> stills) {
+        this.stills = stills;
+    }
+
+    public List<BoardGenre> getBoardGenres() {
+        return boardGenres;
+    }
+
+    public void setBoardGenres(List<BoardGenre> boardGenres) {
+        this.boardGenres = boardGenres;
+    }
+
+    public List<Casting> getCastings() {
+        return castings;
+    }
+
+    public void setCastings(List<Casting> castings) {
+        this.castings = castings;
+    }
 
     public long getId() {
         return id;
