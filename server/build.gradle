@@ -1,9 +1,13 @@
 plugins {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	id 'org.springframework.boot' version '2.5.6'
 =======
 	id 'org.springframework.boot' version '2.5.5'
 >>>>>>> 4b52c78 (rollback)
+=======
+	id 'org.springframework.boot' version '2.5.6'
+>>>>>>> d56cda2 (Temp save)
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
