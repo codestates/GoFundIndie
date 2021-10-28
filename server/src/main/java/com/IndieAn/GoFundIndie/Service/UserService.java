@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -56,6 +57,18 @@ public class UserService {
         }
 
         return user;
+    }
+
+    // 중복되는 닉네임이 있는지 확인한다
+    public User CheckUserByNickname(String query) {
+        for(User u : userRepository.FindUserList()) {
+            // 전체 리스트에서 닉네임이 존재하면 해당 유저를 리턴한다.
+            if(u.getNickname().equals(query)) {
+                return u;
+            }
+        }
+        // 없다면 null을 리턴
+        return null;
     }
 
     // 토큰에 존재하는 email을 통해 DB를 탐색한다.
