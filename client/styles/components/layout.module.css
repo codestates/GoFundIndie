@@ -1,0 +1,10 @@
+.body {
+  height: 100%;
+}
+
+.body-wrapper {
+  height: auto;
+  min-height: 100%;
+  position: relative;
+}
+/*# sourceMappingURL=layout.module.css.map */
