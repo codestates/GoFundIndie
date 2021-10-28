@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Domain.Entity;
 
+import com.IndieAn.GoFundIndie.Resolvers.User.UserGraphQLDTO;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +30,7 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime default now()")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -196,5 +197,25 @@ public class User {
 
     public void setAdAgree(boolean adAgree) {
         this.adAgree = adAgree;
+    }
+
+    public static User from(UserGraphQLDTO dto) {
+        User user = new User();
+
+        if(dto.getEmail() == null || dto.getPassword() == null || dto.getNickname() == null) {
+            return null;
+        } else {
+            user.setEmail(dto.getEmail());
+            user.setPassword(dto.getPassword());
+            user.setNickname(dto.getNickname());
+        }
+        if(dto.isAdminRole()) user.setAdminRole(dto.isAdminRole());
+        if(dto.isBanned()) user.setBanned(dto.isBanned());
+        if(dto.getProfilePicture() != null) user.setProfilePicture(dto.getProfilePicture());
+        if(dto.getTotalDonation() != 0) user.setTotalDonation(dto.getTotalDonation());
+        if(dto.isAdAgree()) user.setAdAgree(dto.isAdAgree());
+        user.setCreatedAt(new Date());
+
+        return user;
     }
 }
