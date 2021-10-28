@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import Image from "next/dist/client/image";
 import styles from "../../../styles/view_boardid.module.scss";
 
 export default function BoarDetails() {

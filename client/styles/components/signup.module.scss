@@ -1,0 +1,68 @@
+@use "../modal.module.scss" as modal;
+
+.screen-wrapper {
+  @include modal.screen_wrapper();
+  .signupmodal-wrapper {
+    @include modal.modal_wrapper();
+    .signupmodal {
+      @include modal.modal_block(605px, 700px);
+      .signupmodal__form {
+        width: 400px;
+        height: 550px;
+
+        .input__text {
+          @include modal.input();
+        }
+        button {
+          @include modal.button();
+          margin-top: 15px;
+        }
+      }
+    }
+  }
+}
+
+.signupmodal__form-upper {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
+  .form-flexstart {
+    display: flex;
+    width: 60%;
+    font-size: 12px;
+    justify-content: flex-start;
+    align-items: flex-end;
+    color: #333333;
+    div {
+      display: flex;
+    }
+  }
+  .form-flexend {
+    display: flex;
+    width: 40%;
+    color: #333333;
+    justify-content: flex-end;
+    align-items: flex-end;
+    div {
+      display: flex;
+    }
+    div:first-child {
+      font-size: 14px;
+    }
+    div:last-child {
+      font-size: 18px;
+      color: #009063;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  }
+}
+.oauth-icon {
+  width: 100%;
+  margin: 15px 0px;
+  display: flex;
+  justify-content: space-between;
+  img {
+    cursor: pointer;
+  }
+}

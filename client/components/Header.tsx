@@ -2,13 +2,18 @@ import Link from "next/link";
 import styles from "../styles/components/header.module.scss";
 import Image from "next/image";
 import gofundIcon from "../images/gofundindie_icon.png";
-import Login from "../components/Login";
+import Login from "./Login";
 import { useState } from "react";
 import axios from "axios";
+import Signup from "./Signup";
 
 export default function Header() {
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
+  const [signupModalOpen, setSignupModalOpen] = useState<boolean>(false);
   const [userLoginStatus, setUserLoginStatus] = useState<boolean>(false);
+  const handleSignupModal = (): void => {
+    setSignupModalOpen(false);
+  };
   const handleLoginModal = (): void => {
     setLoginModalOpen(false);
   };
@@ -68,17 +73,20 @@ export default function Header() {
                 </div>
               </li>
               <li className={styles.header__div__link}>
-                <Link href="/signup">
-                  <a title="회원 가입">회원가입</a>
-                </Link>
+                <div
+                  className={styles.header__div__signup}
+                  onClick={() => setSignupModalOpen(!loginModalOpen)}
+                >
+                  회원가입
+                </div>
               </li>
               <li className={styles.header__div__link}>
                 {userLoginStatus ? (
                   <button onClick={Signout}>로그아웃</button>
                 ) : (
-                  <a onClick={() => setLoginModalOpen(!loginModalOpen)}>
+                  <div onClick={() => setLoginModalOpen(!loginModalOpen)}>
                     로그인
-                  </a>
+                  </div>
                 )}
               </li>
             </ul>
@@ -90,6 +98,9 @@ export default function Header() {
           handleLoginModal={handleLoginModal}
           handleLoginStatus={handleLoginStatus}
         />
+      ) : null}
+      {signupModalOpen ? (
+        <Signup handleSignupModal={handleSignupModal} />
       ) : null}
     </>
   );
