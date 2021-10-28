@@ -9,7 +9,7 @@ $backcolor: #1b1b1b;
     display: flex;
     align-items: center;
     font-size: 15px;
-    height: 88px;
+    height: 74px;
   }
 
   .header__ul {
@@ -36,6 +36,10 @@ $backcolor: #1b1b1b;
       color: white;
       opacity: 0.7;
     }
+    div {
+      color: white;
+      opacity: 0.7;
+    }
   }
 
   .header__searchbar {
@@ -58,4 +62,8 @@ $backcolor: #1b1b1b;
       color: #fafafa;
     }
   }
+}
+
+.header__div__signup {
+  opacity: 0.7;
 }
