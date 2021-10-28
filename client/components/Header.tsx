@@ -53,18 +53,16 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <li className={styles.header__div__link}>
-                  <Link href="/">
-                    <a title="홈">홈</a>
-                  </Link>
-                </li>
-              </li>
-              <li className={styles.header__div__link}>
-                <Link href="/board">
-                  <a title="영화">영화</a>
+                <Link href="/">
+                  <div title="홈">홈</div>
                 </Link>
               </li>
-              <li className={styles.header__div__link}>
+              <li>
+                <Link href="/board">
+                  <div title="영화">영화</div>
+                </Link>
+              </li>
+              <li>
                 <div className={styles["header-searchbar"]}>
                   <input
                     type="text"
@@ -72,15 +70,14 @@ export default function Header() {
                   />
                 </div>
               </li>
-              <li className={styles.header__div__link}>
-                <div
-                  className={styles.header__div__signup}
-                  onClick={() => setSignupModalOpen(!loginModalOpen)}
-                >
-                  회원가입
-                </div>
+              <li>
+                {userLoginStatus ? null : (
+                  <div onClick={() => setSignupModalOpen(!loginModalOpen)}>
+                    회원가입
+                  </div>
+                )}
               </li>
-              <li className={styles.header__div__link}>
+              <li>
                 {userLoginStatus ? (
                   <button onClick={Signout}>로그아웃</button>
                 ) : (
