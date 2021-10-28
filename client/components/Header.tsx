@@ -65,7 +65,7 @@ export default function Header() {
                 </Link>
               </li>
               <li className={styles.header__div__link}>
-                <div className={styles.header__searchbar}>
+                <div className={styles["header-searchbar"]}>
                   <input
                     type="text"
                     placeholder="컨텐츠, 인물, 장르를 검색해보세요"
