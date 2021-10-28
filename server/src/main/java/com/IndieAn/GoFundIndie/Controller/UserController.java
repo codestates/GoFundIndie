@@ -156,7 +156,7 @@ public class UserController {
             // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
             Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
 
-            // token에 email정보가 있다면 정보를 가져오는 과정을 제대로 거친다.
+            // token에 email정보가 있다면 정보를 가져오는 과정을 수행한다.
             if(checkToken.get("email") != null) {
                 User user = userService.FindUserUseEmail(checkToken.get("email"));
                 userService.MakeUserInfoRes(user, data);
@@ -174,30 +174,39 @@ public class UserController {
     }
 
     @PutMapping(value = "/user")
-    public ResponseEntity<?> ModifyUserInfo(@RequestBody UserModifyDTO userModifyDTO, HttpServletRequest request) {
+    public ResponseEntity<?> ModifyUserInfo(@RequestBody UserModifyDTO userModifyDTO, @RequestHeader Map<String, String> requestHeader) {
         // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
         // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 데이터 수정 후 응답한다.
-        // 쿠키에 토큰이 없으면 응답코드 400을 응답한다.
-        Cookie[] cookies = request.getCookies();
-        String cookiesResult = "";
+        // 헤더에 토큰이 없으면 응답코드 400을 응답한다.
         try {
             body.clear();
-            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "accessToken");
+            data.clear();
 
-            if(cookiesResult.equals("")) {
-                body.put("message", "올바르지 않은 요청입니다.");
+            if(requestHeader.get("accesstoken") == null) {
+                body.put("code", 4000);
                 return ResponseEntity.badRequest().body(body);
             }
 
-            // 쿠키에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(cookiesResult);
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+
+            // token에 email정보가 있다면 정보를 수정하는 과정을 수행한다.
             if(checkToken.get("email") != null) {
+                // 요청 바디에 어떤 값도 들어오지 않으며, 광고수신 동의 값이 똑같을 때 4006 오류를 낸다.
+                if(userModifyDTO.getNickname() == null && userModifyDTO.getPassword() == null
+                        && userModifyDTO.getProfilePic() == null && userModifyDTO.isAdAgree() == userService.FindUserUseEmail(checkToken.get("email")).isAdAgree()) {
+                    body.put("code", 4006);
+                    return ResponseEntity.badRequest().body(body);
+                }
+
                 User user = userService.ModifyUserData(userModifyDTO, checkToken.get("email"));
-                userService.MakeUserInfoRes(user, body);
+                userService.MakeUserInfoRes(user, data);
+                body.put("code", 2000);
+                body.put("data", data);
                 return ResponseEntity.ok().body(body);
             }
             else {
-                body.put("message", checkToken.get("message"));
+                body.put("code", checkToken.get("code"));
                 return ResponseEntity.status(401).body(body);
             }
         } catch (Exception e) {

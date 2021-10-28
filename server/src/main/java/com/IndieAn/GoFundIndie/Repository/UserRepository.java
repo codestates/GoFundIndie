@@ -64,6 +64,7 @@ public class UserRepository {
         if(userModifyDTO.getNickname() != null) modifyUser.setNickname(userModifyDTO.getNickname());
         if(userModifyDTO.getPassword() != null) modifyUser.setPassword(userModifyDTO.getPassword());
         if(userModifyDTO.getProfilePic() != null) modifyUser.setProfilePicture(userModifyDTO.getProfilePic());
+        modifyUser.setAdAgree(userModifyDTO.isAdAgree());
 
         return modifyUser;
     }
