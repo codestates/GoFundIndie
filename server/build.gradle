@@ -25,10 +25,13 @@ repositories {
 
 dependencies {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
 >>>>>>> 4b52c78 (rollback)
+=======
+>>>>>>> c57aa5d (Temp Save)
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
@@ -40,10 +43,14 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.8.6'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c57aa5d (Temp Save)
 	// AWS
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
 
+<<<<<<< HEAD
 	// graphQL
 	implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:11.0.0'
 	implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:11.0.0'
@@ -55,6 +62,13 @@ dependencies {
 //	implementation 'com.graphql-java:graphql-java-spring-boot-starter-webmvc:1.0'
 	implementation 'com.google.guava:guava:31.0.1-jre'
 >>>>>>> 4b52c78 (rollback)
+=======
+	// graphQL
+	implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:12.0.0'
+	implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:11.1.0'
+	implementation 'com.graphql-java-kickstart:graphql-java-tools:12.0.0'
+	testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:12.0.0'
+>>>>>>> c57aa5d (Temp Save)
 }
 
 dependencyManagement {
