@@ -2,6 +2,7 @@ package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.UserModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.UserSignUpDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.RefreshToken;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,6 +38,7 @@ public class UserRepository {
             user.setProfilePicture(userSignUpDTO.getProfilePic());
         }
         user.setCreatedAt(new Date());
+        user.setAdAgree(userSignUpDTO.isAdAgree());
         entityManager.persist(user);
 
         entityManager.flush();
@@ -84,5 +86,51 @@ public class UserRepository {
         entityManager.persist(user);
         entityManager.flush();
         entityManager.close();
+    }
+
+    // DB User 테이블에 모든 유저 정보를 리턴한다.
+    public List<RefreshToken> FindRefreshTokenList() {
+        return entityManager.createQuery("SELECT r FROM RefreshToken as r",  RefreshToken.class).getResultList();
+    }
+
+    // DB에 email과 refreshToken쌍을 저장한다.
+    public RefreshToken AddRefreshTokenDB(String email, String refreshToken) {
+
+        List<RefreshToken> list = entityManager
+                .createQuery("SELECT r FROM RefreshToken as r WHERE r.email='" + email + "'",  RefreshToken.class)
+                .getResultList();
+
+        if(list.size() != 0) return null;
+
+        RefreshToken token = new RefreshToken();
+        token.setEmail(email);
+        token.setRefreshToken(refreshToken);
+
+        entityManager.persist(token);
+
+        entityManager.flush();
+        entityManager.close();
+
+        return token;
+    }
+
+    // DB에 email과 refreshToken쌍을 제거한다.
+    public RefreshToken DeleteRefreshTokenDB(String email, String refreshToken) {
+        List<RefreshToken> list = entityManager
+                .createQuery("SELECT r FROM RefreshToken as r WHERE r.email='" + email + "'",  RefreshToken.class)
+                .getResultList();
+        System.out.println(list.size());
+        if(list.size() == 0) return null;
+        RefreshToken rt = entityManager.find(RefreshToken.class, list.get(0).getId());
+
+        // 해당 이메일에 대한 refresh값이 다르면 삭제를 진행하지 않는다.
+        if(!rt.getRefreshToken().equals(refreshToken)) return null;
+
+        entityManager.remove(rt);
+
+        entityManager.flush();
+        entityManager.close();
+
+        return rt;
     }
 }
