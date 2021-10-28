@@ -7,7 +7,8 @@
 또한 감상평을 다른 사용자들과 공유하여 독립·예술영화가 더 많은 사람들에게 다가가고 <br>
 함께 성장하는 기회를 열어주는 서비스입니다. <br>
 <br>
-배포 https://go-fund-indie.vercel.app/
+##📎 배포링크
+https://go-fund-indie.vercel.app/
 
 ## 🛠 Tech Stack
 ![Group 2](https://user-images.githubusercontent.com/45745049/138052835-c7612bf2-530b-4bb0-98ea-69583f4660e6.png)
