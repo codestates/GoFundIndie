@@ -1,0 +1,25 @@
+extend type Query {
+    FindBoardId(id: ID!): board
+}
+
+extend type Mutation {
+    CreateTempBoard(userId: ID!): Int
+}
+
+type board {
+    id: ID
+    userId: ID
+    isApprove: Boolean
+    title: String
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoCountry: String
+    infoCreatedAt: String
+    infoTime: Int
+    infoLimit: Int
+    infoStory: String
+    infoSubtitle: Boolean
+    createdAt: String
+}
