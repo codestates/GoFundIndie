@@ -1,6 +1,7 @@
 @use "../modal.module.scss" as modal;
 
 .screen-wrapper {
+  z-index: 500;
   @include modal.screen_wrapper();
   .signupmodal-wrapper {
     @include modal.modal_wrapper();

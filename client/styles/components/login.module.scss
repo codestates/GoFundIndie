@@ -4,6 +4,7 @@
   @return 100%-$n;
 }
 .screen-wrapper {
+  z-index: 500;
   @include modal.screen_wrapper();
   .loginmodal-wrapper {
     @include modal.modal_wrapper();
