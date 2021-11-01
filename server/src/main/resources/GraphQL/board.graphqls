@@ -1,9 +1,14 @@
 extend type Query {
-    FindBoardId(id: ID!): board
+    FindBoardId(id: ID!): String
 }
 
 extend type Mutation {
-    CreateTempBoard(userId: ID!): Int
+    CreateTempBoard(userId: ID!): tempBoard
+}
+
+type tempBoard {
+    id: Int
+    code: Int
 }
 
 type board {

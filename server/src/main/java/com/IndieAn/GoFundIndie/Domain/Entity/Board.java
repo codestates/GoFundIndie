@@ -12,7 +12,7 @@ public class Board {
     private long id;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User userId;
 
     @Column(name = "is_approve", columnDefinition = "boolean default false")
@@ -51,7 +51,7 @@ public class Board {
     @Column(name = "info_story", length = 1000)
     private String infoStory;
 
-    @Column(name = "info_subtitle")
+    @Column(name = "info_subtitle", columnDefinition = "boolean default false")
     private boolean infoSubtitle;
 
     @Column(name = "created_at", columnDefinition = "datetime default now()")
