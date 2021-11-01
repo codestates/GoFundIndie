@@ -1,9 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import styles from "../styles/components/login.module.scss";
 import cookies from "js-cookie";
-import Image from "next/image";
-import google from "../images/google.png";
-import kakao from "../images/kakao.png";
 import Setaxios from "../fetching/Setaxios";
 
 export default function Login({
@@ -29,18 +26,18 @@ export default function Login({
       email: userData.email,
       password: userData.password,
     };
-    try {
-      Setaxios.postAxios(endpoint, data).then((res) => {
+    Setaxios.postAxios(endpoint, data)
+      .then((res) => {
         //localStorage.setItem("accessToken", accessToken);
         cookies.get("accessToken");
         cookies.set("test", "test");
         alert("로그인에 성공하였습니다");
         handleLoginModal();
         handleLoginStatus();
+      })
+      .catch((err) => {
+        alert(err);
       });
-    } catch (err) {
-      console.log(err);
-    }
   }
 
   return (
@@ -87,8 +84,8 @@ export default function Login({
               </div>
               <div>또는 소셜 로그인</div>
               <div className={styles["oauth-icon"]}>
-                <Image src={kakao} width="180" height="55" />
-                <Image src={google} width="180" height="55" />
+                <img src="/kakao.png" width="180" height="55" />
+                <img src="/google.png" width="180" height="55" />
               </div>
             </div>
           </div>

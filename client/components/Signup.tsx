@@ -1,7 +1,4 @@
 import styles from "../styles/components/signup.module.scss";
-import Image from "next/image";
-import google from "../images/google.png";
-import kakao from "../images/kakao.png";
 import { ChangeEvent, useState } from "react";
 import Setaxios from "../fetching/Setaxios";
 import Router from "next/router";
@@ -16,6 +13,7 @@ export default function Signup({
     password: "",
     nickname: "",
     profilepic: "",
+    ad_agree: "true",
   });
 
   const handleInputValue =
@@ -24,14 +22,14 @@ export default function Signup({
     };
 
   function SignupSubmit() {
-    try {
-      Setaxios.postAxios("signup", userData).then(() => {
+    Setaxios.postAxios("signup", userData)
+      .then(() => {
         alert("성공적으로 가입됐습니다");
         Router.push("/");
+      })
+      .catch((err) => {
+        alert(err);
       });
-    } catch (err) {
-      console.log(err);
-    }
   }
   return (
     <div>
@@ -55,8 +53,8 @@ export default function Signup({
                 </div>
               </div>
               <div className={styles["oauth-icon"]}>
-                <Image src={kakao} width="180" height="55" />
-                <Image src={google} width="180" height="55" />
+                <img src="/kakao.png" width="180" height="55" />
+                <img src="/google.png" width="180" height="55" />
               </div>
               <div>또는 이메일로 가입하기</div>
               <input

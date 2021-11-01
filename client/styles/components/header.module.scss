@@ -1,10 +1,14 @@
 $backcolor: #1b1b1b;
-
 .header__div__wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 25;
+  width: 100%;
   background-color: $backcolor;
-  border-bottom: 1px solid black;
   display: flex;
   align-items: center;
+
   .header__div {
     display: flex;
     align-items: center;
@@ -64,4 +68,7 @@ $backcolor: #1b1b1b;
 
 .header__div__signup {
   opacity: 0.7;
+}
+.transparent {
+  background-color: transparent;
 }
