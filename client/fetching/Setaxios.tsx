@@ -20,7 +20,7 @@ class Setaxios {
   }
 
   async getAxios(endpoint: string) {
-    await axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
+    await axios(`${process.env.NEXT_PUBLIC_SERVER_URL}` + endpoint, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
