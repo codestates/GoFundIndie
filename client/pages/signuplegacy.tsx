@@ -1,4 +1,4 @@
-import styles from "../styles/signup.module.scss";
+import styles from "../styles/components/signup.module.scss";
 import axios from "axios";
 import { useState } from "react";
 import Router from "next/router";
