@@ -12,13 +12,13 @@ public class Board {
     private long id;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User userId;
 
     @Column(name = "is_approve", columnDefinition = "boolean default false")
     private boolean isApprove;
 
-    @Column(nullable = false)
+    @Column
     private String title;
 
     @Column
@@ -33,26 +33,30 @@ public class Board {
     @Column(name = "view_link")
     private String viewLink;
 
-    @Column(name = "info_country", nullable = false)
+    @Column(name = "info_country")
     private String infoCountry;
 
-    @Column(name = "info_created_at", nullable = false)
+    @Column(name = "info_created_at")
     @Temporal(TemporalType.DATE)
     private Date infoCreatedAt;
 
     //    running time
-    @Column(name = "info_time", nullable = false)
+    @Column(name = "info_time")
     private int infoTime;
 
     //    연령제한
-    @Column(name = "info_limit", nullable = false, columnDefinition = "TINYINT")
+    @Column(name = "info_limit", columnDefinition = "TINYINT")
     private int infoLimit;
 
-    @Column(name = "info_story", nullable = false, length = 1000)
+    @Column(name = "info_story", length = 1000)
     private String infoStory;
 
-    @Column(name = "info_subtitle", nullable = false)
+    @Column(name = "info_subtitle", columnDefinition = "boolean default false")
     private boolean infoSubtitle;
+
+    @Column(name = "created_at", columnDefinition = "datetime default now()")
+    @Temporal(TemporalType.DATE)
+    private Date createdAt;
 
     @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BoardLike> boardLikes = new ArrayList<>();
@@ -232,5 +236,13 @@ public class Board {
 
     public void setUserId(User userId) {
         this.userId = userId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

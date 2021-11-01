@@ -15,7 +15,8 @@ import javax.persistence.EntityManager;
 @RequiredArgsConstructor
 public class UserMutation implements GraphQLMutationResolver {
 
-    private final EntityManager em;
+    // 이것도 UserRepository 에서 해야 하는건데 예제라 그냥 여기에 썼습니다
+     private final EntityManager em;
 
     // 신규 유저 생성
     public int CreateUser(UserGraphQLDTO dto) {
