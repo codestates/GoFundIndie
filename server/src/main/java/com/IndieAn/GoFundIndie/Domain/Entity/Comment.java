@@ -28,7 +28,7 @@ public class Comment {
     @Column(length = 2000)
     private String body;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime default now()")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 

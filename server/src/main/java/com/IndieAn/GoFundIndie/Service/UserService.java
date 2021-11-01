@@ -71,6 +71,11 @@ public class UserService {
         return null;
     }
 
+    // id를 통해서 유저를 찾는다
+    public User FindUserById(long id) {
+        return userRepository.FindUserByIdDB(id);
+    }
+
     // 토큰에 존재하는 email을 통해 DB를 탐색한다.
     public User FindUserUseEmail(String email) {
         return userRepository.FindUserByEmail(email);

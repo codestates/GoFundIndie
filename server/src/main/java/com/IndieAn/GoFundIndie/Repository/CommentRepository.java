@@ -44,6 +44,7 @@ public class CommentRepository {
         if(commentInputDTO.getDonation() > 0) comment.setDonation(commentInputDTO.getDonation());
         comment.setBody(commentInputDTO.getCommentBody());
         comment.setCreatedAt(new Date());
+        comment.setSpoiler(commentInputDTO.isSpoiler());
 
         entityManager.persist(comment);
 
