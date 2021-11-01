@@ -3,7 +3,6 @@ package com.IndieAn.GoFundIndie.Resolvers.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 @AllArgsConstructor
@@ -34,8 +33,8 @@ public class BoardGraphQLDTO {
                 .title(board.getTitle())
                 .producer(board.getProducer())
                 .distributor(board.getDistributor())
-                .posterImg(board.getPosterImg())
-                .viewLink(board.getViewLink())
+                .posterImg("board.getPosterImg()")
+                .viewLink("board.getViewLink()")
                 .infoCountry(board.getInfoCountry())
                 .infoCreatedAt(board.getInfoCreatedAt().toString())
                 .infoTime(board.getInfoTime())

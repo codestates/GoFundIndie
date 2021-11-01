@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Resolvers.Board;
 
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardResolver implements GraphQLQueryResolver {
     private BoardRepository boardRepository;
 
-    public BoardGraphQLDTO FindBoardId(Long id) {
-        return BoardGraphQLDTO.from(boardRepository.findBoardId(id));
-    }
+//    public String FindBoardId(Long id) {
+//        System.out.println(id);
+//        System.out.println(id);
+//        System.out.println(id);
+//        System.out.println(id);
+//        System.out.println(id.getClass().getName());
+//        Board board = boardRepository.findBoardId(1L);
+////        if(board != null){
+//            System.out.println("돼냐?");
+//            System.out.println("돼냐?");
+//            System.out.println("돼냐?");
+//            System.out.println("돼냐?");
+//            System.out.println("돼냐?");
+////        }
+//        return "아니 왜안돼";
+//    }
 }
