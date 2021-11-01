@@ -6,8 +6,18 @@ schema {
 type Query {
     FindUserId(id: ID!): user
     FindAllUser: [user]
+
+    FindBoardId(id: ID!): board
+
+    FindGenreId(id: ID!): genre
+    FindAllGenre: [genre]
 }
 
 type Mutation {
     CreateUser(user: userInput!): Int
+
+    CreateTempBoard(userId: ID!): tempBoard
+
+    CreateGenre(genre: genreInput!): Int
+    DeleteGenreId(id: ID!): Int
 }
