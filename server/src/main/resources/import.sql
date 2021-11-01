@@ -85,11 +85,6 @@ INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("셀마 헤이
 INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("안젤리나 졸리", 3, null, 4);
 INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("브라이언 타이리 헨리", 3, "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Brian_Tyree_Henry_by_Gage_Skidmore.jpg/500px-Brian_Tyree_Henry_by_Gage_Skidmore.jpg", 4);
 
---Chat
-INSERT INTO `chat` (user_id_1, user_id_2) VALUES (1,2);
-INSERT INTO `chat` (user_id_1, user_id_2) VALUES (3,4);
-INSERT INTO `chat` (user_id_1, user_id_2) VALUES (5,6);
-
 --Comment
 insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 2, "할아버지가 범인임 할아버지가 범인임", true);
 insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 3, "할아버지가 범인임 할아버지가 범인임", true);
@@ -129,9 +124,3 @@ insert into `comment_report` (user_id, comment_id, body) values (5, 5, "test3");
 --Still
 insert into `still` (image, board_id) values ("https://newsimg.hankookilbo.com/cms/articlerelease/2021/05/18/e1eb38d8-6e13-4297-abef-dee308831b81.jpg", 4);
 insert into `still` (image, board_id) values ("https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/201608/04/htm_2016080484837486184.jpg",4);
-
---Talk
-insert into `talk` (sender_id, chat_id, body) values(1,1,"hi");
-insert into `talk` (sender_id, chat_id, body) values(2,1,"hello");
-insert into `talk` (sender_id, chat_id, body) values(1,1,"world");
-insert into `talk` (sender_id, chat_id, body) values(2,1,"반갑읍니다");
