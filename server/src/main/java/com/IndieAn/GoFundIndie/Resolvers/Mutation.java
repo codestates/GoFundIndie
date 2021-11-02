@@ -8,13 +8,17 @@ import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import com.IndieAn.GoFundIndie.Resolvers.Board.TempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.User.UserGraphQLDTO;
+import graphql.kickstart.execution.context.GraphQLContext;
+import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Service
@@ -22,14 +26,18 @@ import javax.persistence.EntityManager;
 @RequiredArgsConstructor
 public class Mutation implements GraphQLMutationResolver {
 
-    // 이것도 UserRepository 에서 해야 하는건데 예제라 그냥 여기에 썼습니다
+     // Test
      private final EntityManager em;
 
      private final GenreRepository genreRepository;
      private final UserRepository userRepository;
      private final BoardRepository boardRepository;
 
-    // 신규 유저 생성
+     private String TOKEN;
+
+    //
+    //TODO ---- USER ----
+    //
     public int CreateUser(UserGraphQLDTO dto) {
         User user = User.from(dto);
 
@@ -45,8 +53,9 @@ public class Mutation implements GraphQLMutationResolver {
         }
     }
 
-    // 유저 정보 변경
-
+    //
+    //TODO ---- GENRE ----
+    //
     public int CreateGenre(GenreGraphQLDTO dto) {
         Genre genre = GenreGraphQLDTO.to(dto);
 
@@ -63,17 +72,22 @@ public class Mutation implements GraphQLMutationResolver {
         else return 4000;
     }
 
-    public TempBoardDTO CreateTempBoard(Long id) {
-        System.out.println("-----------start----------");
-        User user = userRepository.FindUserByIdDB(id);
-        long boardId = boardRepository.RegisterTempBoard(user);
-        System.out.println("-----------create suc----------");
-        return TempBoardDTO.builder().build();
-//        try {
-//
-//        } catch (NullPointerException e) {
-//            return TempBoardDTO.builder()
-//                    .code(4000).build();
-//        }
+    //
+    //TODO ---- BOARD ----
+    //
+    public TempBoardDTO CreateTempBoard(Long id, DataFetchingEnvironment env) {
+        try {
+            GraphQLServletContext context = env.getContext();
+            HttpServletRequest request = context.getHttpServletRequest();
+            TOKEN = request.getHeader("accesstoken");
+//            log.info(d);
+            User user = userRepository.FindUserByIdDB(id);
+            long boardId = boardRepository.RegisterTempBoard(user);
+            return TempBoardDTO.builder()
+                    .id(boardId).code(2000).build();
+        } catch (NullPointerException e) {
+            return TempBoardDTO.builder()
+                    .code(4000).build();
+        }
     }
 }

@@ -31,9 +31,11 @@ public class BoardRepository {
         entityManager.close();
     }
 
+    // Create Temp Board
     public long RegisterTempBoard(User user) {
         Board board = new Board();
         board.setUserId(user);
+        board.setInfoCountry("TEMP");
         entityManager.persist(board);
         entityManager.flush();
         entityManager.close();

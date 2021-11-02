@@ -12,7 +12,7 @@ public class Board {
     private long id;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User userId;
 
     @Column(name = "is_approve", columnDefinition = "boolean default false")
