@@ -54,18 +54,19 @@ export default function Header() {
             <ul className={styles.header__ul}>
               <li className={styles.header__ul__logo}>
                 <Link href="/">
-                  <img src="/gofundindie_icon.png" width="220" height="40" />
+                  <img
+                    className={styles.logo}
+                    src="/gofundindie_icon.png"
+                    width="220"
+                    height="40"
+                  />
                 </Link>
               </li>
               <li>
-                <Link href="/">
-                  <div title="홈">홈</div>
-                </Link>
+                <Link href="/">홈</Link>
               </li>
               <li>
-                <Link href="/board">
-                  <div title="영화">영화</div>
-                </Link>
+                <Link href="/board">영화</Link>
               </li>
               <li>
                 <div className={styles["header-searchbar"]}>
@@ -77,18 +78,18 @@ export default function Header() {
               </li>
               <li>
                 {userLoginStatus ? null : (
-                  <div onClick={() => setSignupModalOpen(!loginModalOpen)}>
+                  <button onClick={() => setSignupModalOpen(!loginModalOpen)}>
                     회원가입
-                  </div>
+                  </button>
                 )}
               </li>
               <li>
                 {userLoginStatus ? (
                   <button onClick={Signout}>로그아웃</button>
                 ) : (
-                  <div onClick={() => setLoginModalOpen(!loginModalOpen)}>
+                  <button onClick={() => setLoginModalOpen(!loginModalOpen)}>
                     로그인
-                  </div>
+                  </button>
                 )}
               </li>
             </ul>

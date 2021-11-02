@@ -1,5 +1,10 @@
 $backcolor: #1b1b1b;
 .header__div__wrapper {
+  button {
+    all: unset;
+    color: #bbbbbb;
+    cursor: pointer;
+  }
   position: fixed;
   left: 0;
   top: 0;
@@ -28,7 +33,7 @@ $backcolor: #1b1b1b;
     .header__ul__logo {
       margin-top: 5px;
     }
-    a {
+    .logo {
       cursor: pointer;
     }
   }
