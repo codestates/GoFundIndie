@@ -1,7 +1,7 @@
 package com.IndieAn.GoFundIndie.Domain.DTO;
 
 import lombok.Data;
-
+//
 @Data
 public class CommentOutputDTO {
     private Long id;

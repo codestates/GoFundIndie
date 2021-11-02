@@ -4,30 +4,26 @@ import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
-import com.IndieAn.GoFundIndie.Domain.Entity.CommentRating;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.JPAInterface.CommentJPAInterface;
 import com.IndieAn.GoFundIndie.Service.CommentService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
-    private final HashMap<String, Object> body = new HashMap<>();
-    @Autowired
-    CommentJPAInterface commentJPAInterface;
+    private HashMap<String, Object> body = new HashMap<>();
 
     @Autowired
     public CommentController(CommentService commentService, UserService userService) {
@@ -90,36 +86,15 @@ public class CommentController {
     }
 
     @GetMapping(value = "/comment/{boardId}")
-    public ResponseEntity<?> GetComments(@PathVariable Long boardId, @PageableDefault(size = 10) Pageable pageable) {
-        body.clear();
-        Board board = commentService.FindBoard(boardId);
-        Page<Comment> comments = commentJPAInterface.findByBoardId(board, pageable);
-        Page<CommentOutputDTO> commentList = comments.map(
-                comment -> {
-                    int like = 0;
-                    int dislike = 0;
-
-                    for(CommentRating rating : comment.getCommentRatings()) {
-                        if(rating.isLike()) like++;
-                        else if(rating.isDislike()) dislike++;
-                    }
-
-                    return new CommentOutputDTO(
-                            comment.getId(),
-                            comment.getRating(),
-                            comment.getUserId().getId(),
-                            comment.getUserId().getNickname(),
-                            comment.getUserId().getProfilePicture(),
-                            comment.getDonation(),
-                            comment.getBody(),
-                            comment.isSpoiler(),
-                            like,
-                            dislike
-                    );
-                }
-        );
-        body.put("data", commentList);
-
-        return ResponseEntity.ok().body(body);
+    public ResponseEntity<?> GetComments(@PathVariable Long boardId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
+        // 영화 보드에 작성된 댓글들을 불러오는 메소드
+        // 해당 board가 존재하지 않으면 404 응답을 한다.
+        try {
+            body.clear();
+            body = commentService.GetCommentPage(boardId, pageable);
+            return ResponseEntity.status(body.get("data") == null ? 404 : 200).body(body);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
     }
 }

@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-#extend type Query {
-#     FindBoardId(id: ID!): board
-#}
-
-extend type Mutation {
-    CreateTempBoard(userId: ID!): tempBoard
-}
-
-=======
->>>>>>> bd43725d4b4cca0019b4904a8296c45afbd97167
 type tempBoard {
     id: Int
     code: Int
