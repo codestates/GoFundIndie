@@ -53,4 +53,8 @@ public class CommentRepository {
 
         return comment;
     }
+
+    public Board FindBoardDB(long boardId) {
+        return entityManager.createQuery("SELECT b FROM Board as b where b.id = '"+ boardId +"'", Board.class).getResultList().get(0);
+    }
 }
