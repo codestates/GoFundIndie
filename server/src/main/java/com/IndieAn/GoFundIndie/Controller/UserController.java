@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
     private final UserService userService;
     private final HashMap<String, Object> body = new HashMap<>();
