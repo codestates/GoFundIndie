@@ -1,23 +1,29 @@
 package com.IndieAn.GoFundIndie.Controller;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Repository.JPAInterface.CommentJPAInterface;
 import com.IndieAn.GoFundIndie.Service.CommentService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
-    private final HashMap<String, Object> body = new HashMap<>();
+    private HashMap<String, Object> body = new HashMap<>();
 
     @Autowired
     public CommentController(CommentService commentService, UserService userService) {
@@ -79,13 +85,14 @@ public class CommentController {
         }
     }
 
-    @GetMapping(value = "/comment")
-    public ResponseEntity<?> GetCommentList(@RequestParam(name = "board_id") long boardId) {
+    @GetMapping(value = "/comment/{boardId}")
+    public ResponseEntity<?> GetComments(@PathVariable Long boardId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
+        // 영화 보드에 작성된 댓글들을 불러오는 메소드
+        // 해당 board가 존재하지 않으면 404 응답을 한다.
         try {
-            // *** boardId로 해당 보드가 DB에 존재하는지 확인하는 메소드 필요. Board가 완료되면 작성할것 ***
-            List<Comment> commentList = commentService.getCommentsData(boardId);
-            body.put("comments", commentList);
-            return ResponseEntity.ok().body(body);
+            body.clear();
+            body = commentService.GetCommentPage(boardId, pageable);
+            return ResponseEntity.status(body.get("data") == null ? 404 : 200).body(body);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
