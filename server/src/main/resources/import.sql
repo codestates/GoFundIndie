@@ -18,11 +18,11 @@ INSERT INTO `user` (email,password,nickname,ad_agree) VALUES ("mansoor@gofundind
 INSERT INTO `user` (email,password,nickname,ad_agree) VALUES ("mansoor@gofundindie.com", "1234", "광고 거부걸", false);
 
 --Board
-INSERT INTO `board` (id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (1,false,"테스트용 보드 입니다","제작사","배급사",null,null,0,now(),120,1,"테스트를 하기위한 더미데이터",true);
-INSERT INTO `board` (id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (2,false,"나는 전설이였다","codestates","codestates","https://mblogthumb-phinf.pstatic.net/MjAxOTEyMTVfMjc4/MDAxNTc2NDE0MTAwNjg1.cp_9N4gi8GOe7idQjx6pC1LUhK9EqpIs9uArKqZq6iUg.1vF6bTjG3vJW4mb_WagZ5gh0gfwjoo2bznBTEs-tyXkg.JPEG.nilsine11202/github.jpg?type=w800","https://www.youtube.com/",1,now(),117,1,"<p>전설이였지만 지금은 전설이 아닌 그녀석</p>",true);
-INSERT INTO `board` (id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (3,false,"CORS 가 밉다","Soul of Asia",null,"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Empty_Star.svg/1200px-Empty_Star.svg.png","https://www.naver.com/",0,now(),80,1,"<p>CORS가 밉다</p><p></p><p>CORS가 너무 밉다</p><p>CORS가 CORS가 CORS가</p>",false);
-INSERT INTO `board` (id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (4,false,"이터널스","마블","디즈니","https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Star%2A.svg/600px-Star%2A.svg.png",null,0,now(),120,1,"<p>마블 스튜디오의 <이터널스>는 수 천년에 걸쳐 그 모습을 드러내지 않고 살아온 불멸의 히어로들이</p>",true);
-INSERT INTO `board` (id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (5,false,"TEST BOARD","producer","distributor",null,null,0,now(),120,1,"<p>DUMMY DATA</p>",true);
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (1, 3, false,"테스트용 보드 입니다","제작사","배급사",null,null,"한국",now(),120,1,"테스트를 하기위한 더미데이터",true);
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (2, 4, false,"나는 전설이였다","codestates","codestates","https://mblogthumb-phinf.pstatic.net/MjAxOTEyMTVfMjc4/MDAxNTc2NDE0MTAwNjg1.cp_9N4gi8GOe7idQjx6pC1LUhK9EqpIs9uArKqZq6iUg.1vF6bTjG3vJW4mb_WagZ5gh0gfwjoo2bznBTEs-tyXkg.JPEG.nilsine11202/github.jpg?type=w800","https://www.youtube.com/","미국",now(),117,1,"<p>전설이였지만 지금은 전설이 아닌 그녀석</p>",true);
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (3, 5, false,"CORS 가 밉다","Soul of Asia",null,"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Empty_Star.svg/1200px-Empty_Star.svg.png","https://www.naver.com/","한국",now(),80,1,"<p>CORS가 밉다</p><p></p><p>CORS가 너무 밉다</p><p>CORS가 CORS가 CORS가</p>",false);
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (4, 6, false,"이터널스","마블","디즈니","https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Star%2A.svg/600px-Star%2A.svg.png",null,"미국",now(),120,1,"<p>마블 스튜디오의 <이터널스>는 수 천년에 걸쳐 그 모습을 드러내지 않고 살아온 불멸의 히어로들이</p>",true);
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (5, 7, false,"TEST BOARD","producer","distributor",null,null,"태국",now(),120,1,"<p>DUMMY DATA</p>",true);
 
 --Genre
 INSERT INTO `genre` (name) VALUES ("드라마");
@@ -85,11 +85,6 @@ INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("셀마 헤이
 INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("안젤리나 졸리", 3, null, 4);
 INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("브라이언 타이리 헨리", 3, "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Brian_Tyree_Henry_by_Gage_Skidmore.jpg/500px-Brian_Tyree_Henry_by_Gage_Skidmore.jpg", 4);
 
---Chat
-INSERT INTO `chat` (user_id_1, user_id_2) VALUES (1,2);
-INSERT INTO `chat` (user_id_1, user_id_2) VALUES (3,4);
-INSERT INTO `chat` (user_id_1, user_id_2) VALUES (5,6);
-
 --Comment
 insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 2, "할아버지가 범인임 할아버지가 범인임", true);
 insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 3, "할아버지가 범인임 할아버지가 범인임", true);
@@ -129,9 +124,3 @@ insert into `comment_report` (user_id, comment_id, body) values (5, 5, "test3");
 --Still
 insert into `still` (image, board_id) values ("https://newsimg.hankookilbo.com/cms/articlerelease/2021/05/18/e1eb38d8-6e13-4297-abef-dee308831b81.jpg", 4);
 insert into `still` (image, board_id) values ("https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/201608/04/htm_2016080484837486184.jpg",4);
-
---Talk
-insert into `talk` (sender_id, chat_id, body) values(1,1,"hi");
-insert into `talk` (sender_id, chat_id, body) values(2,1,"hello");
-insert into `talk` (sender_id, chat_id, body) values(1,1,"world");
-insert into `talk` (sender_id, chat_id, body) values(2,1,"반갑읍니다");

@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import Image from "next/dist/client/image";
 import styles from "../../../styles/view_boardid.module.scss";
-
+import Setaxios from "../../../fetching/Setaxios";
 export default function BoarDetails() {
   const filmData = {
     title: "Alternative Math",
@@ -21,52 +20,62 @@ export default function BoarDetails() {
   const router = useRouter();
   const { boardid } = router.query;
   return (
-    <div>
+    <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
-        <img
-          className={styles.header__img}
-          src={filmData.poster_img}
-          width="500"
-          height="500"
-        />
+        <div className={styles.header__img}>
+          <img src="https://static.news.zumst.com/images/78/2020/08/20/205fe8f1090f4467a908266d3c0af460.jpg" />
+        </div>
       </div>
       <div className={styles.poster__img__div}>
-        <img className={styles.poster__img} src={filmData.poster_img} />
-      </div>
-      <div className={styles.filminfo__wrapper}>
-        <div className={styles.filminfo__title}>{filmData.title}</div>
-        <div className={styles.filminfo__someinfo}>
-          <span className={styles.filminfo__someinfo__text}>
-            {filmData.info_created_at}
-          </span>
-          <span className={styles.filminfo__someinfo__text}>
-            {filmData.info_genre}
-          </span>
-          <span className={styles.filminfo__someinfo__text}>
-            {filmData.info_country}
-          </span>
+        <div className={styles["poster__img-positional"]}>
+          <div className={styles["poster__img-wrapper"]}>
+            <img className={styles.poster__img} src={filmData.poster_img} />
+          </div>
         </div>
       </div>
-      <div className={styles.filminfo__details}>
-        <div>기본 정보</div>
-        <div>영화</div>
-        <div>
-          <a href={filmData.view_link}>링크</a>
+      <div className={styles.content__wrapper}>
+        <div className={styles.content}>
+          <div className={styles.filminfo__wrapper}>
+            <div className={styles.filminfo__title}>{filmData.title}</div>
+            <div className={styles.filminfo__info}>
+              <span className={styles.filminfo__info__text}>
+                {filmData.info_created_at}
+              </span>
+              <span className={styles.dot}>・</span>
+              <span className={styles.filminfo__info__text}>
+                {filmData.info_genre}
+              </span>
+              <span className={styles.dot}>・</span>
+              <span className={styles.filminfo__info__text}>
+                {filmData.info_country}
+              </span>
+            </div>
+          </div>
+          <div className={styles.filminfo__details}>
+            <div>지금 보고싶어요</div>
+            <div>
+              <a href={filmData.view_link}>외부 링크로 연결하기...</a>
+            </div>
+          </div>
+          <div></div>
+          <div>{filmData.info_story}</div>
+          <div>
+            <h1>영화 상세정보 ID : {boardid}</h1>
+          </div>
         </div>
-        {/* <iframe
-          width="80%"
-          height="700px"
-          src={"https://www.youtube.com/embed/Zh3Yz3PiXZw"}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe> */}
-      </div>
-      <div>{filmData.info_story}</div>
-      <div>
-        <h1>영화 상세정보 ID : {boardid}</h1>
       </div>
     </div>
   );
 }
+
+// export async function getServerSideProps(context) {
+//   const id = context.params.id;
+//   endpoint = "/board/view/board?=" + id;
+//   const res = Setaxios.getAxios(endpoint);
+//   const data = res.data
+//   return {
+//     props: {
+//       filmData: data,
+//     }
+//   }
+// }

@@ -71,6 +71,11 @@ public class UserService {
         return null;
     }
 
+    // id를 통해서 유저를 찾는다
+    public User FindUserById(long id) {
+        return userRepository.FindUserByIdDB(id);
+    }
+
     // 토큰에 존재하는 email을 통해 DB를 탐색한다.
     public User FindUserUseEmail(String email) {
         return userRepository.FindUserByEmail(email);
@@ -105,21 +110,21 @@ public class UserService {
     }
 
     // 토큰 유효성 검증
-    public Map<String, String> CheckToken(String token) {
-        HashMap<String, String> msg = new HashMap<>();
+    public Map<String, Object> CheckToken(String token) {
+        HashMap<String, Object> msg = new HashMap<>();
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(SIGN_KEY)
                     .parseClaimsJws(token)
                     .getBody();
 
-            msg.put("email", (String) claims.get("email"));
+            msg.put("email", claims.get("email"));
             return msg;
         } catch (ExpiredJwtException e) {
-            msg.put("code", "4101");
+            msg.put("code", 4101);
             return msg;
         } catch (JwtException e) {
-            msg.put("code", "4100");
+            msg.put("code", 4100);
             return msg;
         }
     }

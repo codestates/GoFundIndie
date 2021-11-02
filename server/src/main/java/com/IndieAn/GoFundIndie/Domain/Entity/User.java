@@ -41,9 +41,6 @@ public class User {
     private boolean adAgree;
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<UserCard> userCards = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CommentReport> commentReports = new ArrayList<>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -58,18 +55,10 @@ public class User {
     @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "userId")
     private List<Board> boards = new ArrayList<>();
 
     public User() {}
-
-    public List<UserCard> getUserCards() {
-        return userCards;
-    }
-
-    public void setUserCards(List<UserCard> userCards) {
-        this.userCards = userCards;
-    }
 
     public List<CommentReport> getCommentReports() {
         return commentReports;

@@ -47,6 +47,11 @@ public class UserRepository {
         return user;
     }
 
+    // id를 통해서 유저가 존재하는지 확인한다.
+    public User FindUserByIdDB(long userId) {
+        return entityManager.find(User.class, userId);
+    }
+
     // email을 기준으로 User 데이터를 불러온다.
     public User FindUserByEmail(String email) {
         List<User> userList = entityManager
@@ -65,6 +70,9 @@ public class UserRepository {
         if(userModifyDTO.getPassword() != null) modifyUser.setPassword(userModifyDTO.getPassword());
         if(userModifyDTO.getProfilePic() != null) modifyUser.setProfilePicture(userModifyDTO.getProfilePic());
         modifyUser.setAdAgree(userModifyDTO.isAdAgree());
+
+        entityManager.flush();
+        entityManager.close();
 
         return modifyUser;
     }

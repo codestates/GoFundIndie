@@ -1,0 +1,22 @@
+type tempBoard {
+    id: Int
+    code: Int
+}
+
+type board {
+    id: ID
+    userId: ID
+    isApprove: Boolean
+    title: String
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoCountry: String
+    infoCreatedAt: String
+    infoTime: Int
+    infoLimit: Int
+    infoStory: String
+    infoSubtitle: Boolean
+    createdAt: String
+}

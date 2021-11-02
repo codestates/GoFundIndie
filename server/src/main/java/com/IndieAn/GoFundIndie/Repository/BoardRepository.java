@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
+import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,16 @@ public class BoardRepository {
         entityManager.persist(board);
         entityManager.flush();
         entityManager.close();
+    }
+
+    // Create Temp Board
+    public long RegisterTempBoard(User user) {
+        Board board = new Board();
+        board.setUserId(user);
+        board.setInfoCountry("TEMP");
+        entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
+        return board.getId();
     }
 }

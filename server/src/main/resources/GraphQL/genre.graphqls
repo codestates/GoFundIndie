@@ -1,0 +1,8 @@
+type genre {
+    id: ID
+    name: String
+}
+
+input genreInput {
+    name: String!
+}
