@@ -1,11 +1,15 @@
 package com.IndieAn.GoFundIndie.Config;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
     @Value("#{info['gofund.url1']}")
     private String url1;
@@ -17,11 +21,12 @@ public class WebConfig implements WebMvcConfigurer {
     private String url3;
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@NotNull CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(url1, url2, url3)
                 .allowedHeaders("*")
-                .allowedMethods("GET", "POST", "DELETE", "PATCH", "PUT")
-                .allowCredentials(true);
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true)
+                .maxAge(3600L);
     }
 }
