@@ -1,6 +1,6 @@
-extend type Query {
-    FindBoardId(id: ID!): board
-}
+#extend type Query {
+#     FindBoardId(id: ID!): board
+#}
 
 extend type Mutation {
     CreateTempBoard(userId: ID!): tempBoard

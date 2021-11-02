@@ -1,10 +1,11 @@
 package com.IndieAn.GoFundIndie.Service;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
-import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class CommentService {
         return commentRepository.AddComment(commentInputDTO);
     }
 
-    public List<Comment> getCommentsData(long boardId) {
-        return commentRepository.FindCommentListByBoardId(boardId);
+    public Board FindBoard(long boardId) {
+        return commentRepository.FindBoardDB(boardId);
     }
 }

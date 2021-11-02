@@ -1,17 +1,25 @@
 package com.IndieAn.GoFundIndie.Controller;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
+import com.IndieAn.GoFundIndie.Domain.Entity.CommentRating;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Repository.JPAInterface.CommentJPAInterface;
 import com.IndieAn.GoFundIndie.Service.CommentService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
@@ -19,6 +27,8 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
     private final HashMap<String, Object> body = new HashMap<>();
+    @Autowired
+    CommentJPAInterface commentJPAInterface;
 
     @Autowired
     public CommentController(CommentService commentService, UserService userService) {
@@ -80,15 +90,37 @@ public class CommentController {
         }
     }
 
-    @GetMapping(value = "/comment")
-    public ResponseEntity<?> GetCommentList(@RequestParam(name = "board_id") long boardId) {
-        try {
-            // *** boardId로 해당 보드가 DB에 존재하는지 확인하는 메소드 필요. Board가 완료되면 작성할것 ***
-            List<Comment> commentList = commentService.getCommentsData(boardId);
-            body.put("comments", commentList);
-            return ResponseEntity.ok().body(body);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("err");
-        }
+    @GetMapping(value = "/comment/{boardId}")
+    public ResponseEntity<?> GetComments(@PathVariable Long boardId, @PageableDefault(size = 10) Pageable pageable) {
+        body.clear();
+        Board board = commentService.FindBoard(boardId);
+        Page<Comment> comments = commentJPAInterface.findByBoardId(board, pageable);
+        Page<CommentOutputDTO> commentList = comments.map(
+                comment -> {
+                    int like = 0;
+                    int dislike = 0;
+
+                    for(CommentRating rating : comment.getCommentRatings()) {
+                        if(rating.isLike()) like++;
+                        else if(rating.isDislike()) dislike++;
+                    }
+
+                    return new CommentOutputDTO(
+                            comment.getId(),
+                            comment.getRating(),
+                            comment.getUserId().getId(),
+                            comment.getUserId().getNickname(),
+                            comment.getUserId().getProfilePicture(),
+                            comment.getDonation(),
+                            comment.getBody(),
+                            comment.isSpoiler(),
+                            like,
+                            dislike
+                    );
+                }
+        );
+        body.put("data", commentList);
+
+        return ResponseEntity.ok().body(body);
     }
 }
