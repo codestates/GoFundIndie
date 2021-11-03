@@ -1,17 +1,40 @@
-extend type Query {
-    FindBoardId(id: ID!): board
-}
-
-extend type Mutation {
-    CreateTempBoard(userId: ID!): tempBoard
-}
-
-type tempBoard {
-    id: Int
+type BoardCreate {
     code: Int
+    data: BoardId
 }
 
-type board {
+type BoardId {
+    id: Int
+}
+
+type WrappingBoard {
+    code: Int
+    data: ViewBoard
+}
+
+type WrappingBoards {
+    code: Int
+    data: [Board]
+}
+
+input boardInput {
+    boardId: ID!
+    userId: ID!
+    title: String!
+    infoCountry: String!
+    infoCreatedYear: String!
+    infoCreatedDate: String
+    infoTime: Int!
+    infoStory: String!
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoLimit: Int
+    infoSubtitle: Boolean
+}
+
+type Board {
     id: ID
     userId: ID
     isApprove: Boolean
@@ -21,10 +44,34 @@ type board {
     posterImg: String
     viewLink: String
     infoCountry: String
-    infoCreatedAt: String
+    infoCreatedYear: String
+    infoCreatedDate: String
     infoTime: Int
     infoLimit: Int
     infoStory: String
     infoSubtitle: Boolean
     createdAt: String
+}
+
+type ViewBoard {
+    id: ID
+    userId: ID
+    isApprove: Boolean
+    title: String
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoCountry: String
+    infoCreatedYear: String
+    infoCreatedDate: String
+    infoTime: Int
+    infoLimit: Int
+    infoStory: String
+    infoSubtitle: Boolean
+    createdAt: String
+    genre: [genre]
+    casting: [casting]
+    still: [still]
+    comment: [comment]
 }

@@ -29,3 +29,8 @@
     display: block;
   }
 }
+@media (min-width: 1200px) {
+  .swiper-div {
+    overflow-x: scroll;
+  }
+}

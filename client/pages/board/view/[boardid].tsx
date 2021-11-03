@@ -1,24 +1,22 @@
 import { useRouter } from "next/router";
 import styles from "../../../styles/view_boardid.module.scss";
-import Setaxios from "../../../fetching/Setaxios";
-export default function BoarDetails() {
-  const filmData = {
-    title: "Alternative Math",
-    producer: "",
-    distributor: "",
-    poster_img:
-      "https://m.media-amazon.com/images/M/MV5BZjFhN2FhMTQtNTA2OS00MjUxLWIwN2UtOGY2ZWQ4NWRmOWE4XkEyXkFqcGdeQXVyMjI3MTE4MjU@._V1_.jpg",
-    view_link: "https://www.youtube.com/watch?v=Zh3Yz3PiXZw&ab_channel=Ideaman",
-    info_country: "미국",
-    info_created_at: 2017,
-    info_time: 9,
-    info_limit: 0,
-    info_story: "진실이 집단적으로 왜곡되는 현실을 기발하게 풍자한 단편",
-    info_subtitle: true,
-    info_genre: "코미디",
-  };
+import { GetServerSideProps } from "next";
+import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+export default function BoarDetails({ film }: any) {
+  console.log(film.FindBoardId.data);
+  let filmData;
+  if (film !== null) {
+    filmData = film.FindBoardId.data;
+  }
+  if (film === null) {
+    return <div></div>;
+  }
+
   const router = useRouter();
   const { boardid } = router.query;
+
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
@@ -29,7 +27,7 @@ export default function BoarDetails() {
       <div className={styles.poster__img__div}>
         <div className={styles["poster__img-positional"]}>
           <div className={styles["poster__img-wrapper"]}>
-            <img className={styles.poster__img} src={filmData.poster_img} />
+            <img className={styles.poster__img} src={filmData.posterImg} />
           </div>
         </div>
       </div>
@@ -39,43 +37,91 @@ export default function BoarDetails() {
             <div className={styles.filminfo__title}>{filmData.title}</div>
             <div className={styles.filminfo__info}>
               <span className={styles.filminfo__info__text}>
-                {filmData.info_created_at}
+                {filmData.infoCreatedAt}
               </span>
               <span className={styles.dot}>・</span>
               <span className={styles.filminfo__info__text}>
-                {filmData.info_genre}
+                {filmData.genre}
               </span>
               <span className={styles.dot}>・</span>
               <span className={styles.filminfo__info__text}>
-                {filmData.info_country}
+                {filmData.infoCountry}
               </span>
             </div>
           </div>
-          <div className={styles.filminfo__details}>
+          <div className={styles.filminfoStory}>
             <div>지금 보고싶어요</div>
             <div>
-              <a href={filmData.view_link}>외부 링크로 연결하기...</a>
+              <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
             </div>
           </div>
           <div></div>
-          <div>{filmData.info_story}</div>
+          <div>{filmData.infoStory}</div>
           <div>
             <h1>영화 상세정보 ID : {boardid}</h1>
           </div>
+          <InfoWrapper comments={filmData.comment} />
         </div>
       </div>
     </div>
   );
 }
 
-// export async function getServerSideProps(context) {
-//   const id = context.params.id;
-//   endpoint = "/board/view/board?=" + id;
-//   const res = Setaxios.getAxios(endpoint);
-//   const data = res.data
-//   return {
-//     props: {
-//       filmData: data,
-//     }
-//   }
-// }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  // const res = Setaxios.getAxios("/board/view/board?=" + 1).then((res) => {
+  // const res = Setaxios.getAxios("/board/view/board?=" + 1);
+  // const res = await Setaxios.getAxios("check?type=email&query=q");
+
+  // const res = await fetch("https://localhost:8080/check?type=email&query=q");
+  if (context.params === undefined) return { props: {} };
+  const query = `{
+    FindBoardId(id: ${context.params.boardid}) {
+      data {
+        id
+        userId
+        isApprove
+        title
+        producer
+        distributor
+        posterImg
+        viewLink
+        infoCountry
+        infoCreatedAt
+        infoTime
+        infoLimit
+        infoStory
+        infoSubtitle
+        createdAt
+        genre {
+          name
+        }
+        casting {
+          name
+          position
+          image
+        }
+        still {
+          image
+        }
+        comment {
+          rating
+          userNickname
+        }
+      } 
+    }
+}`;
+  const res = await fetch("https://localhost:8080/graphql", {
+    method: "POST",
+    body: JSON.stringify({ query }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const film = await (await res).json();
+  if (film === null) return { props: {} };
+  return {
+    props: {
+      film: film.data,
+    },
+  };
+};

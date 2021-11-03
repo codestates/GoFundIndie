@@ -12,7 +12,7 @@ public class Board {
     private long id;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User userId;
 
     @Column(name = "is_approve", columnDefinition = "boolean default false")
@@ -36,9 +36,13 @@ public class Board {
     @Column(name = "info_country")
     private String infoCountry;
 
-    @Column(name = "info_created_at")
-    @Temporal(TemporalType.DATE)
-    private Date infoCreatedAt;
+    //    개봉년도
+    @Column(name = "info_created_year")
+    private String infoCreatedYear;
+
+    //    개봉 월 일
+    @Column(name = "info_created_date")
+    private String infoCreatedDate;
 
     //    running time
     @Column(name = "info_time")
@@ -78,60 +82,20 @@ public class Board {
 
     public Board() {}
 
-    public List<BoardLike> getBoardLikes() {
-        return boardLikes;
-    }
-
-    public void setBoardLikes(List<BoardLike> boardLikes) {
-        this.boardLikes = boardLikes;
-    }
-
-    public List<BoardReport> getBoardReports() {
-        return boardReports;
-    }
-
-    public void setBoardReports(List<BoardReport> boardReports) {
-        this.boardReports = boardReports;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public List<Still> getStills() {
-        return stills;
-    }
-
-    public void setStills(List<Still> stills) {
-        this.stills = stills;
-    }
-
-    public List<BoardGenre> getBoardGenres() {
-        return boardGenres;
-    }
-
-    public void setBoardGenres(List<BoardGenre> boardGenres) {
-        this.boardGenres = boardGenres;
-    }
-
-    public List<Casting> getCastings() {
-        return castings;
-    }
-
-    public void setCastings(List<Casting> castings) {
-        this.castings = castings;
-    }
-
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     public boolean isApprove() {
@@ -190,12 +154,20 @@ public class Board {
         this.infoCountry = infoCountry;
     }
 
-    public Date getInfoCreatedAt() {
-        return infoCreatedAt;
+    public String getInfoCreatedYear() {
+        return infoCreatedYear;
     }
 
-    public void setInfoCreatedAt(Date infoCreatedAt) {
-        this.infoCreatedAt = infoCreatedAt;
+    public void setInfoCreatedYear(String infoCreatedYear) {
+        this.infoCreatedYear = infoCreatedYear;
+    }
+
+    public String getInfoCreatedDate() {
+        return infoCreatedDate;
+    }
+
+    public void setInfoCreatedDate(String infoCreatedDate) {
+        this.infoCreatedDate = infoCreatedDate;
     }
 
     public int getInfoTime() {
@@ -230,19 +202,59 @@ public class Board {
         this.infoSubtitle = infoSubtitle;
     }
 
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<BoardLike> getBoardLikes() {
+        return boardLikes;
+    }
+
+    public void setBoardLikes(List<BoardLike> boardLikes) {
+        this.boardLikes = boardLikes;
+    }
+
+    public List<BoardReport> getBoardReports() {
+        return boardReports;
+    }
+
+    public void setBoardReports(List<BoardReport> boardReports) {
+        this.boardReports = boardReports;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Still> getStills() {
+        return stills;
+    }
+
+    public void setStills(List<Still> stills) {
+        this.stills = stills;
+    }
+
+    public List<BoardGenre> getBoardGenres() {
+        return boardGenres;
+    }
+
+    public void setBoardGenres(List<BoardGenre> boardGenres) {
+        this.boardGenres = boardGenres;
+    }
+
+    public List<Casting> getCastings() {
+        return castings;
+    }
+
+    public void setCastings(List<Casting> castings) {
+        this.castings = castings;
     }
 }

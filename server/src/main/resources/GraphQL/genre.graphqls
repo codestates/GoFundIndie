@@ -1,13 +1,3 @@
-extend type Query {
-    FindGenreId(id: ID!): genre
-    FindAllGenre: [genre]
-}
-
-extend type Mutation {
-    CreateGenre(genre: genreInput!): Int
-    DeleteGenreId(id: ID!): Int
-}
-
 type genre {
     id: ID
     name: String
