@@ -1,12 +1,14 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
-import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.GenreRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
-import com.IndieAn.GoFundIndie.Resolvers.Board.BoardGraphQLDTO;
-import com.IndieAn.GoFundIndie.Resolvers.Genre.GenreGraphQLDTO;
-import com.IndieAn.GoFundIndie.Resolvers.User.UserGraphQLDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.ViewBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.ViewWrappingBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.ViewWrappingBoardsDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,14 +54,32 @@ public class Query implements GraphQLQueryResolver {
 
     public List<GenreGraphQLDTO> FindAllGenre() {
         return genreRepository.FindAll().stream()
-                .map(el -> GenreGraphQLDTO.from(el))
+                .map(GenreGraphQLDTO::from)
                 .collect(Collectors.toList());
     }
 
     //
     //TODO ---- BOARD ----
     //
-    public BoardGraphQLDTO FindBoardId(Long id) {
-        return BoardGraphQLDTO.from(boardRepository.findBoardId(id));
+    public ViewWrappingBoardDTO FindBoardId(Long id) {
+        try {
+            return ViewWrappingBoardDTO.builder()
+                    .code(2000)
+                    .data(ViewBoardDTO.from(boardRepository.findBoardId(id)))
+                    .build();
+        } catch (NullPointerException e) {
+            return ViewWrappingBoardDTO.builder()
+                    .code(4401)
+                    .build();
+        }
+    }
+
+    public ViewWrappingBoardsDTO FindBoards() {
+        return ViewWrappingBoardsDTO.builder()
+                .code(2000)
+                .data(boardRepository.findBoards().stream()
+                        .map(BoardGraphQLDTO::from)
+                        .collect(Collectors.toList()))
+                .build();
     }
 }

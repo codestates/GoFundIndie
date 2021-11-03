@@ -40,7 +40,7 @@ INSERT INTO `genre` (name) VALUES ("다큐멘터리");
 INSERT INTO `genre` (name) VALUES ("SF");
 
 --BoardGenre
-INSERT INTO `board_genre` (board_id, genre_id) VALUES (1,1);
+INSERT INTO `board_genre` (board_id, genre_id) VALUES (1,1), (1,2), (1,3);
 INSERT INTO `board_genre` (board_id, genre_id) VALUES (2,2);
 INSERT INTO `board_genre` (board_id, genre_id) VALUES (3,3);
 INSERT INTO `board_genre` (board_id, genre_id) VALUES (4,4);
@@ -108,6 +108,8 @@ insert into `comment` (rating, user_id, board_id) values (1,6,5);
 insert into `comment` (rating, user_id, board_id) values (1,7,5);
 insert into `comment` (rating, user_id, board_id) values (1,8,5);
 
+insert into `comment` (rating, user_id, board_id) values (1,1,1), (2,2,1), (3,3,1), (4,4,1);
+
 --CommentRating
 insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 3, 1);
 insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 4, 2);
@@ -124,3 +126,4 @@ insert into `comment_report` (user_id, comment_id, body) values (5, 5, "test3");
 --Still
 insert into `still` (image, board_id) values ("https://newsimg.hankookilbo.com/cms/articlerelease/2021/05/18/e1eb38d8-6e13-4297-abef-dee308831b81.jpg", 4);
 insert into `still` (image, board_id) values ("https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/201608/04/htm_2016080484837486184.jpg",4);
+insert into `still` (image, board_id) values ("test1", 1), ("test2", 1), ("test3", 1);

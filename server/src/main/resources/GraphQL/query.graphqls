@@ -7,7 +7,8 @@ type Query {
     FindUserId(id: ID!): user
     FindAllUser: [user]
 
-    FindBoardId(id: ID!): board
+    FindBoardId(id: ID!): WrappingBoard
+    FindBoards: WrappingBoards
 
     FindGenreId(id: ID!): genre
     FindAllGenre: [genre]
@@ -16,8 +17,9 @@ type Query {
 type Mutation {
     CreateUser(user: userInput!): Int
 
-    CreateTempBoard(userId: ID!): tempBoard
-
     CreateGenre(genre: genreInput!): Int
     DeleteGenreId(id: ID!): Int
+
+    CreateTempBoard: BoardCreate
+    CompleteBoard(board: boardInput!): BoardCreate
 }
