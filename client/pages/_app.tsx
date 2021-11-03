@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import Layout from "../components/Layout";
+import Layout from "../components/layout/Layout";
 import { AppProps } from "next/dist/shared/lib/router/router";
 
 import "swiper/scss";

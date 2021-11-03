@@ -3,10 +3,13 @@
 .screen-wrapper {
   z-index: 500;
   @include modal.screen_wrapper();
+
   .signupmodal-wrapper {
     @include modal.modal_wrapper();
+
     .signupmodal {
       @include modal.modal_block(605px, 700px);
+
       .signupmodal__form {
         width: 400px;
         height: 550px;
@@ -16,6 +19,7 @@
         }
         button {
           @include modal.button();
+
           margin-top: 15px;
         }
       }
