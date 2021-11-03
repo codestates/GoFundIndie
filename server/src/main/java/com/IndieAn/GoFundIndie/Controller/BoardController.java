@@ -12,4 +12,18 @@ import java.util.HashMap;
 public class BoardController {
     private final HashMap<String, Object> body = new HashMap<>();
 
+
+    //    Test
+    private final EntityManager em;
+    private final BoardRepository boardRepository;
+
+    @GetMapping(value = "/")
+    public ResponseEntity<?> TestServer () {
+        Board board = boardRepository.findBoardId(2);
+        body.clear();
+        body.put("server", "connected");
+        body.put("board 1 title", board.getTitle());
+        return ResponseEntity.status(200).body(body);
+    }
+
 }
