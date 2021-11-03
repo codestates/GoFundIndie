@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class HealthController {
+    private final HealthDTO health = HealthDTO.builder().server("running").health("OK").build();
+
     @GetMapping(value = "/")
     public ResponseEntity<?> ServerHealthCheck () {
-        HealthDTO health = HealthDTO.builder().server("running").health("OK").build();
         log.info("Sever health check");
         return ResponseEntity.status(200).body(health);
     }
