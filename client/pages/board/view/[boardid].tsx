@@ -79,7 +79,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         posterImg
         viewLink
         infoCountry
-        infoCreatedAt
+        infoCreatedYear
         infoTime
         infoLimit
         infoStory
