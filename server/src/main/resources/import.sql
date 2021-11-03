@@ -23,7 +23,7 @@ INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, post
 INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (3, 5, false,"CORS 가 밉다","Soul of Asia",null,"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Empty_Star.svg/1200px-Empty_Star.svg.png","https://www.naver.com/","한국",now(),80,1,"<p>CORS가 밉다</p><p></p><p>CORS가 너무 밉다</p><p>CORS가 CORS가 CORS가</p>",false);
 INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (4, 6, false,"이터널스","마블","디즈니","https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Star%2A.svg/600px-Star%2A.svg.png",null,"미국",now(),120,1,"<p>마블 스튜디오의 <이터널스>는 수 천년에 걸쳐 그 모습을 드러내지 않고 살아온 불멸의 히어로들이</p>",true);
 INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (5, 7, false,"TEST BOARD","producer","distributor",null,null,"태국",now(),120,1,"<p>DUMMY DATA</p>",true);
-
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_at, info_time, info_limit, info_story, info_subtitle) VALUES (32, 7, true,"Alternative Math","producer","distributor","https://m.media-amazon.com/images/M/MV5BZjFhN2FhMTQtNTA2OS00MjUxLWIwN2UtOGY2ZWQ4NWRmOWE4XkEyXkFqcGdeQXVyMjI3MTE4MjU@._V1_.jpg", "https://www.youtube.com/watch?v=Zh3Yz3PiXZw&ab_channel=Ideaman","미국",now(),120,1,"진실이 집단적으로 왜곡되는 현실을 기발하게 풍자한 단편",true);
 --Genre
 INSERT INTO `genre` (name) VALUES ("드라마");
 INSERT INTO `genre` (name) VALUES ("로멘스");
@@ -100,6 +100,10 @@ insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 9, 
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (2, 10, 4, 0, "2점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 2, 100, "영화 재밌어서 돈 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 4, 2, 2000, "좋은 영화 많이 만들어 주세요");
+
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 32, 0, "5점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 32, 0, "4점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 32, 0, "3점 드립니다");
 
 insert into `comment` (rating, user_id, board_id) values (1,3,3);
 insert into `comment` (rating, user_id, board_id) values (1,4,3);
