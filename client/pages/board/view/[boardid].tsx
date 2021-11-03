@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import styles from "../../../styles/view_boardid.module.scss";
 import { GetServerSideProps } from "next";
 import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
@@ -13,9 +12,6 @@ export default function BoarDetails({ film }: any) {
   if (film === null) {
     return <div></div>;
   }
-
-  const router = useRouter();
-  const { boardid } = router.query;
 
   return (
     <div className={styles["board-detail__wrapper"]}>
@@ -57,9 +53,6 @@ export default function BoarDetails({ film }: any) {
           </div>
           <div></div>
           <div>{filmData.infoStory}</div>
-          <div>
-            <h1>영화 상세정보 ID : {boardid}</h1>
-          </div>
           <InfoWrapper comments={filmData.comment} />
         </div>
       </div>
