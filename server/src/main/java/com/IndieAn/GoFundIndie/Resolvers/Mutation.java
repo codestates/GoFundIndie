@@ -6,8 +6,8 @@ import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.GenreRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardResponseDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.TempBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import com.IndieAn.GoFundIndie.Service.UserService;
@@ -83,7 +83,7 @@ public class Mutation implements GraphQLMutationResolver {
     //
     //TODO ---- BOARD ----
     //
-    public CreateTempBoardResponseDTO CreateTempBoard(DataFetchingEnvironment env) {
+    public WrappingCreateTempBoardDTO CreateTempBoard(DataFetchingEnvironment env) {
         try {
             context = env.getContext();
             request = context.getHttpServletRequest();
@@ -91,19 +91,19 @@ public class Mutation implements GraphQLMutationResolver {
 
             // No token in the Header : 4000
             if(context == null || request == null || accessToken == null)
-                return CreateTempBoardResponseDTO.builder().code(4000).build();
+                return WrappingCreateTempBoardDTO.builder().code(4000).build();
 
             checkToken = userService.CheckToken(accessToken);
 
             if(checkToken.get("email") != null) {
                 long boardId = boardRepository.RegisterTempBoard(
                         userService.FindUserUseEmail(checkToken.get("email").toString()));
-                return CreateTempBoardResponseDTO.builder().code(2000)
-                        .data(TempBoardDTO.builder().id(boardId).build())
+                return WrappingCreateTempBoardDTO.builder().code(2000)
+                        .data(CreateTempBoardDTO.builder().id(boardId).build())
                         .build();
             } else {
                 // Token Invalid
-                return CreateTempBoardResponseDTO.builder()
+                return WrappingCreateTempBoardDTO.builder()
                         .code(Integer.parseInt(checkToken.get("code").toString()))
                         .build();
             }
@@ -114,11 +114,11 @@ public class Mutation implements GraphQLMutationResolver {
 //                    TempBoardDTO.builder().id(boardId).build()
 //            ).build();
         } catch (NullPointerException e) {
-            return CreateTempBoardResponseDTO.builder().code(4000).build();
+            return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
     }
 
-    public CreateTempBoardResponseDTO CompleteBoard(CreateBoardCompleteDTO dto, DataFetchingEnvironment env) {
+    public WrappingCreateTempBoardDTO CompleteBoard(CreateBoardCompleteDTO dto, DataFetchingEnvironment env) {
         try {
             context = env.getContext();
             request = context.getHttpServletRequest();
@@ -126,7 +126,7 @@ public class Mutation implements GraphQLMutationResolver {
 
             // No token in the Header : 4000
             if(context == null || request == null || accessToken == null)
-                return CreateTempBoardResponseDTO.builder().code(4000).build();
+                return WrappingCreateTempBoardDTO.builder().code(4000).build();
 
             checkToken = userService.CheckToken(accessToken);
 
@@ -135,17 +135,17 @@ public class Mutation implements GraphQLMutationResolver {
 
                 // Invalid UserId
                 if(userId != dto.getUserId())
-                    return CreateTempBoardResponseDTO.builder().code(4301).build();
+                    return WrappingCreateTempBoardDTO.builder().code(4301).build();
 
                 return null;
             } else {
                 // Token Invalid
-                return CreateTempBoardResponseDTO.builder()
+                return WrappingCreateTempBoardDTO.builder()
                         .code(Integer.parseInt(checkToken.get("code").toString()))
                         .build();
             }
         } catch (NullPointerException e) {
-            return CreateTempBoardResponseDTO.builder().code(4000).build();
+            return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
     }
 }

@@ -22,7 +22,8 @@ input boardInput {
     userId: ID!
     title: String!
     infoCountry: String!
-    infoCreatedAt: String!
+    infoCreatedYear: String!
+    infoCreatedDate: String
     infoTime: Int!
     infoStory: String!
     producer: String
@@ -43,7 +44,8 @@ type Board {
     posterImg: String
     viewLink: String
     infoCountry: String
-    infoCreatedAt: String
+    infoCreatedYear: String
+    infoCreatedDate: String
     infoTime: Int
     infoLimit: Int
     infoStory: String
@@ -61,7 +63,8 @@ type ViewBoard {
     posterImg: String
     viewLink: String
     infoCountry: String
-    infoCreatedAt: String
+    infoCreatedYear: String
+    infoCreatedDate: String
     infoTime: Int
     infoLimit: Int
     infoStory: String

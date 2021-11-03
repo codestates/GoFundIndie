@@ -1,12 +1,13 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
+import com.IndieAn.GoFundIndie.Common.SearchTypes;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.GenreRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.ViewBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.ViewWrappingBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.ViewWrappingBoardsDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardsDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -61,25 +62,38 @@ public class Query implements GraphQLQueryResolver {
     //
     //TODO ---- BOARD ----
     //
-    public ViewWrappingBoardDTO FindBoardId(Long id) {
+    public WrappingViewBoardDTO FindBoardId(Long id) {
         try {
-            return ViewWrappingBoardDTO.builder()
+            return WrappingViewBoardDTO.builder()
                     .code(2000)
                     .data(ViewBoardDTO.from(boardRepository.findBoardId(id)))
                     .build();
         } catch (NullPointerException e) {
-            return ViewWrappingBoardDTO.builder()
+            return WrappingViewBoardDTO.builder()
                     .code(4401)
                     .build();
         }
     }
 
-    public ViewWrappingBoardsDTO FindBoards() {
-        return ViewWrappingBoardsDTO.builder()
+    public WrappingViewBoardsDTO FindBoards() {
+        return WrappingViewBoardsDTO.builder()
                 .code(2000)
                 .data(boardRepository.findBoards().stream()
                         .map(BoardGraphQLDTO::from)
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    // type
+
+    //   - Genre = 장르별 영화
+    //   - My = 내가 찜한 영화
+    public String FindBoardsType(String type) {
+        try {
+            SearchTypes searchType = SearchTypes.findSearchType(type);
+            return searchType.name();
+        } catch (RuntimeException e) {
+            return "enum type null";
+        }
     }
 }

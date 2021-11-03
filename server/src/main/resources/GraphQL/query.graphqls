@@ -9,6 +9,7 @@ type Query {
 
     FindBoardId(id: ID!): WrappingBoard
     FindBoards: WrappingBoards
+    FindBoardsType(Type: String!): String
 
     FindGenreId(id: ID!): genre
     FindAllGenre: [genre]
