@@ -1,5 +1,12 @@
 $backcolor: #1b1b1b;
+$buttoncolor: #bbbbbb;
 .header__div__wrapper {
+  button {
+    all: unset;
+    min-width: 4rem;
+    color: $buttoncolor;
+    cursor: pointer;
+  }
   position: fixed;
   left: 0;
   top: 0;
@@ -21,20 +28,21 @@ $backcolor: #1b1b1b;
     list-style: none;
     display: flex;
     margin-left: 20px;
-    font-size: 18px;
+    font-size: 1.1rem;
     align-items: center;
     flex-direction: row;
     justify-content: flex-start;
     .header__ul__logo {
       margin-top: 5px;
     }
-    a {
+    .logo {
       cursor: pointer;
     }
   }
   li {
     margin-right: 25px;
     margin-left: 50px;
+    min-width: 2rem;
     text-align: center;
     a {
       color: white;

@@ -13,9 +13,8 @@ public class CommentOutputDTO {
     private String body;
     private boolean spoiler;
     private int like;
-    private int dislike;
 
-    public CommentOutputDTO(Long id, int rating, long userId, String userNickname, String profilePicture,int donation, String body, boolean spoiler, int like, int dislike) {
+    public CommentOutputDTO(Long id, int rating, long userId, String userNickname, String profilePicture,int donation, String body, boolean spoiler, int like) {
         this.id = id;
         this.rating = rating;
         this.userId = userId;
@@ -25,6 +24,5 @@ public class CommentOutputDTO {
         this.body = body;
         this.spoiler = spoiler;
         this.like = like;
-        this.dislike = dislike;
     }
 }
