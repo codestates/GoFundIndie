@@ -1,6 +1,5 @@
 import { ChangeEvent, useState } from "react";
 import styles from "../styles/components/login.module.scss";
-import cookies from "js-cookie";
 import Setaxios from "../fetching/Setaxios";
 import axios from "axios";
 
@@ -31,8 +30,6 @@ export default function Login({
     };
     Setaxios.postAxios(endpoint, data)
       .then((res) => {
-        //localStorage.setItem("accessToken", accessToken);
-        console.log(res.data);
         const resData: any = res.data;
         axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
         alert("로그인에 성공하였습니다");
