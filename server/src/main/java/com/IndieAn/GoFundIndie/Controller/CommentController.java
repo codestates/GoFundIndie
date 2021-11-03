@@ -69,12 +69,25 @@ public class CommentController {
     }
 
     @GetMapping(value = "/comment/{boardId}")
-    public ResponseEntity<?> GetComments(@PathVariable long boardId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
+    public ResponseEntity<?> GetComments(@PathVariable long boardId, @RequestHeader Map<String, String> requestHeader, @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
         // 영화 보드에 작성된 댓글들을 불러오는 메소드
         // 해당 board가 존재하지 않으면 404 응답을 한다.
         try {
             body.clear();
-            body = commentService.GetCommentPage(boardId, pageable);
+            String email = null;
+            // 헤더에 access token이 있다면 회원으로 보는 것이다.
+            if(requestHeader.get("accesstoken") != null) {
+                // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+                Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+                // 검증이 되지 않는다면 응답 오류를 보낸다.
+                if(checkToken.get("email") == null) {
+                    return ResponseEntity.status(401).body(checkToken);
+                }
+                email = (String)checkToken.get("email");
+            }
+
+            // token에 email정보가 유효하면 댓글을 가져오는 과정을 수행한다
+            body = commentService.GetCommentPage(boardId, email, pageable);
             return ResponseEntity.status(body.get("data") == null ? 404 : 200).body(body);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
@@ -125,7 +138,7 @@ public class CommentController {
             // token에 email정보가 있다면 좋아요 기능을 수행한다.
             if(checkToken.get("email") != null) {
                 body = commentRatingService.addRating(user, commentId.getComment_id());
-                return ResponseEntity.status(body.get("code").equals(2000) ? 200 : 404).body(body);
+                return ResponseEntity.status(body.get("code").equals(2000) ? 201 : 404).body(body);
             }
             else {
                 return ResponseEntity.status(401).body(checkToken);
