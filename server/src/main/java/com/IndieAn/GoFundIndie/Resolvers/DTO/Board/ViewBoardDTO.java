@@ -25,7 +25,8 @@ public class ViewBoardDTO {
     private String posterImg;
     private String viewLink;
     private String infoCountry;
-    private String infoCreatedAt;
+    private String infoCreatedYear;
+    private String infoCreatedDate;
     private int infoTime;
     private int infoLimit;
     private String infoStory;
@@ -49,7 +50,8 @@ public class ViewBoardDTO {
                 .posterImg(en.getPosterImg())
                 .viewLink(en.getViewLink())
                 .infoCountry(en.getInfoCountry())
-                .infoCreatedAt(en.getInfoCreatedAt().toString())
+                .infoCreatedYear(en.getInfoCreatedYear())
+                .infoCreatedDate(en.getInfoCreatedDate())
                 .infoTime(en.getInfoTime())
                 .infoLimit(en.getInfoLimit())
                 .infoStory(en.getInfoStory())
