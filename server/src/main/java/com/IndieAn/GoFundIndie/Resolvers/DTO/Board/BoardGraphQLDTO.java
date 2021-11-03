@@ -26,23 +26,24 @@ public class BoardGraphQLDTO {
 
     public BoardGraphQLDTO() {}
 
-    public static BoardGraphQLDTO from(Board board) {
+    public static BoardGraphQLDTO from(Board en) {
         return BoardGraphQLDTO.builder()
-                .id(board.getId())
-                .userId(board.getUserId().getId())
-                .isApprove(board.isApprove())
-                .title(board.getTitle())
-                .producer(board.getProducer())
-                .distributor(board.getDistributor())
-                .posterImg(board.getPosterImg())
-                .viewLink(board.getViewLink())
-                .infoCountry(board.getInfoCountry())
-                .infoCreatedYear(board.getInfoCreatedYear())
-                .infoTime(board.getInfoTime())
-                .infoLimit(board.getInfoLimit())
-                .infoStory(board.getInfoStory())
-                .infoSubtitle(board.isInfoSubtitle())
-                .createdAt(board.getCreatedAt().toString())
+                .id(en.getId())
+                .userId(en.getUserId().getId())
+                .isApprove(en.isApprove())
+                .title(en.getTitle())
+                .producer(en.getProducer())
+                .distributor(en.getDistributor())
+                .posterImg(en.getPosterImg())
+                .viewLink(en.getViewLink())
+                .infoCountry(en.getInfoCountry())
+                .infoCreatedYear(en.getInfoCreatedYear())
+                .infoCreatedDate(en.getInfoCreatedDate())
+                .infoTime(en.getInfoTime())
+                .infoLimit(en.getInfoLimit())
+                .infoStory(en.getInfoStory())
+                .infoSubtitle(en.isInfoSubtitle())
+                .createdAt(en.getCreatedAt().toString())
                 .build();
     }
 

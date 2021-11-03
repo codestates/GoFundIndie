@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
+import com.IndieAn.GoFundIndie.Common.SearchTypes;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.GenreRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
@@ -84,9 +85,15 @@ public class Query implements GraphQLQueryResolver {
     }
 
     // type
-    //   - my = 내가 찜한 영화
-    //   - Genre = 장르별 영화
-    public void FindBoardsType() {
 
+    //   - Genre = 장르별 영화
+    //   - My = 내가 찜한 영화
+    public String FindBoardsType(String type) {
+        try {
+            SearchTypes searchType = SearchTypes.findSearchType(type);
+            return searchType.name();
+        } catch (RuntimeException e) {
+            return "enum type null";
+        }
     }
 }

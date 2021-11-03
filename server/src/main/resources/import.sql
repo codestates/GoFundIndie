@@ -35,9 +35,9 @@ INSERT INTO `genre` (name) VALUES ("가족");
 INSERT INTO `genre` (name) VALUES ("범죄");
 INSERT INTO `genre` (name) VALUES ("코미디");
 INSERT INTO `genre` (name) VALUES ("애니메이션");
-INSERT INTO `genre` (name) VALUES ("서부");
 INSERT INTO `genre` (name) VALUES ("액션");
 INSERT INTO `genre` (name) VALUES ("SF");
+--Genre END
 
 --BoardGenre
 INSERT INTO `board_genre` (board_id, genre_id) VALUES (1,1), (1,2), (1,3);
@@ -171,3 +171,10 @@ INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, post
 INSERT INTO `board_genre` (board_id, genre_id) VALUES (30,5);
 INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_year, info_created_date, info_time, info_limit, info_story, info_subtitle) VALUES(31,7,false,"이반의 무개념 나들이","Dummy","Data","Test","https://pedia.watcha.com/ko-KR","크로아티아","2020","11/11",200,1,"더미 데이터 입니다",true);
 INSERT INTO `board_genre` (board_id, genre_id) VALUES (31,1);
+
+-- 준희님 더미데이터
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_year, info_created_date, info_time, info_limit, info_story, info_subtitle) VALUES (32, 7, true,"Alternative Math","producer","distributor","https://m.media-amazon.com/images/M/MV5BZjFhN2FhMTQtNTA2OS00MjUxLWIwN2UtOGY2ZWQ4NWRmOWE4XkEyXkFqcGdeQXVyMjI3MTE4MjU@._V1_.jpg", "https://www.youtube.com/watch?v=Zh3Yz3PiXZw&ab_channel=Ideaman","미국","2021","11/03",120,1,"진실이 집단적으로 왜곡되는 현실을 기발하게 풍자한 단편",true);
+
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 32, 0, "5점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 32, 0, "4점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 32, 0, "3점 드립니다");
