@@ -2,13 +2,16 @@ import { ChangeEvent, useState } from "react";
 import styles from "../styles/components/login.module.scss";
 import cookies from "js-cookie";
 import Setaxios from "../fetching/Setaxios";
+import axios from "axios";
 
 export default function Login({
   handleLoginModal,
   handleLoginStatus,
+  handleSignupModal,
 }: {
   handleLoginModal(): void;
   handleLoginStatus(): void;
+  handleSignupModal(): void;
 }) {
   const [userData, setUserData] = useState({
     email: "",
@@ -29,8 +32,9 @@ export default function Login({
     Setaxios.postAxios(endpoint, data)
       .then((res) => {
         //localStorage.setItem("accessToken", accessToken);
-        cookies.get("accessToken");
-        cookies.set("test", "test");
+        console.log(res.data);
+        const resData: any = res.data;
+        axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
         alert("로그인에 성공하였습니다");
         handleLoginModal();
         handleLoginStatus();
@@ -56,7 +60,14 @@ export default function Login({
                 <div className={styles["form-flexstart"]}>로그인</div>
                 <div className={styles["form-flexend"]}>
                   <div>아직 회원이 아니신가요?</div>
-                  <div>회원가입</div>
+                  <div
+                    onClick={() => {
+                      handleSignupModal();
+                      handleLoginModal();
+                    }}
+                  >
+                    회원가입
+                  </div>
                 </div>
               </div>
               <input

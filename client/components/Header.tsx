@@ -11,10 +11,9 @@ export default function Header() {
   const [signupModalOpen, setSignupModalOpen] = useState<boolean>(false);
   const [userLoginStatus, setUserLoginStatus] = useState<boolean>(false);
   const router = useRouter();
-  let pathname = "";
   useEffect(() => {
     if (!router.isReady) return;
-    pathname = router.pathname;
+    let pathname = router.pathname;
     const header = document.querySelector("#header__div");
     if (header !== null) {
       header.classList.add(styles.transparent);
@@ -27,10 +26,10 @@ export default function Header() {
     window.addEventListener("scroll", CheckScroll);
   }, [router.pathname]);
   const handleSignupModal = (): void => {
-    setSignupModalOpen(false);
+    setSignupModalOpen(!signupModalOpen);
   };
   const handleLoginModal = (): void => {
-    setLoginModalOpen(false);
+    setLoginModalOpen(!loginModalOpen);
   };
   const handleLoginStatus = (): void => {
     setUserLoginStatus(true);
@@ -100,10 +99,14 @@ export default function Header() {
         <Login
           handleLoginModal={handleLoginModal}
           handleLoginStatus={handleLoginStatus}
+          handleSignupModal={handleSignupModal}
         />
       ) : null}
       {signupModalOpen ? (
-        <Signup handleSignupModal={handleSignupModal} />
+        <Signup
+          handleSignupModal={handleSignupModal}
+          handleLoginModal={handleLoginModal}
+        />
       ) : null}
     </>
   );
