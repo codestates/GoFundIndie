@@ -5,8 +5,10 @@ import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Repository.CommentRatingRepository;
 import com.IndieAn.GoFundIndie.Repository.CommentRepository;
 import com.IndieAn.GoFundIndie.Repository.JPAInterface.CommentJPAInterface;
+import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -19,12 +21,17 @@ import java.util.HashMap;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentJPAInterface commentJPAInterface;
+    private final UserRepository userRepository;
+    private final CommentRatingRepository commentRatingRepository;
     private HashMap<String, Object> body = new HashMap<>();
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, CommentJPAInterface commentJPAInterface) {
+    public CommentService(CommentRepository commentRepository, CommentJPAInterface commentJPAInterface,
+                          UserRepository userRepository, CommentRatingRepository commentRatingRepository) {
         this.commentRepository = commentRepository;
         this.commentJPAInterface = commentJPAInterface;
+        this.userRepository = userRepository;
+        this.commentRatingRepository = commentRatingRepository;
     }
 
     // Comment를 생성하는 기능을 하는 서비스 기능
@@ -51,7 +58,7 @@ public class CommentService {
     }
 
     // 각 보드에 대한 Comment들을 불러오는 서비스 기능
-    public HashMap<String, Object> GetCommentPage(long boardId, Pageable pageable) {
+    public HashMap<String, Object> GetCommentPage(long boardId, String email, Pageable pageable) {
         body.clear();
         Board board = commentRepository.FindBoardDB(boardId);
         // board가 null이라면 코드 4401 응답을 낸다.
@@ -60,12 +67,23 @@ public class CommentService {
             return body;
         }
 
+        // email이 들어와 회원인 경우
+        User user = null;
+        if(email != null) {
+            user = userRepository.FindUserByEmail(email);
+        }
         // 페이징을 통해 응답과 합께 데이터를 보내준다.
         Page<Comment> comments = commentJPAInterface.findByBoardId(board, pageable);
+        User findUser = user;
         Page<CommentOutputDTO> commentList = comments.map(
                 comment -> {
                     int like = comment.getCommentRatings().size();
-
+                    boolean ratingChecked = false;
+                    if(findUser != null) {
+                        if(commentRatingRepository.FindRatingByUserAndComment(findUser.getId(), comment.getId()) != null) {
+                            ratingChecked = true;
+                        }
+                    }
                     return new CommentOutputDTO(
                             comment.getId(),
                             comment.getRating(),
@@ -75,7 +93,8 @@ public class CommentService {
                             comment.getDonation(),
                             comment.getBody(),
                             comment.isSpoiler(),
-                            like
+                            like,
+                            ratingChecked
                     );
                 });
 
