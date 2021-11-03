@@ -1,0 +1,6 @@
+type casting {
+    id: ID
+    name: String
+    position: Int
+    image: String
+}

@@ -1,6 +1,6 @@
 package com.IndieAn.GoFundIndie.Domain.Entity;
 
-import com.IndieAn.GoFundIndie.Resolvers.User.UserGraphQLDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;

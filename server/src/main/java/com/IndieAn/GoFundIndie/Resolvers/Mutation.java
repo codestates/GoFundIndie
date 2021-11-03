@@ -5,10 +5,12 @@ import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.GenreRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
-import com.IndieAn.GoFundIndie.Resolvers.Board.TempBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.Genre.GenreGraphQLDTO;
-import com.IndieAn.GoFundIndie.Resolvers.User.UserGraphQLDTO;
-import graphql.kickstart.execution.context.GraphQLContext;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardResponseDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.TempBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
+import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
@@ -19,21 +21,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class Mutation implements GraphQLMutationResolver {
+    // Test
+    private final EntityManager em;
 
-     // Test
-     private final EntityManager em;
+    private final GenreRepository genreRepository;
+    private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
 
-     private final GenreRepository genreRepository;
-     private final UserRepository userRepository;
-     private final BoardRepository boardRepository;
+    private final UserService userService;
 
-     private String TOKEN;
+    private String accessToken = null;
+    private Map<String, Object> checkToken = null;
+
+    private GraphQLServletContext context = null;
+    private HttpServletRequest request = null;
 
     //
     //TODO ---- USER ----
@@ -75,19 +83,69 @@ public class Mutation implements GraphQLMutationResolver {
     //
     //TODO ---- BOARD ----
     //
-    public TempBoardDTO CreateTempBoard(Long id, DataFetchingEnvironment env) {
+    public CreateTempBoardResponseDTO CreateTempBoard(DataFetchingEnvironment env) {
         try {
-            GraphQLServletContext context = env.getContext();
-            HttpServletRequest request = context.getHttpServletRequest();
-            TOKEN = request.getHeader("accesstoken");
-//            log.info(d);
-            User user = userRepository.FindUserByIdDB(id);
-            long boardId = boardRepository.RegisterTempBoard(user);
-            return TempBoardDTO.builder()
-                    .id(boardId).code(2000).build();
+            context = env.getContext();
+            request = context.getHttpServletRequest();
+            accessToken = request.getHeader("accesstoken");
+
+            // No token in the Header : 4000
+            if(context == null || request == null || accessToken == null)
+                return CreateTempBoardResponseDTO.builder().code(4000).build();
+
+            checkToken = userService.CheckToken(accessToken);
+
+            if(checkToken.get("email") != null) {
+                long boardId = boardRepository.RegisterTempBoard(
+                        userService.FindUserUseEmail(checkToken.get("email").toString()));
+                return CreateTempBoardResponseDTO.builder().code(2000)
+                        .data(TempBoardDTO.builder().id(boardId).build())
+                        .build();
+            } else {
+                // Token Invalid
+                return CreateTempBoardResponseDTO.builder()
+                        .code(Integer.parseInt(checkToken.get("code").toString()))
+                        .build();
+            }
+            // Test Code : No Access Token
+//            User user = userRepository.FindUserByIdDB(1L);
+//            long boardId = boardRepository.RegisterTempBoard(user);
+//            return CreateTempBoardResponseDTO.builder().code(2000).data(
+//                    TempBoardDTO.builder().id(boardId).build()
+//            ).build();
         } catch (NullPointerException e) {
-            return TempBoardDTO.builder()
-                    .code(4000).build();
+            return CreateTempBoardResponseDTO.builder().code(4000).build();
+        }
+    }
+
+    public CreateTempBoardResponseDTO CompleteBoard(CreateBoardCompleteDTO dto, DataFetchingEnvironment env) {
+        try {
+            context = env.getContext();
+            request = context.getHttpServletRequest();
+            accessToken = request.getHeader("accesstoken");
+
+            // No token in the Header : 4000
+            if(context == null || request == null || accessToken == null)
+                return CreateTempBoardResponseDTO.builder().code(4000).build();
+
+            checkToken = userService.CheckToken(accessToken);
+
+            if(checkToken.get("email") != null) {
+                long userId = userService.FindUserUseEmail(checkToken.get("email").toString()).getId();
+
+                // Invalid UserId
+                if(userId != dto.getUserId())
+                    return CreateTempBoardResponseDTO.builder().code(4301).build();
+
+                return null;
+            } else {
+                // Token Invalid
+                return CreateTempBoardResponseDTO.builder()
+                        .code(Integer.parseInt(checkToken.get("code").toString()))
+                        .build();
+            }
+        } catch (NullPointerException e) {
+            return CreateTempBoardResponseDTO.builder().code(4000).build();
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.IndieAn.GoFundIndie.Resolvers.Genre;
+package com.IndieAn.GoFundIndie.Resolvers.DTO.Genre;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Genre;
 import lombok.AllArgsConstructor;
