@@ -8,12 +8,6 @@ public class CommentRating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean like;
-
-    @Column(columnDefinition = "boolean default false")
-    private boolean dislike;
-
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", nullable = false)
     private User userId;
@@ -30,22 +24,6 @@ public class CommentRating {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public boolean isLike() {
-        return like;
-    }
-
-    public void setLike(boolean like) {
-        this.like = like;
-    }
-
-    public boolean isDislike() {
-        return dislike;
-    }
-
-    public void setDislike(boolean dislike) {
-        this.dislike = dislike;
     }
 
     public User getUserId() {
