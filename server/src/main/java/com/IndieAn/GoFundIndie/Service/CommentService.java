@@ -4,7 +4,6 @@ import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
-import com.IndieAn.GoFundIndie.Domain.Entity.CommentRating;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.CommentRepository;
 import com.IndieAn.GoFundIndie.Repository.JPAInterface.CommentJPAInterface;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -66,13 +64,7 @@ public class CommentService {
         Page<Comment> comments = commentJPAInterface.findByBoardId(board, pageable);
         Page<CommentOutputDTO> commentList = comments.map(
                 comment -> {
-                    int like = 0;
-                    int dislike = 0;
-
-                    for(CommentRating rating : comment.getCommentRatings()) {
-                        if(rating.isLike()) like++;
-                        else if(rating.isDislike()) dislike++;
-                    }
+                    int like = comment.getCommentRatings().size();
 
                     return new CommentOutputDTO(
                             comment.getId(),
@@ -83,8 +75,7 @@ public class CommentService {
                             comment.getDonation(),
                             comment.getBody(),
                             comment.isSpoiler(),
-                            like,
-                            dislike
+                            like
                     );
                 });
 

@@ -109,12 +109,12 @@ insert into `comment` (rating, user_id, board_id) values (1,7,5);
 insert into `comment` (rating, user_id, board_id) values (1,8,5);
 
 --CommentRating
-insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 3, 1);
-insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 4, 2);
-insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 5, 3);
-insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 6, 4);
-insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 7, 5);
-insert into `comment_rating` (`like`, `dislike`, user_id, comment_id) values (true, false, 8, 6);
+insert into `comment_rating` (user_id, comment_id) values (3, 1);
+insert into `comment_rating` (user_id, comment_id) values (4, 2);
+insert into `comment_rating` (user_id, comment_id) values (5, 3);
+insert into `comment_rating` (user_id, comment_id) values (6, 4);
+insert into `comment_rating` (user_id, comment_id) values (7, 5);
+insert into `comment_rating` (user_id, comment_id) values (8, 6);
 
 --CommentReport
 insert into `comment_report` (user_id, comment_id, body) values (3, 4, "test");

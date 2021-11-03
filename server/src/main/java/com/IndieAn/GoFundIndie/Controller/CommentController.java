@@ -1,15 +1,12 @@
 package com.IndieAn.GoFundIndie.Controller;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
-import com.IndieAn.GoFundIndie.Domain.Entity.Board;
-import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
+import com.IndieAn.GoFundIndie.Domain.DTO.RatingInputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
-import com.IndieAn.GoFundIndie.Repository.JPAInterface.CommentJPAInterface;
+import com.IndieAn.GoFundIndie.Service.CommentRatingService;
 import com.IndieAn.GoFundIndie.Service.CommentService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,13 +19,15 @@ import java.util.Map;
 @RestController
 public class CommentController {
     private final CommentService commentService;
+    private final CommentRatingService commentRatingService;
     private final UserService userService;
     private HashMap<String, Object> body = new HashMap<>();
 
     @Autowired
-    public CommentController(CommentService commentService, UserService userService) {
+    public CommentController(CommentService commentService, UserService userService, CommentRatingService commentRatingService) {
         this.commentService = commentService;
         this.userService = userService;
+        this.commentRatingService = commentRatingService;
     }
 
     @PostMapping(value = "/comment")
@@ -87,6 +86,7 @@ public class CommentController {
         // 작성된 댓글을 삭제하는 기능
         // 해당 id를 가진 comment가 존재하지 않으면 404 응답을 한다.
         try {
+            body.clear();
             // 헤더에 accesstoken이 없으면 4000 응답을 한다.
             if(requestHeader.get("accesstoken") == null) {
                 body.put("code", 4000);
@@ -99,6 +99,32 @@ public class CommentController {
             // token에 email정보가 있다면 댓글 삭제 과정을 수행한다
             if(checkToken.get("email") != null) {
                 body = commentService.DeleteComments(commentId, user);
+                return ResponseEntity.status(body.get("code").equals(2000) ? 200 : 404).body(body);
+            }
+            else {
+                return ResponseEntity.status(401).body(checkToken);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @PostMapping(value = "/rating")
+    public ResponseEntity<?> RatingComment(@RequestBody RatingInputDTO commentId, @RequestHeader Map<String, String> requestHeader) {
+        try {
+            body.clear();
+            // 헤더에 accesstoken이 없으면 4000 응답을 한다.
+            if(requestHeader.get("accesstoken") == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
+
+            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+            Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+            User user = userService.FindUserUseEmail((String) checkToken.get("email"));
+            // token에 email정보가 있다면 좋아요 기능을 수행한다.
+            if(checkToken.get("email") != null) {
+                body = commentRatingService.addRating(user, commentId.getComment_id());
                 return ResponseEntity.status(body.get("code").equals(2000) ? 200 : 404).body(body);
             }
             else {
