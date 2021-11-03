@@ -1,33 +1,34 @@
-package com.IndieAn.GoFundIndie.Resolvers.Board;
+package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 @Getter
 @Setter
 @Builder
-public class BoardCompleteDTO {
+public class CreateBoardCompleteDTO {
+    @NotBlank
+    private long boardId;
 
-    @NotBlank(message = "4006 : user cannot be blank")
+    @NotBlank
     private long userId;
 
-    @NotBlank(message = "4006 : title cannot be blank")
+    @NotBlank
     private String title;
 
-    @NotBlank(message = "4006 : infoCountry cannot be blank")
+    @NotBlank
     private String infoCountry;
 
-    @NotBlank(message = "4006 : infoCreatedAt cannot be blank")
+    @NotBlank
     private String infoCreatedAt;
 
-    @NotBlank(message = "4006 : infoTime cannot be blank")
+    @NotBlank
     private int infoTime;
 
-    @NotBlank(message = "4006 : infoStory cannot be blank")
+    @NotBlank
     private String infoStory;
 
     private String producer;
@@ -36,15 +37,14 @@ public class BoardCompleteDTO {
     private String viewLink;
     private int infoLimit;
     private boolean infoSubtitle;
-    private Date createdAt;
 
-    public BoardCompleteDTO() {}
+    public CreateBoardCompleteDTO() {}
 
-    public BoardCompleteDTO(long userId, String title, String infoCountry,
-                            String infoCreatedAt, int infoTime, String infoStory,
-                            String producer, String distributor, String posterImg,
-                            String viewLink, int infoLimit, boolean infoSubtitle,
-                            Date createdAt) {
+    public CreateBoardCompleteDTO(long boardId, long userId, String title, String infoCountry,
+                                  String infoCreatedAt, int infoTime, String infoStory,
+                                  String producer, String distributor, String posterImg,
+                                  String viewLink, int infoLimit, boolean infoSubtitle) {
+        this.boardId = boardId;
         this.userId = userId;
         this.title = title;
         this.infoCountry = infoCountry;
@@ -57,6 +57,5 @@ public class BoardCompleteDTO {
         this.viewLink = viewLink;
         this.infoLimit = infoLimit;
         this.infoSubtitle = infoSubtitle;
-        this.createdAt = createdAt;
     }
 }

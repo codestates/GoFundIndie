@@ -1,0 +1,5 @@
+type comment {
+    id: ID
+    rating: Int
+    userNickname: String
+}

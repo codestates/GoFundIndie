@@ -1,4 +1,4 @@
-package com.IndieAn.GoFundIndie.Resolvers.User;
+package com.IndieAn.GoFundIndie.Resolvers.DTO.User;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import lombok.*;
