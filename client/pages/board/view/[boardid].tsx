@@ -1,22 +1,26 @@
 import { useRouter } from "next/router";
 import styles from "../../../styles/view_boardid.module.scss";
 import Setaxios from "../../../fetching/Setaxios";
-export default function BoarDetails() {
-  const filmData = {
-    title: "Alternative Math",
-    producer: "",
-    distributor: "",
-    poster_img:
-      "https://m.media-amazon.com/images/M/MV5BZjFhN2FhMTQtNTA2OS00MjUxLWIwN2UtOGY2ZWQ4NWRmOWE4XkEyXkFqcGdeQXVyMjI3MTE4MjU@._V1_.jpg",
-    view_link: "https://www.youtube.com/watch?v=Zh3Yz3PiXZw&ab_channel=Ideaman",
-    info_country: "미국",
-    info_created_at: 2017,
-    info_time: 9,
-    info_limit: 0,
-    info_story: "진실이 집단적으로 왜곡되는 현실을 기발하게 풍자한 단편",
-    info_subtitle: true,
-    info_genre: "코미디",
-  };
+import { GetServerSideProps } from "next";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+export default function BoarDetails({ filmData, film }) {
+  console.log(film);
+  // const filmData = {
+  //   title: "Alternative Math",
+  //   producer: "",
+  //   distributor: "",
+  //   poster_img:
+  //     "https://m.media-amazon.com/images/M/MV5BZjFhN2FhMTQtNTA2OS00MjUxLWIwN2UtOGY2ZWQ4NWRmOWE4XkEyXkFqcGdeQXVyMjI3MTE4MjU@._V1_.jpg",
+  //   view_link: "https://www.youtube.com/watch?v=Zh3Yz3PiXZw&ab_channel=Ideaman",
+  //   info_country: "미국",
+  //   info_created_at: 2017,
+  //   info_time: 9,
+  //   info_limit: 0,
+  //   info_story: "진실이 집단적으로 왜곡되는 현실을 기발하게 풍자한 단편",
+  //   info_subtitle: true,
+  //   info_genre: "코미디",
+  // };
   const router = useRouter();
   const { boardid } = router.query;
   return (
@@ -68,14 +72,35 @@ export default function BoarDetails() {
   );
 }
 
-// export async function getServerSideProps(context) {
-//   const id = context.params.id;
-//   endpoint = "/board/view/board?=" + id;
-//   const res = Setaxios.getAxios(endpoint);
-//   const data = res.data
-//   return {
-//     props: {
-//       filmData: data,
-//     }
-//   }
-// }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  // const res = Setaxios.getAxios("/board/view/board?=" + 1).then((res) => {
+  // const res = Setaxios.getAxios("/board/view/board?=" + 1);
+  // const res = await Setaxios.getAxios("check?type=email&query=q");
+
+  const res = fetch("https://localhost:8080/check?type=email&query=q");
+  console.log(res);
+  const film = await (await res).json();
+  console.log(film);
+
+  return {
+    props: {
+      filmData: {
+        title: "Alternative Math",
+        producer: "",
+        distributor: "",
+        poster_img:
+          "https://m.media-amazon.com/images/M/MV5BZjFhN2FhMTQtNTA2OS00MjUxLWIwN2UtOGY2ZWQ4NWRmOWE4XkEyXkFqcGdeQXVyMjI3MTE4MjU@._V1_.jpg",
+        view_link:
+          "https://www.youtube.com/watch?v=Zh3Yz3PiXZw&ab_channel=Ideaman",
+        info_country: "미국",
+        info_created_at: 2017,
+        info_time: 9,
+        info_limit: 0,
+        info_story: "진실이 집단적으로 왜곡되는 현실을 기발하게 풍자한 단편",
+        info_subtitle: true,
+        info_genre: "코미디",
+      },
+      film,
+    },
+  };
+};

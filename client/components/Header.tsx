@@ -30,7 +30,6 @@ export default function Header() {
   }, [router.pathname]);
   //쿠키 리프레쉬 토큰확인하여 엑세스토큰 받아오기
   useEffect(() => {
-    console.log("test");
     if (cookies.get("refreshToken")) {
       Setaxios.getAxios("reissuance").then((res) => {
         const resData: any = res.data;
