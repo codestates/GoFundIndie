@@ -110,21 +110,21 @@ public class UserService {
     }
 
     // 토큰 유효성 검증
-    public Map<String, String> CheckToken(String token) {
-        HashMap<String, String> msg = new HashMap<>();
+    public Map<String, Object> CheckToken(String token) {
+        HashMap<String, Object> msg = new HashMap<>();
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(SIGN_KEY)
                     .parseClaimsJws(token)
                     .getBody();
 
-            msg.put("email", (String) claims.get("email"));
+            msg.put("email", claims.get("email"));
             return msg;
         } catch (ExpiredJwtException e) {
-            msg.put("code", "4101");
+            msg.put("code", 4101);
             return msg;
         } catch (JwtException e) {
-            msg.put("code", "4100");
+            msg.put("code", 4100);
             return msg;
         }
     }
