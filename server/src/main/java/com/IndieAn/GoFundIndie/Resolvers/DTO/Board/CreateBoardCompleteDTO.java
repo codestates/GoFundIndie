@@ -23,7 +23,7 @@ public class CreateBoardCompleteDTO {
     private String infoCountry;
 
     @NotBlank
-    private String infoCreatedAt;
+    private String infoCreatedYear;
 
     @NotBlank
     private int infoTime;
@@ -37,18 +37,16 @@ public class CreateBoardCompleteDTO {
     private String viewLink;
     private int infoLimit;
     private boolean infoSubtitle;
+    private String infoCreatedDate;
 
     public CreateBoardCompleteDTO() {}
 
-    public CreateBoardCompleteDTO(long boardId, long userId, String title, String infoCountry,
-                                  String infoCreatedAt, int infoTime, String infoStory,
-                                  String producer, String distributor, String posterImg,
-                                  String viewLink, int infoLimit, boolean infoSubtitle) {
+    public CreateBoardCompleteDTO(long boardId, long userId, String title, String infoCountry, String infoCreatedYear, int infoTime, String infoStory, String producer, String distributor, String posterImg, String viewLink, int infoLimit, boolean infoSubtitle, String infoCreatedDate) {
         this.boardId = boardId;
         this.userId = userId;
         this.title = title;
         this.infoCountry = infoCountry;
-        this.infoCreatedAt = infoCreatedAt;
+        this.infoCreatedYear = infoCreatedYear;
         this.infoTime = infoTime;
         this.infoStory = infoStory;
         this.producer = producer;
@@ -57,5 +55,6 @@ public class CreateBoardCompleteDTO {
         this.viewLink = viewLink;
         this.infoLimit = infoLimit;
         this.infoSubtitle = infoSubtitle;
+        this.infoCreatedDate = infoCreatedDate;
     }
 }

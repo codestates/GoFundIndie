@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ViewWrappingBoardsDTO {
+public class WrappingViewBoardsDTO {
     private int code;
     private List<BoardGraphQLDTO> data;
 
-    public ViewWrappingBoardsDTO() {}
+    public WrappingViewBoardsDTO() {}
 }

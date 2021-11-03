@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ViewWrappingBoardDTO {
+public class WrappingBoardGraphQLDTO {
     private int code;
-    private ViewBoardDTO data;
+    private BoardGraphQLDTO data;
 
-    public ViewWrappingBoardDTO() {}
+    public WrappingBoardGraphQLDTO() {}
 }

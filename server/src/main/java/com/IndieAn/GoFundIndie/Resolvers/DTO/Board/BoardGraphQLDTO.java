@@ -16,7 +16,8 @@ public class BoardGraphQLDTO {
     private String posterImg;
     private String viewLink;
     private String infoCountry;
-    private String infoCreatedAt;
+    private String infoCreatedYear;
+    private String infoCreatedDate;
     private int infoTime;
     private int infoLimit;
     private String infoStory;
@@ -36,7 +37,7 @@ public class BoardGraphQLDTO {
                 .posterImg(board.getPosterImg())
                 .viewLink(board.getViewLink())
                 .infoCountry(board.getInfoCountry())
-                .infoCreatedAt(board.getInfoCreatedAt().toString())
+                .infoCreatedYear(board.getInfoCreatedYear())
                 .infoTime(board.getInfoTime())
                 .infoLimit(board.getInfoLimit())
                 .infoStory(board.getInfoStory())
@@ -117,12 +118,20 @@ public class BoardGraphQLDTO {
         this.infoCountry = infoCountry;
     }
 
-    public String getInfoCreatedAt() {
-        return infoCreatedAt;
+    public String getInfoCreatedYear() {
+        return infoCreatedYear;
     }
 
-    public void setInfoCreatedAt(String infoCreatedAt) {
-        this.infoCreatedAt = infoCreatedAt;
+    public void setInfoCreatedYear(String infoCreatedYear) {
+        this.infoCreatedYear = infoCreatedYear;
+    }
+
+    public String getInfoCreatedDate() {
+        return infoCreatedDate;
+    }
+
+    public void setInfoCreatedDate(String infoCreatedDate) {
+        this.infoCreatedDate = infoCreatedDate;
     }
 
     public int getInfoTime() {

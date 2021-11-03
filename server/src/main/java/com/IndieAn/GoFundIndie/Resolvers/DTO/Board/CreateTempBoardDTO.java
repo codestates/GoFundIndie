@@ -3,12 +3,12 @@ package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 import lombok.Builder;
 
 @Builder
-public class TempBoardDTO {
+public class CreateTempBoardDTO {
     private long id;
 
-    public TempBoardDTO() {}
+    public CreateTempBoardDTO() {}
 
-    public TempBoardDTO(long id) { this.id = id; }
+    public CreateTempBoardDTO(long id) { this.id = id; }
 
     public long getId() {
         return id;
