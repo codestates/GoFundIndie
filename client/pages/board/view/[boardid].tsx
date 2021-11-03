@@ -103,7 +103,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       } 
     }
 }`;
-  const res = await fetch("https://localhost:8080/graphql", {
+  // const res = await fetch("https://localhost:8080/graphql", {
+  //   method: "POST",
+  //   body: JSON.stringify({ query }),
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),
     headers: {
