@@ -1,5 +1,5 @@
 import styles from "../../styles/components/boardInfos/comments.module.scss";
-export default function Comments({ comments }: any) {
+export default function Comments({ comments }: { comments: Array<string> }) {
   return (
     <>
       {comments.map((comment: any) => {
