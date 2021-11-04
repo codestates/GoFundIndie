@@ -61,20 +61,20 @@ public class BoardRepository {
     // Create Temp Board
     public long RegisterTempBoard(User user) {
         Board board = new Board();
+
         board.setUserId(user);
         board.setInfoCountry("TEMP");
+
         entityManager.persist(board);
         entityManager.flush();
         entityManager.close();
+
         return board.getId();
     }
 
     // Put Complete Board
-    public Board CompleteBoard(CreateBoardCompleteDTO dto) {
+    public long CompleteBoard(Board board, CreateBoardCompleteDTO dto) {
         // not null values
-        Board board = entityManager.find(Board.class, dto.getBoardId());
-        board.setId(dto.getBoardId());
-        board.setUserId(entityManager.find(User.class, dto.getUserId()));
         board.setTitle(dto.getTitle());
         board.setInfoCountry(dto.getInfoCountry());
         board.setInfoCreatedYear(dto.getInfoCreatedYear());
@@ -94,6 +94,6 @@ public class BoardRepository {
         entityManager.flush();
         entityManager.close();
 
-        return board;
+        return board.getId();
     }
 }
