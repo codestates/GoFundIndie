@@ -10,7 +10,7 @@ export default function BoarDetails({ film }: any) {
     filmData = film.FindBoardId.data;
   }
   if (film === null) {
-    return <div></div>;
+    return <></>;
   }
 
   return (
