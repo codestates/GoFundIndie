@@ -1,14 +1,12 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
-import com.IndieAn.GoFundIndie.Repository.BoardRepository;
-import com.IndieAn.GoFundIndie.Repository.GenreRepository;
-import com.IndieAn.GoFundIndie.Repository.UserRepository;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingBoardGraphQLsDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
-import com.IndieAn.GoFundIndie.Resolvers.Querys.FindBoardsQuery;
-import com.IndieAn.GoFundIndie.Service.UserService;
-import graphql.kickstart.servlet.context.GraphQLServletContext;
+import com.IndieAn.GoFundIndie.Resolvers.Querys.BoardQuery;
+import com.IndieAn.GoFundIndie.Resolvers.Querys.GenreQuery;
+import com.IndieAn.GoFundIndie.Resolvers.Querys.UserQuery;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
@@ -16,69 +14,45 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class Query implements GraphQLQueryResolver {
-    private final GenreRepository genreRepository;
-    private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+    private final BoardQuery boardQuery;
+    private final GenreQuery genreQuery;
+    private final UserQuery userQuery;
 
-    private final UserService userService;
-
-    private final FindBoardsQuery findBoardsQuery;
-
-    private String accessToken = null;
-    private Map<String, Object> checkToken = null;
-
-    private GraphQLServletContext context = null;
-    private HttpServletRequest request = null;
-
-    //
-    //TODO ---- USER ----
+    // ---- USER ----
     //
     public UserGraphQLDTO FindUserId(Long id) {
-        return UserGraphQLDTO.from(
-                userRepository.FindUserByIdDB(id)
-        );
+        return userQuery.FindUserId(id);
     }
 
     public List<UserGraphQLDTO> FindAllUser() {
-        List<UserGraphQLDTO> result = new ArrayList<>();
-        userRepository.FindUserList()
-                .forEach(el -> result.add(UserGraphQLDTO.from(el)));
-        return result;
+        return userQuery.FindAllUser();
     }
 
 
-    //
-    //TODO ---- GENRE ----
+    // ---- GENRE ----
     //
     public GenreGraphQLDTO FindGenreId(Long id) {
-        return GenreGraphQLDTO.from(genreRepository.FindById(id));
+        return genreQuery.FindGenreId(id);
     }
 
     public List<GenreGraphQLDTO> FindAllGenre() {
-        return genreRepository.FindAll().stream()
-                .map(GenreGraphQLDTO::from)
-                .collect(Collectors.toList());
+        return genreQuery.FindAllGenre();
     }
 
-    //
-    //TODO ---- BOARD ----
+    // ---- BOARD ----
     //
     public WrappingViewBoardDTO FindBoardId(Long id) {
-        return findBoardsQuery.FindBoardId(id);
+        return boardQuery.FindBoardId(id);
     }
 
     public WrappingBoardGraphQLsDTO FindBoards(String type, DataFetchingEnvironment env) {
-        return findBoardsQuery.FindBoards(type, env);
+        return boardQuery.FindBoards(type, env);
     }
 }
