@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;

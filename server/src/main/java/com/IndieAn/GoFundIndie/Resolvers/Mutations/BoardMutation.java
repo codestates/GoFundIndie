@@ -1,9 +1,11 @@
 package com.IndieAn.GoFundIndie.Resolvers.Mutations;
 
+import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -34,34 +37,34 @@ public class BoardMutation {
 
     public WrappingCreateTempBoardDTO CreateTempBoard(DataFetchingEnvironment env) {
         try {
-//            context = env.getContext();
-//            request = context.getHttpServletRequest();
-//            accessToken = request.getHeader("accesstoken");
-//
-//            // No token in the Header : 4000
-//            if(context == null || request == null || accessToken == null)
-//                return WrappingCreateTempBoardDTO.builder().code(4000).build();
-//
-//            checkToken = userService.CheckToken(accessToken);
-//
-//            if(checkToken.get("email") != null) {
-//                long boardId = boardRepository.RegisterTempBoard(
-//                        userService.FindUserUseEmail(checkToken.get("email").toString()));
-//                return WrappingCreateTempBoardDTO.builder().code(2000)
-//                        .data(CreateTempBoardDTO.builder().id(boardId).build())
-//                        .build();
-//            } else {
-//                // Token Invalid
-//                return WrappingCreateTempBoardDTO.builder()
-//                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
-//            }
+            context = env.getContext();
+            request = context.getHttpServletRequest();
+            accessToken = request.getHeader("accesstoken");
+
+            // No token in the Header : 4000
+            if(context == null || request == null || accessToken == null)
+                return WrappingCreateTempBoardDTO.builder().code(4000).build();
+
+            checkToken = userService.CheckToken(accessToken);
+
+            if(checkToken.get("email") != null) {
+                long boardId = boardRepository.RegisterTempBoard(
+                        userService.FindUserUseEmail(checkToken.get("email").toString()));
+                return WrappingCreateTempBoardDTO.builder().code(2000)
+                        .data(CreateTempBoardDTO.builder().id(boardId).build())
+                        .build();
+            } else {
+                // Token Invalid
+                return WrappingCreateTempBoardDTO.builder()
+                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
+            }
 
             // Test Code : No Access Token
-            return WrappingCreateTempBoardDTO.builder()
-                    .code(2000)
-                    .data(CreateTempBoardDTO.builder().id(boardRepository
-                            .RegisterTempBoard(userRepository.FindUserByIdDB(1L))).build())
-                    .build();
+//            return WrappingCreateTempBoardDTO.builder()
+//                    .code(2000)
+//                    .data(CreateTempBoardDTO.builder().id(boardRepository
+//                            .RegisterTempBoard(userRepository.FindUserByIdDB(1L))).build())
+//                    .build();
 
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
@@ -81,13 +84,23 @@ public class BoardMutation {
             checkToken = userService.CheckToken(accessToken);
 
             if(checkToken.get("email") != null) {
-                long userId = userService.FindUserUseEmail(checkToken.get("email").toString()).getId();
+                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
 
                 // Invalid UserId
-                if(userId != dto.getUserId())
+                if(!user.isAdminRole() && user.getId() != dto.getUserId())
                     return WrappingCreateTempBoardDTO.builder().code(4301).build();
 
-                return null;
+                try {
+                    return WrappingCreateTempBoardDTO.builder()
+                            .code(2000)
+                            .data(CreateTempBoardDTO.builder()
+                                    .id(boardRepository.CompleteBoard(dto).getId()).build())
+                            .build();
+                } catch (NullPointerException e) {
+                    // Essential value is null
+                    return WrappingCreateTempBoardDTO.builder()
+                            .code(4006).build();
+                }
             } else {
                 // Token Invalid
                 return WrappingCreateTempBoardDTO.builder()
