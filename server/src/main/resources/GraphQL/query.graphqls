@@ -22,4 +22,9 @@ type Mutation {
 
     CreateTempBoard: BoardCreate
     CompleteBoard(board: boardInput!): BoardCreate
+    ApproveBoard(id: ID!): onlyCode
+}
+
+type onlyCode {
+    code: Int
 }

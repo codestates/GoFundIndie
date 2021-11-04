@@ -48,7 +48,7 @@ public class BoardQuery {
         if(type == null){
             return WrappingBoardGraphQLsDTO.builder()
                     .code(2000)
-                    .data(boardRepository.findBoards().stream()
+                    .data(boardRepository.findBoards(true).stream()
                             .map(BoardGraphQLDTO::from)
                             .collect(Collectors.toList()))
                     .build();
@@ -96,8 +96,30 @@ public class BoardQuery {
                     } catch (NullPointerException e) {
                         return WrappingBoardGraphQLsDTO.builder().code(4000).build();
                     }
-
-                    //   - Genre = 장르별 영화
+                //   - Approve_false = 미승인 보드
+                case SEARCH_TYPES_APPROVE_FALSE:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findBoards(false).stream()
+                                    .map(BoardGraphQLDTO::from)
+                                    .collect(Collectors.toList()))
+                            .build();
+                case SEARCH_TYPES_APPROVE_TRUE:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findBoards(true).stream()
+                                    .map(BoardGraphQLDTO::from)
+                                    .collect(Collectors.toList()))
+                            .build();
+                //   - All = 필터 없이 모든 보드
+                case SEARCH_TYPES_ALL:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findAllBoards().stream()
+                                    .map(BoardGraphQLDTO::from)
+                                    .collect(Collectors.toList()))
+                            .build();
+                //   - Genre = 장르별 영화
                 default:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)

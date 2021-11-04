@@ -8,6 +8,7 @@ import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
 import com.IndieAn.GoFundIndie.Service.BoardService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
@@ -87,14 +88,18 @@ public class BoardMutation {
             checkToken = userService.CheckToken(accessToken);
 
             if(checkToken.get("email") != null) {
-                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
                 Board board = boardRepository.findBoardId(dto.getBoardId());
+                // Can not find board : 4401
+                if(board == null)
+                    return WrappingCreateTempBoardDTO.builder().code(4401).build();
 
-                // Invalid UserId
+                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+                // Invalid User : 4301
                 if(!user.isAdminRole() && user.getId() != board.getUserId().getId())
                     return WrappingCreateTempBoardDTO.builder().code(4301).build();
 
                 try {
+                    // User != Admin : 4300
                     if(board.isApprove() && !user.isAdminRole()) {
                         return WrappingCreateTempBoardDTO.builder()
                                 .code(4300)
@@ -107,7 +112,7 @@ public class BoardMutation {
                                 .build();
                     }
                 } catch (NullPointerException e) {
-                    // Essential value is null
+                    // Essential value is null : 4006
                     return WrappingCreateTempBoardDTO.builder()
                             .code(4006).build();
                 }
@@ -127,6 +132,44 @@ public class BoardMutation {
 
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
+        }
+    }
+
+    public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
+        try {
+            context = env.getContext();
+            request = context.getHttpServletRequest();
+            accessToken = request.getHeader("accesstoken");
+
+            if(context == null || request == null || accessToken == null)
+                return OnlyCodeDTO.builder().code(4000).build();
+
+            checkToken = userService.CheckToken(accessToken);
+
+            if(checkToken.get("email") != null) {
+                Board board = boardRepository.findBoardId(id);
+                if(board == null)
+                    return OnlyCodeDTO.builder().code(4401).build();
+
+                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+                if(!user.isAdminRole())
+                    return OnlyCodeDTO.builder().code(4300).build();
+
+                boardRepository.ApproveBoard(board);
+                return OnlyCodeDTO.builder().code(2000).build();
+            } else {
+                // Token Invalid
+                return OnlyCodeDTO.builder()
+                        .code(Integer.parseInt(checkToken.get("code").toString()))
+                        .build();
+            }
+
+            // Test Code : No Access Token
+//            boardRepository.ApproveBoard(boardRepository.findBoardId(id));
+//            return OnlyCodeDTO.builder().code(2000).build();
+
+        } catch (NullPointerException e) {
+            return OnlyCodeDTO.builder().code(4000).build();
         }
     }
 }

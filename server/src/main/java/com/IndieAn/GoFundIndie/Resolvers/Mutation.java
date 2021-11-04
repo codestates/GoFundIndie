@@ -4,6 +4,7 @@ import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.Mutations.BoardMutation;
 import com.IndieAn.GoFundIndie.Resolvers.Mutations.GenreMutation;
@@ -48,5 +49,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     public WrappingCreateTempBoardDTO CompleteBoard(CreateBoardCompleteDTO dto, DataFetchingEnvironment env) {
         return boardMutation.CompleteBoard(dto, env);
+    }
+
+    public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
+        return boardMutation.ApproveBoard(id, env);
     }
 }
