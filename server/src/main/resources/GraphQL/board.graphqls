@@ -4,7 +4,7 @@ type BoardCreate {
 }
 
 type BoardId {
-    id: Int
+    id: ID
 }
 
 type WrappingBoard {
@@ -19,7 +19,6 @@ type WrappingBoards {
 
 input boardInput {
     boardId: ID!
-    userId: ID!
     title: String!
     infoCountry: String!
     infoCreatedYear: String!

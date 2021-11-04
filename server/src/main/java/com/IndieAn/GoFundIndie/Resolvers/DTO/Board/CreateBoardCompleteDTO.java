@@ -2,7 +2,6 @@ package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,9 +10,6 @@ import javax.validation.constraints.NotBlank;
 public class CreateBoardCompleteDTO {
     @NotBlank
     private long boardId;
-
-    @NotBlank
-    private long userId;
 
     @NotBlank
     private String title;
@@ -40,9 +36,8 @@ public class CreateBoardCompleteDTO {
 
     public CreateBoardCompleteDTO() {}
 
-    public CreateBoardCompleteDTO(long boardId, long userId, String title, String infoCountry, String infoCreatedYear, int infoTime, String infoStory, String producer, String distributor, String posterImg, String viewLink, int infoLimit, boolean infoSubtitle, String infoCreatedDate) {
+    public CreateBoardCompleteDTO(long boardId, String title, String infoCountry, String infoCreatedYear, int infoTime, String infoStory, String producer, String distributor, String posterImg, String viewLink, int infoLimit, boolean infoSubtitle, String infoCreatedDate) {
         this.boardId = boardId;
-        this.userId = userId;
         this.title = title;
         this.infoCountry = infoCountry;
         this.infoCreatedYear = infoCreatedYear;
