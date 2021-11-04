@@ -24,12 +24,13 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FindBoardsQuery {
+public class BoardQuery {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
     private final UserService userService;
 
+    //TODO : Sort comment by like & limit 5
     public WrappingViewBoardDTO FindBoardId(Long id) {
         try {
             return WrappingViewBoardDTO.builder()

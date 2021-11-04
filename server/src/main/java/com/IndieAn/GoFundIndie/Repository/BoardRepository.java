@@ -50,6 +50,7 @@ public class BoardRepository {
                 .map(BoardGenre::getBoardId).collect(Collectors.toList());
     }
 
+    // Upload or Update poster image
     public void updateBoardImg(Board board, String img) {
         board.setPosterImg(img);
         entityManager.persist(board);
@@ -68,7 +69,31 @@ public class BoardRepository {
         return board.getId();
     }
 
-    public long CompleteBoard(CreateBoardCompleteDTO dto) {
-        return 0;
+    // Put Complete Board
+    public Board CompleteBoard(CreateBoardCompleteDTO dto) {
+        // not null values
+        Board board = entityManager.find(Board.class, dto.getBoardId());
+        board.setId(dto.getBoardId());
+        board.setUserId(entityManager.find(User.class, dto.getUserId()));
+        board.setTitle(dto.getTitle());
+        board.setInfoCountry(dto.getInfoCountry());
+        board.setInfoCreatedYear(dto.getInfoCreatedYear());
+        board.setInfoTime(dto.getInfoTime());
+        board.setInfoStory(dto.getInfoStory());
+
+        // nullable values
+        board.setProducer(dto.getProducer());
+        board.setDistributor(dto.getDistributor());
+        board.setPosterImg(dto.getPosterImg());
+        board.setViewLink(dto.getViewLink());
+        board.setInfoLimit(dto.getInfoLimit());
+        board.setInfoSubtitle(dto.isInfoSubtitle());
+        board.setInfoCreatedDate(dto.getInfoCreatedDate());
+
+        entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
+
+        return board;
     }
 }

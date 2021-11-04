@@ -1,8 +1,8 @@
 package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
