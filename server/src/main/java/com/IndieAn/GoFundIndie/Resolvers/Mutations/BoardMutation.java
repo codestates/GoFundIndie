@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Resolvers.Mutations;
 
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
@@ -7,6 +8,7 @@ import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
+import com.IndieAn.GoFundIndie.Service.BoardService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
@@ -27,6 +29,7 @@ public class BoardMutation {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
+    private final BoardService boardService;
     private final UserService userService;
 
     private String accessToken = null;
@@ -85,17 +88,24 @@ public class BoardMutation {
 
             if(checkToken.get("email") != null) {
                 User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+                Board board = boardRepository.findBoardId(dto.getBoardId());
 
                 // Invalid UserId
-                if(!user.isAdminRole() && user.getId() != dto.getUserId())
+                if(!user.isAdminRole() && user.getId() != board.getUserId().getId())
                     return WrappingCreateTempBoardDTO.builder().code(4301).build();
 
                 try {
-                    return WrappingCreateTempBoardDTO.builder()
-                            .code(2000)
-                            .data(CreateTempBoardDTO.builder()
-                                    .id(boardRepository.CompleteBoard(dto).getId()).build())
-                            .build();
+                    if(board.isApprove() && !user.isAdminRole()) {
+                        return WrappingCreateTempBoardDTO.builder()
+                                .code(4300)
+                                .build();
+                    } else {
+                        return WrappingCreateTempBoardDTO.builder()
+                                .code(2000)
+                                .data(CreateTempBoardDTO.builder()
+                                        .id(boardRepository.CompleteBoard(board, dto)).build())
+                                .build();
+                    }
                 } catch (NullPointerException e) {
                     // Essential value is null
                     return WrappingCreateTempBoardDTO.builder()
@@ -111,7 +121,8 @@ public class BoardMutation {
             // Test Code : No Access Token
 //            return WrappingCreateTempBoardDTO.builder()
 //                    .code(2000)
-//                    .data(CreateTempBoardDTO.builder().id(boardRepository.CompleteBoard(dto).getId()).build())
+//                    .data(CreateTempBoardDTO.builder().id(boardRepository
+//                            .CompleteBoard(dto).getId()).build())
 //                    .build();
 
         } catch (NullPointerException e) {
