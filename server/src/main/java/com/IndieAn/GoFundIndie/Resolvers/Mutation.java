@@ -32,8 +32,8 @@ public class Mutation implements GraphQLMutationResolver {
     private final EntityManager em;
 
     private final GenreRepository genreRepository;
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     private final UserService userService;
 
@@ -104,8 +104,7 @@ public class Mutation implements GraphQLMutationResolver {
             } else {
                 // Token Invalid
                 return WrappingCreateTempBoardDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString()))
-                        .build();
+                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
             }
             // Test Code : No Access Token
 //            User user = userRepository.FindUserByIdDB(1L);

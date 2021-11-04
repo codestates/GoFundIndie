@@ -1,8 +1,7 @@
 package com.IndieAn.GoFundIndie.Common;
 
-import java.util.Arrays;
-
 public enum SearchTypes {
+    //   - Genre = 장르별 영화
     SEARCH_TYPES_DRAMA("Drama"),
     SEARCH_TYPES_HORROR("Horror"),
     SEARCH_TYPES_ROMANCE("Romance"),
@@ -15,6 +14,7 @@ public enum SearchTypes {
     SEARCH_TYPES_ANI("Animation"),
     SEARCH_TYPES_ACTION("Action"),
     SEARCH_TYPES_SF("SF"),
+    //   - My = 내가 찜한 영화
     SEARCH_TYPES_MY("My");
 
     private final String types;
