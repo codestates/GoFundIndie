@@ -69,7 +69,8 @@ public class CommentController {
     }
 
     @GetMapping(value = "/comment/{boardId}")
-    public ResponseEntity<?> GetComments(@PathVariable long boardId, @RequestHeader Map<String, String> requestHeader, @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
+    public ResponseEntity<?> GetComments(@PathVariable long boardId, @RequestParam(required = false) String type,
+                                         @RequestParam(required = false) Integer page, @RequestHeader Map<String, String> requestHeader) {
         // 영화 보드에 작성된 댓글들을 불러오는 메소드
         // 해당 board가 존재하지 않으면 404 응답을 한다.
         try {
@@ -87,7 +88,8 @@ public class CommentController {
             }
 
             // token에 email정보가 유효하면 댓글을 가져오는 과정을 수행한다
-            body = commentService.GetCommentPage(boardId, email, pageable);
+            System.out.println("여긴올것이고");
+            body = commentService.GetCommentPage(boardId, email, type, page);
             return ResponseEntity.status(body.get("data") == null ? 404 : 200).body(body);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");

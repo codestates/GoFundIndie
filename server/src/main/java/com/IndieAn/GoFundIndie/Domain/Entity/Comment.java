@@ -41,6 +41,17 @@ public class Comment {
     @OneToMany(mappedBy = "commentId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CommentRating> commentRatings = new ArrayList<>();
 
+    @Column(columnDefinition = "integer default 0")
+    private int like;
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
     public Comment() {}
 
     public List<CommentReport> getCommentReports() {
