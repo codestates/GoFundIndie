@@ -86,14 +86,14 @@ INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("안젤리나 
 INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("브라이언 타이리 헨리", 3, "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Brian_Tyree_Henry_by_Gage_Skidmore.jpg/500px-Brian_Tyree_Henry_by_Gage_Skidmore.jpg", 4);
 
 --Comment
-insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 2, "할아버지가 범인임 할아버지가 범인임", true);
-insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 3, "할아버지가 범인임 할아버지가 범인임", true);
-insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 4, "할아버지가 범인임 할아버지가 범인임", true);
+insert into `comment` (rating, user_id, board_id, body, spoiler, `like`) VALUES (5, 11, 2, "할아버지가 범인임 할아버지가 범인임", true, 1);
+insert into `comment` (rating, user_id, board_id, body, spoiler, `like`) VALUES (5, 11, 3, "할아버지가 범인임 할아버지가 범인임", true, 1);
+insert into `comment` (rating, user_id, board_id, body, spoiler, `like`) VALUES (5, 11, 4, "할아버지가 범인임 할아버지가 범인임", true, 6);
 
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 4, 0, "5점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 4, 0, "4점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 4, 0, "3점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (2, 6, 4, 0, "2점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (5, 3, 4, 0, "5점 드립니다", 1);
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (4, 4, 4, 0, "4점 드립니다", 4);
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (3, 5, 4, 0, "3점 드립니다", 1);
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (2, 6, 4, 0, "2점 드립니다", 3);
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 7, 4, 0, "1점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (0, 8, 4, 0, "0점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 9, 4, 0, "1점 드립니다");
@@ -117,6 +117,21 @@ insert into `comment_rating` (user_id, comment_id) values (5, 3);
 insert into `comment_rating` (user_id, comment_id) values (6, 4);
 insert into `comment_rating` (user_id, comment_id) values (7, 5);
 insert into `comment_rating` (user_id, comment_id) values (8, 6);
+
+insert into `comment_rating` (user_id, comment_id) values (3, 3);
+insert into `comment_rating` (user_id, comment_id) values (4, 3);
+insert into `comment_rating` (user_id, comment_id) values (6, 3);
+insert into `comment_rating` (user_id, comment_id) values (7, 3);
+insert into `comment_rating` (user_id, comment_id) values (8, 3);
+
+insert into `comment_rating` (user_id, comment_id) values (4, 5);
+insert into `comment_rating` (user_id, comment_id) values (5, 5);
+insert into `comment_rating` (user_id, comment_id) values (6, 5);
+
+insert into `comment_rating` (user_id, comment_id) values (3, 7);
+insert into `comment_rating` (user_id, comment_id) values (5, 7);
+insert into `comment_rating` (user_id, comment_id) values (6, 7);
+
 
 --CommentReport
 insert into `comment_report` (user_id, comment_id, body) values (3, 4, "test");
