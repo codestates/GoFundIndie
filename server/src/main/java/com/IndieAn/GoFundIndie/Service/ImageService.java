@@ -148,18 +148,23 @@ public class ImageService {
         return result;
     }
 
-    public String uploadCastingImage(MultipartFile file, Long boardId) {
-        board = boardRepository.findBoardId(boardId);
+    public String uploadCastingImage(MultipartFile file, Long castingId) {
+        Casting casting = castingRepository.findCastingById(castingId);
 
         //board valid check fail
-        if(board == null) return "NullPointException";
+        if(casting == null) return "NullPointException";
 
-        dir = DIR_MOVIE + "/" + boardId + "/casting";
+        dir = DIR_MOVIE + "/" + casting.getBoardId().getId() + "/casting";
 
-        result = uploadStandBy(file, dir, UUID.randomUUID() + "-" + file.getOriginalFilename());
+        if(casting.getImage() != null){
+            result = casting.getImage();
+            delete(dir + "/" + result.substring(result.lastIndexOf("/") + 1));
+        }
+
+        result = uploadStandBy(file, dir, castingId + "-" + file.getOriginalFilename());
 
         //add DB casting info
-        castingRepository.addCastingInfo(board, result);
+        castingRepository.updateCastingImage(casting, result);
 
         return result;
     }
