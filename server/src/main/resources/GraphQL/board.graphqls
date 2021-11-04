@@ -4,7 +4,7 @@ type BoardCreate {
 }
 
 type BoardId {
-    id: Int
+    id: ID
 }
 
 type WrappingBoard {

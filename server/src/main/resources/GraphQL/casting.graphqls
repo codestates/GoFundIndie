@@ -4,3 +4,25 @@ type casting {
     position: Int
     image: String
 }
+
+input completeCasting {
+    castingId: ID!
+    name: String!
+    position: Int!
+}
+
+input putCasting {
+    castingId: ID!
+    name: String
+    position: Int
+    image: String
+}
+
+type CastingCreate {
+    code: Int
+    data: CastingId
+}
+
+type CastingId {
+    id: ID
+}

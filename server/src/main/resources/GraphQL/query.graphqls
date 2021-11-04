@@ -23,6 +23,11 @@ type Mutation {
     CreateTempBoard: BoardCreate
     CompleteBoard(board: boardInput!): BoardCreate
     ApproveBoard(id: ID!): onlyCode
+
+    CreateTempCasting(boardId: ID!): CastingCreate
+    CompleteCasting(casting: completeCasting!): CastingCreate
+    PutCasting(casting: putCasting!): CastingCreate
+    DeleteCasting(id: ID!): onlyCode
 }
 
 type onlyCode {
