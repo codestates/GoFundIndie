@@ -107,6 +107,13 @@ public class BoardMutation {
                         .code(Integer.parseInt(checkToken.get("code").toString()))
                         .build();
             }
+
+            // Test Code : No Access Token
+//            return WrappingCreateTempBoardDTO.builder()
+//                    .code(2000)
+//                    .data(CreateTempBoardDTO.builder().id(boardRepository.CompleteBoard(dto).getId()).build())
+//                    .build();
+
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
