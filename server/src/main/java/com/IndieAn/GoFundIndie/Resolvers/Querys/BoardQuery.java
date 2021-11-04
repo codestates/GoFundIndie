@@ -44,11 +44,11 @@ public class BoardQuery {
         }
     }
 
-    public WrappingBoardGraphQLsDTO FindBoards(String type, DataFetchingEnvironment env) {
+    public WrappingBoardGraphQLsDTO FindBoards(String type, int limit, DataFetchingEnvironment env) {
         if(type == null){
             return WrappingBoardGraphQLsDTO.builder()
                     .code(2000)
-                    .data(boardRepository.findBoards(true).stream()
+                    .data(boardRepository.findBoards(true, limit).stream()
                             .map(BoardGraphQLDTO::from)
                             .collect(Collectors.toList()))
                     .build();
@@ -77,7 +77,7 @@ public class BoardQuery {
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
                                     .data(boardRepository.findBoardsByLike(userService
-                                                    .FindUserUseEmail(checkToken.get("email").toString()))
+                                                    .FindUserUseEmail(checkToken.get("email").toString()), limit)
                                             .stream().map(BoardGraphQLDTO::from)
                                             .collect(Collectors.toList()))
                                     .build();
@@ -100,14 +100,14 @@ public class BoardQuery {
                 case SEARCH_TYPES_APPROVE_FALSE:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoards(false).stream()
+                            .data(boardRepository.findBoards(false, limit).stream()
                                     .map(BoardGraphQLDTO::from)
                                     .collect(Collectors.toList()))
                             .build();
                 case SEARCH_TYPES_APPROVE_TRUE:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoards(true).stream()
+                            .data(boardRepository.findBoards(true, limit).stream()
                                     .map(BoardGraphQLDTO::from)
                                     .collect(Collectors.toList()))
                             .build();
@@ -119,11 +119,19 @@ public class BoardQuery {
                                     .map(BoardGraphQLDTO::from)
                                     .collect(Collectors.toList()))
                             .build();
+                //   - New = 최근 승인된 순으로 정렬
+                case SEARCH_TYPES_NEW:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findBoardsNew(limit)
+                                    .stream().map(BoardGraphQLDTO::from)
+                                    .collect(Collectors.toList()))
+                            .build();
                 //   - Genre = 장르별 영화
                 default:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoardsByGenre(searchType)
+                            .data(boardRepository.findBoardsByGenre(searchType, limit)
                                     .stream().map(BoardGraphQLDTO::from)
                                     .collect(Collectors.toList()))
                             .build();

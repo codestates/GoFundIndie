@@ -8,7 +8,7 @@ type Query {
     FindAllUser: [user]
 
     FindBoardId(id: ID!): WrappingBoard
-    FindBoards(Type: String): WrappingBoards
+    FindBoards(Type: String, Limit: Int): WrappingBoards
 
     FindGenreId(id: ID!): genre
     FindAllGenre: [genre]

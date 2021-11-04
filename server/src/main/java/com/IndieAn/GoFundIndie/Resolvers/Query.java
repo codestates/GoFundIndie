@@ -52,7 +52,8 @@ public class Query implements GraphQLQueryResolver {
         return boardQuery.FindBoardId(id);
     }
 
-    public WrappingBoardGraphQLsDTO FindBoards(String type, DataFetchingEnvironment env) {
-        return boardQuery.FindBoards(type, env);
+    public WrappingBoardGraphQLsDTO FindBoards(String type, Integer limit, DataFetchingEnvironment env) {
+        if(limit == null) return boardQuery.FindBoards(type, 100000000, env);
+        return boardQuery.FindBoards(type, limit, env);
     }
 }
