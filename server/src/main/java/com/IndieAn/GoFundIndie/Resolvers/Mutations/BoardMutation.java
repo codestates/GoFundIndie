@@ -163,6 +163,11 @@ public class BoardMutation {
                         .code(Integer.parseInt(checkToken.get("code").toString()))
                         .build();
             }
+
+            // Test Code : No Access Token
+//            boardRepository.ApproveBoard(boardRepository.findBoardId(id));
+//            return OnlyCodeDTO.builder().code(2000).build();
+
         } catch (NullPointerException e) {
             return OnlyCodeDTO.builder().code(4000).build();
         }
