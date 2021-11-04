@@ -25,18 +25,18 @@ INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, post
 INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_year, info_time, info_limit, info_story, info_subtitle) VALUES (5, 7, false,"TEST BOARD","producer","distributor",null,null,"태국","2021",120,1,"<p>DUMMY DATA</p>",true);
 
 --Genre
-INSERT INTO `genre` (name) VALUES ("드라마");
-INSERT INTO `genre` (name) VALUES ("공포");
-INSERT INTO `genre` (name) VALUES ("로멘스");
-INSERT INTO `genre` (name) VALUES ("판타지");
-INSERT INTO `genre` (name) VALUES ("스릴러");
-INSERT INTO `genre` (name) VALUES ("다큐멘터리");
-INSERT INTO `genre` (name) VALUES ("가족");
-INSERT INTO `genre` (name) VALUES ("범죄");
-INSERT INTO `genre` (name) VALUES ("코미디");
-INSERT INTO `genre` (name) VALUES ("애니메이션");
-INSERT INTO `genre` (name) VALUES ("액션");
-INSERT INTO `genre` (name) VALUES ("SF");
+INSERT INTO `genre` (id, name) VALUES (1, "드라마");
+INSERT INTO `genre` (id, name) VALUES (2, "공포");
+INSERT INTO `genre` (id, name) VALUES (3, "로멘스");
+INSERT INTO `genre` (id, name) VALUES (4, "판타지");
+INSERT INTO `genre` (id, name) VALUES (5, "스릴러");
+INSERT INTO `genre` (id, name) VALUES (6, "다큐멘터리");
+INSERT INTO `genre` (id, name) VALUES (7, "가족");
+INSERT INTO `genre` (id, name) VALUES (8, "범죄");
+INSERT INTO `genre` (id, name) VALUES (9, "코미디");
+INSERT INTO `genre` (id, name) VALUES (10, "애니메이션");
+INSERT INTO `genre` (id, name) VALUES (11, "액션");
+INSERT INTO `genre` (id, name) VALUES (12, "SF");
 --Genre END
 
 --BoardGenre
