@@ -31,7 +31,13 @@ public class BoardRepository {
         }
     }
 
-    public List<Board> findBoards() {
+    public List<Board> findBoards(boolean isApprove) {
+        return entityManager.createQuery(
+                "SELECT a FROM Board a WHERE isApprove=" + isApprove + "", Board.class
+        ).getResultList();
+    }
+
+    public List<Board> findAllBoards() {
         return entityManager.createQuery(
                 "SELECT a FROM Board a", Board.class
         ).getResultList();
@@ -45,9 +51,11 @@ public class BoardRepository {
     public List<Board> findBoardsByGenre(SearchTypes type) {
         int a = Arrays.asList(SearchTypes.values()).indexOf(type) + 1;
         return entityManager.createQuery(
-                "SELECT a FROM BoardGenre a WHERE genreId=" + a + "", BoardGenre.class
+                "SELECT a FROM BoardGenre a WHERE a.genreId=" + a, BoardGenre.class
         ).getResultList().stream()
-                .map(BoardGenre::getBoardId).collect(Collectors.toList());
+                .map(BoardGenre::getBoardId)
+                .filter(Board::isApprove)
+                .collect(Collectors.toList());
     }
 
     // Upload or Update poster image
@@ -95,5 +103,13 @@ public class BoardRepository {
         entityManager.close();
 
         return board.getId();
+    }
+
+    public void ApproveBoard(Board board) {
+        board.setApprove(true);
+
+        entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
     }
 }
