@@ -3,6 +3,7 @@ package com.IndieAn.GoFundIndie.Resolvers;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.WrappingCastingGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
@@ -53,5 +54,24 @@ public class Mutation implements GraphQLMutationResolver {
 
     public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
         return boardMutation.ApproveBoard(id, env);
+    }
+
+    // ---- Casting ----
+    //
+
+    // 캐스팅 임시
+    public void CreateTempCasting(long id, DataFetchingEnvironment env) {
+    }
+
+    // 캐스팅 등록
+    public void CompleteCasting(long id, DataFetchingEnvironment env) {
+    }
+
+    // 캐스팅 수정
+    public void PutCasting(long id, DataFetchingEnvironment env) {
+    }
+
+    // 캐스팅 삭제
+    public void DeleteCasting(long id, DataFetchingEnvironment env) {
     }
 }
