@@ -1,16 +1,12 @@
 .swiper-div {
   justify-content: center;
-  width: 100%;
+  width: auto;
   img {
-    height: 450px;
-    width: auto;
+    height: auto;
     border: 0.1px solid #1b1b1b;
     border-radius: 80px;
     //todo: 마스크로 바꾸기
   }
-}
-.swiper-button-next {
-  right: 500px;
 }
 
 .poster__wrapper {
@@ -27,10 +23,5 @@
 
     position: relative;
     display: block;
-  }
-}
-@media (min-width: 1200px) {
-  .swiper-div {
-    overflow-x: scroll;
   }
 }

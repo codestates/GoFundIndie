@@ -1,3 +1,3 @@
-export default function Cast() {
-  return <div></div>;
+export default function Cast({ casting }: any) {
+  return <></>;
 }

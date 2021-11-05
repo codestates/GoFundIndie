@@ -1,10 +1,11 @@
 import styles from "../../styles/components/boardInfos/comments.module.scss";
-export default function Comments({ comments }: any) {
+export default function Comments({ comments }: { comments: Array<string> }) {
   return (
-    <div>
+    <>
+      <div>코멘트</div>
       {comments.map((comment: any) => {
         return (
-          <>
+          <div key={comment.userNickname}>
             <div className={styles["comment-block"]}>
               <div className={styles["comment"]}>
                 <div className={styles["comment-header"]}>
@@ -32,9 +33,9 @@ export default function Comments({ comments }: any) {
                 </div>
               </div>
             </div>
-          </>
+          </div>
         );
       })}
-    </div>
+    </>
   );
 }
