@@ -63,22 +63,18 @@ public class Mutation implements GraphQLMutationResolver {
     // ---- Casting ----
     //
 
-    // 캐스팅 임시
     public WrappingCreateTempCastingDTO CreateTempCasting(long id, DataFetchingEnvironment env) {
         return castingMutation.CreateTempCasting(id,env);
     }
 
-    // 캐스팅 등록
     public WrappingCreateTempCastingDTO CompleteCasting(CreateCastingCompleteDTO dto, DataFetchingEnvironment env) {
         return castingMutation.CompleteCasting(dto, env);
     }
 
-    // 캐스팅 수정
     public WrappingCreateTempCastingDTO PutCasting(PutCastingDTO dto, DataFetchingEnvironment env) {
         return castingMutation.PutCasting(dto, env);
     }
 
-    // 캐스팅 삭제
     public OnlyCodeDTO DeleteCasting(long id, DataFetchingEnvironment env) {
         return castingMutation.DeleteCasting(id, env);
     }
