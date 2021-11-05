@@ -9,7 +9,12 @@ type BoardId {
 
 type WrappingBoard {
     code: Int
-    data: ViewBoard
+    data: viewBoard
+}
+
+type WrappingAdminBoard {
+    code: Int
+    data: adminBoard
 }
 
 type WrappingBoards {
@@ -35,26 +40,18 @@ input boardInput {
 
 type Board {
     id: ID
-    userId: ID
     isApprove: Boolean
     title: String
-    producer: String
-    distributor: String
     posterImg: String
-    viewLink: String
     infoCountry: String
     infoCreatedYear: String
     infoCreatedDate: String
     infoTime: Int
     infoLimit: Int
-    infoStory: String
-    infoSubtitle: Boolean
-    createdAt: String
 }
 
-type ViewBoard {
+type viewBoard {
     id: ID
-    userId: ID
     isApprove: Boolean
     title: String
     producer: String
@@ -69,6 +66,33 @@ type ViewBoard {
     infoStory: String
     infoSubtitle: Boolean
     createdAt: String
+    commentAmount: Int
+    likeAmount: Int
+    genre: [genre]
+    casting: [casting]
+    still: [still]
+    comment: [comment]
+}
+
+type adminBoard {
+    id: ID
+    user: user
+    isApprove: Boolean
+    title: String
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoCountry: String
+    infoCreatedYear: String
+    infoCreatedDate: String
+    infoTime: Int
+    infoLimit: Int
+    infoStory: String
+    infoSubtitle: Boolean
+    createdAt: String
+    commentAmount: Int
+    likeAmount: Int
     genre: [genre]
     casting: [casting]
     still: [still]

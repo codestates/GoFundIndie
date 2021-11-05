@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingAdminViewBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingBoardGraphQLsDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
@@ -52,7 +53,12 @@ public class Query implements GraphQLQueryResolver {
         return boardQuery.FindBoardId(id);
     }
 
-    public WrappingBoardGraphQLsDTO FindBoards(String type, DataFetchingEnvironment env) {
-        return boardQuery.FindBoards(type, env);
+    public WrappingAdminViewBoardDTO FindBoardIdAdmin(Long id, DataFetchingEnvironment env) {
+        return boardQuery.FindBoardIdAdmin(id, env);
+    }
+
+    public WrappingBoardGraphQLsDTO FindBoards(String type, Integer limit, DataFetchingEnvironment env) {
+        if(limit == null) return boardQuery.FindBoards(type, 100000000, env);
+        return boardQuery.FindBoards(type, limit, env);
     }
 }

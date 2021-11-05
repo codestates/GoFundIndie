@@ -5,14 +5,18 @@ import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.BoardGenre;
 import com.IndieAn.GoFundIndie.Domain.Entity.BoardLike;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
 public class BoardRepository {
     private final EntityManager entityManager;
 
+    private final static String BOARD_GRAPHQL_DTO_QUERY_SELECT = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO(b.id, b.isApprove, b.title, b.posterImg, b.infoCountry, b.infoCreatedYear, b.infoCreatedDate, b.infoTime, b.infoLimit) ";
+
     public Board findBoardId(long id) {
         try {
             return entityManager.find(Board.class, id);
@@ -31,31 +37,55 @@ public class BoardRepository {
         }
     }
 
-    public List<Board> findBoards(boolean isApprove) {
+    public List<BoardGraphQLDTO> findBoards(boolean isApprove, int limit) {
         return entityManager.createQuery(
-                "SELECT a FROM Board a WHERE isApprove=" + isApprove + "", Board.class
-        ).getResultList();
+            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+                    "FROM Board b " +
+                    "WHERE b.isApprove=" + isApprove + " " +
+                    "ORDER BY b.commentAmount DESC", BoardGraphQLDTO.class)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
-    public List<Board> findAllBoards() {
+    public List<BoardGraphQLDTO> findAllBoards(int limit) {
         return entityManager.createQuery(
-                "SELECT a FROM Board a", Board.class
-        ).getResultList();
+            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+                    "FROM Board b " +
+                    "ORDER BY b.id DESC", BoardGraphQLDTO.class)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
-    public List<Board> findBoardsByLike(User user) {
-        return user.getBoardLikes().stream()
-                .map(BoardLike::getBoardId).collect(Collectors.toList());
+    public List<BoardGraphQLDTO> findBoardsByLike(User user, int limit) {
+        return entityManager.createQuery(
+            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+                    "FROM BoardLike l " +
+                    "LEFT JOIN l.boardId b " +
+                    "WHERE l.userId = " + user.getId() + " AND b.isApprove = true " +
+                    "ORDER BY l.createdAt DESC", BoardGraphQLDTO.class)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
-    public List<Board> findBoardsByGenre(SearchTypes type) {
-        int a = Arrays.asList(SearchTypes.values()).indexOf(type) + 1;
+    public List<BoardGraphQLDTO> findBoardsByGenre(SearchTypes type, int limit) {
+        int genreId = Arrays.asList(SearchTypes.values()).indexOf(type) + 1;
         return entityManager.createQuery(
-                "SELECT a FROM BoardGenre a WHERE a.genreId=" + a, BoardGenre.class
-        ).getResultList().stream()
-                .map(BoardGenre::getBoardId)
-                .filter(Board::isApprove)
-                .collect(Collectors.toList());
+            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+                    "FROM BoardGenre g " +
+                    "LEFT JOIN g.boardId b " +
+                    "WHERE g.genreId = " + genreId + " AND b.isApprove = true " +
+                    "ORDER BY b.commentAmount DESC", BoardGraphQLDTO.class)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<BoardGraphQLDTO> findBoardsNew(int limit) {
+        return entityManager.createQuery(
+            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+                    "FROM Board b " +
+                    "WHERE b.isApprove = true " +
+                    "ORDER BY b.id DESC", BoardGraphQLDTO.class)
+                .setMaxResults(limit).getResultList();
     }
 
     // Upload or Update poster image
@@ -107,6 +137,7 @@ public class BoardRepository {
 
     public void ApproveBoard(Board board) {
         board.setApprove(true);
+        board.setCreatedAt(new Date());
 
         entityManager.persist(board);
         entityManager.flush();
