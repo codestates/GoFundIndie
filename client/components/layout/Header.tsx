@@ -17,11 +17,15 @@ export default function Header() {
   //TODO::/효율적인 방법 찾기
   useEffect(() => {
     if (!router.isReady) return;
-    const header = document.querySelector("#header__div");
-    if (header !== null) {
-      header.classList.add(styles.transparent);
+    if (router.pathname !== "/board/view/[boardid]") {
+      return;
     }
+    const header = document.querySelector("#header__div");
+
     function CheckScroll() {
+      if (window.scrollY === 0) {
+        header?.classList.add(styles.transparent);
+      }
       if (window.scrollY > 10) {
         header?.classList.remove(styles.transparent);
       }
@@ -65,46 +69,67 @@ export default function Header() {
         <div id="header__div" className={styles.header__div__wrapper}>
           <div className={styles.header__div}>
             <ul className={styles.header__ul}>
-              <li className={styles.header__ul__logo}>
-                <Link href="/">
-                  <img
-                    className={styles.logo}
-                    src="/gofundindie_icon.png"
-                    width="220"
-                    height="40"
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link href="/">홈</Link>
-              </li>
-              <li>
-                <Link href="/board">영화</Link>
-              </li>
-              <li>
+              <div className={styles["flex-start"]}>
+                <li className={styles.header__ul__logo}>
+                  <Link href="/">
+                    <img
+                      className={styles.logo}
+                      src="/gofundindie_icon.png"
+                      width="220"
+                      height="40"
+                    />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/">홈</Link>
+                </li>
+                <li>
+                  <Link href="/board">영화</Link>
+                </li>
+              </div>
+              {/* <li>
                 <div className={styles["header-searchbar"]}>
-                  <input
+                <input
                     type="text"
                     placeholder="컨텐츠, 인물, 장르를 검색해보세요"
                   />
                 </div>
-              </li>
-              <li>
-                {userLoginStatus ? null : (
-                  <button onClick={() => setSignupModalOpen(!loginModalOpen)}>
-                    회원가입
-                  </button>
-                )}
-              </li>
-              <li>
+              </li> */}
+              <div className={styles["flex-end"]}>
                 {userLoginStatus ? (
-                  <button onClick={Signout}>로그아웃</button>
+                  <>
+                    <li>
+                      <Link href="/mypage">마이페이지</Link>
+                    </li>
+                    <li>
+                      <button onClick={Signout}>로그아웃</button>
+                    </li>
+                  </>
                 ) : (
-                  <button onClick={() => setLoginModalOpen(!loginModalOpen)}>
-                    로그인
-                  </button>
+                  <>
+                    <li>
+                      <button
+                        onClick={() => {
+                          window.scrollTo(0, 0);
+                          setSignupModalOpen(!loginModalOpen);
+                        }}
+                      >
+                        회원가입
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          window.scrollTo(0, 0);
+                          setLoginModalOpen(!loginModalOpen);
+                        }}
+                      >
+                        로그인
+                      </button>
+                    </li>
+                  </>
                 )}
-              </li>
+              </div>
             </ul>
           </div>
         </div>

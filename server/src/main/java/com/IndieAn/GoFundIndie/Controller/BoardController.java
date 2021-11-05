@@ -11,4 +11,5 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class BoardController {
     private final HashMap<String, Object> body = new HashMap<>();
+
 }
