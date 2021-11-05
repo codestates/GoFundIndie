@@ -21,7 +21,9 @@ public enum SearchTypes {
     //   - Approve_true = 승인 보드
     SEARCH_TYPES_APPROVE_TRUE("Approve_true"),
     //   - All = isApprove 구분없이 전부
-    SEARCH_TYPES_ALL("All");
+    SEARCH_TYPES_ALL("All"),
+    //   - New = 최근 등록한 영화
+    SEARCH_TYPES_NEW("New");
 
     private final String types;
 
