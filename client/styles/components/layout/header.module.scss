@@ -1,24 +1,40 @@
 $backcolor: #1b1b1b;
 $buttoncolor: #bbbbbb;
 .header__div__wrapper {
+  min-width: 1200px !important;
+  overflow: scroll !important;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 25;
+  background-color: $backcolor;
+  display: flex;
+  align-items: center;
+
+  .flex-start {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .flex-end {
+    margin-right: 3rem;
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
   button {
     all: unset;
     min-width: 4rem;
     color: $buttoncolor;
     cursor: pointer;
   }
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 25;
-  width: 100%;
-  background-color: $backcolor;
-  display: flex;
-  align-items: center;
-
   .header__div {
     display: flex;
     align-items: center;
+    width: 100%;
     font-size: 15px;
     height: 74px;
   }
@@ -26,14 +42,18 @@ $buttoncolor: #bbbbbb;
   .header__ul {
     padding-left: 0;
     list-style: none;
+    width: 100%;
     display: flex;
-    margin-left: 20px;
+    margin-left: 1rem;
     font-size: 1.1rem;
     align-items: center;
     flex-direction: row;
     justify-content: flex-start;
     .header__ul__logo {
       margin-top: 5px;
+      & + li {
+        margin-left: 1rem;
+      }
     }
     .logo {
       cursor: pointer;
@@ -42,7 +62,7 @@ $buttoncolor: #bbbbbb;
   li {
     margin-right: 25px;
     margin-left: 50px;
-    min-width: 2rem;
+    min-width: 5rem;
     text-align: center;
     a {
       color: white;
