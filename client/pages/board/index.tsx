@@ -13,6 +13,11 @@ export default function Board() {
             id = 32 영화 페이지로 이동
           </Link>
         </div>
+        <div>
+          <Link href="/board/view/[boardid]" as={`/board/view/33`}>
+            id = 33 영화 페이지로 이동
+          </Link>
+        </div>
       </div>
     </div>
   );

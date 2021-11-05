@@ -25,18 +25,18 @@ INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, post
 INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_year, info_time, info_limit, info_story, info_subtitle) VALUES (5, 7, false,"TEST BOARD","producer","distributor",null,null,"태국","2021",120,1,"<p>DUMMY DATA</p>",true);
 
 --Genre
-INSERT INTO `genre` (name) VALUES ("드라마");
-INSERT INTO `genre` (name) VALUES ("공포");
-INSERT INTO `genre` (name) VALUES ("로멘스");
-INSERT INTO `genre` (name) VALUES ("판타지");
-INSERT INTO `genre` (name) VALUES ("스릴러");
-INSERT INTO `genre` (name) VALUES ("다큐멘터리");
-INSERT INTO `genre` (name) VALUES ("가족");
-INSERT INTO `genre` (name) VALUES ("범죄");
-INSERT INTO `genre` (name) VALUES ("코미디");
-INSERT INTO `genre` (name) VALUES ("애니메이션");
-INSERT INTO `genre` (name) VALUES ("액션");
-INSERT INTO `genre` (name) VALUES ("SF");
+INSERT INTO `genre` (id, name) VALUES (1, "드라마");
+INSERT INTO `genre` (id, name) VALUES (2, "공포");
+INSERT INTO `genre` (id, name) VALUES (3, "로멘스");
+INSERT INTO `genre` (id, name) VALUES (4, "판타지");
+INSERT INTO `genre` (id, name) VALUES (5, "스릴러");
+INSERT INTO `genre` (id, name) VALUES (6, "다큐멘터리");
+INSERT INTO `genre` (id, name) VALUES (7, "가족");
+INSERT INTO `genre` (id, name) VALUES (8, "범죄");
+INSERT INTO `genre` (id, name) VALUES (9, "코미디");
+INSERT INTO `genre` (id, name) VALUES (10, "애니메이션");
+INSERT INTO `genre` (id, name) VALUES (11, "액션");
+INSERT INTO `genre` (id, name) VALUES (12, "SF");
 --Genre END
 
 --BoardGenre
@@ -86,20 +86,24 @@ INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("안젤리나 
 INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("브라이언 타이리 헨리", 3, "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Brian_Tyree_Henry_by_Gage_Skidmore.jpg/500px-Brian_Tyree_Henry_by_Gage_Skidmore.jpg", 4);
 
 --Comment
-insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 2, "할아버지가 범인임 할아버지가 범인임", true);
-insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 3, "할아버지가 범인임 할아버지가 범인임", true);
-insert into `comment` (rating, user_id, board_id, body, spoiler) VALUES (5, 11, 4, "할아버지가 범인임 할아버지가 범인임", true);
+insert into `comment` (rating, user_id, board_id, body, spoiler, `like`) VALUES (5, 11, 2, "할아버지가 범인임 할아버지가 범인임", true, 1);
+insert into `comment` (rating, user_id, board_id, body, spoiler, `like`) VALUES (5, 11, 3, "할아버지가 범인임 할아버지가 범인임", true, 1);
+insert into `comment` (rating, user_id, board_id, body, spoiler, `like`) VALUES (5, 11, 4, "할아버지가 범인임 할아버지가 범인임", true, 6);
 
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 4, 0, "5점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 4, 0, "4점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 4, 0, "3점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (2, 6, 4, 0, "2점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (5, 3, 4, 0, "5점 드립니다", 1);
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (4, 4, 4, 0, "4점 드립니다", 4);
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (3, 5, 4, 0, "3점 드립니다", 1);
+insert into `comment` (rating, user_id, board_id, donation, body, `like`) VALUES (2, 6, 4, 0, "2점 드립니다", 3);
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 7, 4, 0, "1점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (0, 8, 4, 0, "0점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 9, 4, 0, "1점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (2, 10, 4, 0, "2점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 2, 100, "영화 재밌어서 돈 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 4, 2, 2000, "좋은 영화 많이 만들어 주세요");
+
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 32, 0, "5점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 32, 0, "4점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 32, 0, "3점 드립니다");
 
 insert into `comment` (rating, user_id, board_id) values (1,3,3);
 insert into `comment` (rating, user_id, board_id) values (1,4,3);
@@ -117,6 +121,21 @@ insert into `comment_rating` (user_id, comment_id) values (5, 3);
 insert into `comment_rating` (user_id, comment_id) values (6, 4);
 insert into `comment_rating` (user_id, comment_id) values (7, 5);
 insert into `comment_rating` (user_id, comment_id) values (8, 6);
+
+insert into `comment_rating` (user_id, comment_id) values (3, 3);
+insert into `comment_rating` (user_id, comment_id) values (4, 3);
+insert into `comment_rating` (user_id, comment_id) values (6, 3);
+insert into `comment_rating` (user_id, comment_id) values (7, 3);
+insert into `comment_rating` (user_id, comment_id) values (8, 3);
+
+insert into `comment_rating` (user_id, comment_id) values (4, 5);
+insert into `comment_rating` (user_id, comment_id) values (5, 5);
+insert into `comment_rating` (user_id, comment_id) values (6, 5);
+
+insert into `comment_rating` (user_id, comment_id) values (3, 7);
+insert into `comment_rating` (user_id, comment_id) values (5, 7);
+insert into `comment_rating` (user_id, comment_id) values (6, 7);
+
 
 --CommentReport
 insert into `comment_report` (user_id, comment_id, body) values (3, 4, "test");
@@ -178,3 +197,13 @@ INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, post
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 32, 0, "5점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 32, 0, "4점 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 32, 0, "3점 드립니다");
+
+-- 유월
+INSERT INTO `board` (id, user_id, is_approve, title, producer, distributor, poster_img, view_link, info_country, info_created_year, info_created_date, info_time, info_limit, info_story, info_subtitle) VALUES (33, 3, true, "유월", "베프 (BEFF)", null, "https://cdn.notefolio.net/img/b9/93/b9938dc2e3873a124318f5275a94219112a61af429a0a3791357d9540ac363e7_v1.jpg", "https://www.youtube.com/watch?v=zOXFqZ9rGUo&t=1211s&ab_channel=TeamYuwol", "한국", "2019", null, "25", 0, "한시도 몸을 가만두지 않고 춤추는 소년 유월은 어느날 사립초등학교에 발발한 집단무용증(a.k.a. 댄스바이러스)의 원흉으로 지목당하며, 질서에 목매는 담임선생 혜림과 옆반 선생들에게 추격당하기 시작하는데… ", true)
+insert into `still` (image, board_id) values ("http://t1.daumcdn.net/movie/1c5dba172b234f069beb6fbe73697abb1541961065119", 33), ("http://t1.daumcdn.net/movie/ce9bcdab5d724c58b04ced12c506e20f1556290815564", 33), ("http://t1.daumcdn.net/movie/1baed4d6d11f4a7d8b698c77c6812b011561201162187", 33) ,( "http://t1.daumcdn.net/movie/501ac33768514f5d88bbd802ef05ba981556290815280",33) ,("http://t1.daumcdn.net/movie/486e5c921866477aaecf477fe6d4d9821541961066872",33),("http://t1.daumcdn.net/movie/26e2e96597ec417c95510b8cf58b14401562230555905",33);
+
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (1, 3, 33, 0, "5점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (2, 4, 33, 0, "4점 드립니다");
+insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 33, 0, "3점 드립니다");
+
+INSERT INTO `casting` (name, `position`, image, board_id) VALUES ("이병윤", 1, "https://img1.daumcdn.net/thumb/C200x210/?fname=http%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F8c4e537395c5c07aa1e37be376f2f93ce5cd223c", 33);

@@ -5,12 +5,15 @@ import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Repository.CommentRatingRepository;
 import com.IndieAn.GoFundIndie.Repository.CommentRepository;
 import com.IndieAn.GoFundIndie.Repository.JPAInterface.CommentJPAInterface;
+import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,17 +22,22 @@ import java.util.HashMap;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentJPAInterface commentJPAInterface;
-    private HashMap<String, Object> body = new HashMap<>();
+    private final UserRepository userRepository;
+    private final CommentRatingRepository commentRatingRepository;
+    private HashMap<String, Object> body;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, CommentJPAInterface commentJPAInterface) {
+    public CommentService(CommentRepository commentRepository, CommentJPAInterface commentJPAInterface,
+                          UserRepository userRepository, CommentRatingRepository commentRatingRepository) {
         this.commentRepository = commentRepository;
         this.commentJPAInterface = commentJPAInterface;
+        this.userRepository = userRepository;
+        this.commentRatingRepository = commentRatingRepository;
     }
 
     // Comment를 생성하는 기능을 하는 서비스 기능
     public HashMap<String, Object> AddCommentData(CommentInputDTO commentInputDTO, User user) {
-        body.clear();
+        body = new HashMap<>();
 
         // 토큰으로 얻은 email의 pk와 입력으로 들어온 user의 pk가 다르다면 400 응답을 한다.
         if(user.getId() != commentInputDTO.getUserId()) {
@@ -51,8 +59,8 @@ public class CommentService {
     }
 
     // 각 보드에 대한 Comment들을 불러오는 서비스 기능
-    public HashMap<String, Object> GetCommentPage(long boardId, Pageable pageable) {
-        body.clear();
+    public HashMap<String, Object> GetCommentPage(long boardId, String email, String type, Integer page) {
+        body = new HashMap<>();
         Board board = commentRepository.FindBoardDB(boardId);
         // board가 null이라면 코드 4401 응답을 낸다.
         if(board == null) {
@@ -60,12 +68,27 @@ public class CommentService {
             return body;
         }
 
+        // email이 들어와 회원인 경우
+        User user = null;
+        if(email != null) {
+            user = userRepository.FindUserByEmail(email);
+        }
         // 페이징을 통해 응답과 합께 데이터를 보내준다.
+        if(page == null) page = 1;
+        if(type == null) type = "new";
+        // 인기순이면 order가 like가 되고, 그 외에는 id로 최신순으로 정렬하도록 한다.
+        String order = type.equals("pop") ? "like" : "id";
+        PageRequest pageable = PageRequest.of(page-1, 10, Sort.by(order).descending());
         Page<Comment> comments = commentJPAInterface.findByBoardId(board, pageable);
+        User findUser = user;
         Page<CommentOutputDTO> commentList = comments.map(
                 comment -> {
-                    int like = comment.getCommentRatings().size();
-
+                    boolean ratingChecked = false;
+                    if(findUser != null) {
+                        if(commentRatingRepository.FindRatingByUserAndComment(findUser.getId(), comment.getId()) != null) {
+                            ratingChecked = true;
+                        }
+                    }
                     return new CommentOutputDTO(
                             comment.getId(),
                             comment.getRating(),
@@ -75,7 +98,8 @@ public class CommentService {
                             comment.getDonation(),
                             comment.getBody(),
                             comment.isSpoiler(),
-                            like
+                            comment.getLike(),
+                            ratingChecked
                     );
                 });
 
@@ -86,7 +110,7 @@ public class CommentService {
 
     // Comment를 삭제하는 기능을 하는 서비스 기능
     public HashMap<String, Object> DeleteComments(long commentId, User user) {
-        body.clear();
+        body = new HashMap<>();
         Comment comment = commentRepository.FindCommentById(commentId);
         // comment가 없다면 4405 응답을 한다.
         if(comment == null) {

@@ -34,6 +34,7 @@ public class CommentRatingRepository {
         CommentRating commentRating = new CommentRating();
         User user = entityManager.find(User.class, userId);
         Comment comment = entityManager.find(Comment.class, commentId);
+        comment.setLike(comment.getLike()+1);
 
         commentRating.setUserId(user);
         commentRating.setCommentId(comment);
@@ -49,6 +50,8 @@ public class CommentRatingRepository {
     // DB CommentRating 테이블에 id를 사용해 CommentRating 정보를 삭제한다.
     public CommentRating DeleteRating(long id) {
         CommentRating deleteRating = entityManager.find(CommentRating.class, id);
+        Comment comment = entityManager.find(Comment.class, deleteRating.getCommentId().getId());
+        comment.setLike(comment.getLike()-1);
         entityManager.remove(deleteRating);
 
         entityManager.flush();

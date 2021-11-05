@@ -8,8 +8,8 @@ type Query {
     FindAllUser: [user]
 
     FindBoardId(id: ID!): WrappingBoard
-    FindBoards: WrappingBoards
-    FindBoardsType(Type: String!): String
+    FindBoardIdAdmin(id: ID!): WrappingAdminBoard
+    FindBoards(Type: String, Limit: Int): WrappingBoards
 
     FindGenreId(id: ID!): genre
     FindAllGenre: [genre]
@@ -23,4 +23,14 @@ type Mutation {
 
     CreateTempBoard: BoardCreate
     CompleteBoard(board: boardInput!): BoardCreate
+    ApproveBoard(id: ID!): onlyCode
+
+    CreateTempCasting(boardId: ID!): CastingCreate
+    CompleteCasting(casting: completeCasting!): CastingCreate
+    PutCasting(casting: putCasting!): CastingCreate
+    DeleteCasting(id: ID!): onlyCode
+}
+
+type onlyCode {
+    code: Int
 }

@@ -8,10 +8,10 @@ public class Casting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false, columnDefinition = "TINYINT")
+    @Column(columnDefinition = "TINYINT")
     private int position;
 
     @Column

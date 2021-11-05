@@ -29,7 +29,6 @@ public class ImageController {
                                          @PathVariable(value = "path_id", required = false) Long pathId,
                                          @RequestPart(value = "upload") MultipartFile image) {
 
-        //TODO String result; 클래스 안 선언 말고 / 메소드 선언 Garbage Collector 로 안 없애는지??
         //image dir result
         try {
             String result;

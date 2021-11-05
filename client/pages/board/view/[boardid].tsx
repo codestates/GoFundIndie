@@ -10,14 +10,14 @@ export default function BoarDetails({ film }: any) {
     filmData = film.FindBoardId.data;
   }
   if (film === null) {
-    return <div></div>;
+    return <></>;
   }
-
+  
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
         <div className={styles.header__img}>
-          <img src="https://static.news.zumst.com/images/78/2020/08/20/205fe8f1090f4467a908266d3c0af460.jpg" />
+          {filmData.still[0] ? <img src={filmData.still[0].image} /> : null}
         </div>
       </div>
       <div className={styles.poster__img__div}>
@@ -33,7 +33,7 @@ export default function BoarDetails({ film }: any) {
             <div className={styles.filminfo__title}>{filmData.title}</div>
             <div className={styles.filminfo__info}>
               <span className={styles.filminfo__info__text}>
-                {filmData.infoCreatedAt}
+                {filmData.infoCreatedYear}
               </span>
               <span className={styles.dot}>・</span>
               <span className={styles.filminfo__info__text}>
@@ -53,7 +53,11 @@ export default function BoarDetails({ film }: any) {
           </div>
           <div></div>
           <div>{filmData.infoStory}</div>
-          <InfoWrapper comments={filmData.comment} />
+          <InfoWrapper
+            casting={filmData.casting}
+            stills={filmData.still}
+            comments={filmData.comment}
+          />
         </div>
       </div>
     </div>
@@ -61,11 +65,6 @@ export default function BoarDetails({ film }: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // const res = Setaxios.getAxios("/board/view/board?=" + 1).then((res) => {
-  // const res = Setaxios.getAxios("/board/view/board?=" + 1);
-  // const res = await Setaxios.getAxios("check?type=email&query=q");
-
-  // const res = await fetch("https://localhost:8080/check?type=email&query=q");
   if (context.params === undefined) return { props: {} };
   const query = `{
     FindBoardId(id: ${context.params.boardid}) {
@@ -103,19 +102,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       } 
     }
 }`;
-  // const res = await fetch("https://localhost:8080/graphql", {
-  //   method: "POST",
-  //   body: JSON.stringify({ query }),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),
     headers: {
       "Content-Type": "application/json",
     },
+  }).catch((err) => {
+    return err;
   });
   const film = await (await res).json();
   if (film === null) return { props: {} };
