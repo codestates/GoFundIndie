@@ -27,16 +27,6 @@ public class CommentRepository {
         return entityManager.createQuery("SELECT c FROM Comment as c", Comment.class).getResultList();
     }
 
-    // DB Comment 테이블에서 해당 board id를 가진 코멘트들을 리턴한다.
-    public List<Comment> FindCommentListByBoardId(long boardId) {
-        return entityManager.createQuery("SELECT c FROM Comment as c where c.board_id = '"+ boardId +"'", Comment.class).getResultList();
-    }
-
-    // (임시) boardId를 통해 board를 찾는 기능
-    public Board FindBoardDB(long boardId) {
-        return entityManager.find(Board.class, boardId);
-    }
-
     // Id를 통해서 Comment를 찾는 기능
     public Comment FindCommentById(long commentId) {
         return entityManager.find(Comment.class, commentId);
@@ -44,7 +34,7 @@ public class CommentRepository {
     }
 
     // DB Comment 테이블에 매개변수 commentInputDTO의 데이터를 사용하여 Comment 정보를 저장한다.
-    public Comment AddComment(CommentInputDTO commentInputDTO) {
+    public void AddComment(CommentInputDTO commentInputDTO) {
         Comment comment = new Comment();
         User user = entityManager.find(User.class, commentInputDTO.getUserId());
         Board board = entityManager.find(Board.class, commentInputDTO.getBoardId());
@@ -64,12 +54,10 @@ public class CommentRepository {
 
         entityManager.flush();
         entityManager.close();
-
-        return comment;
     }
 
     // DB Comment 테이블에 매개변수 commentId를 사용하여 Comment 정보를 삭제한다.
-    public Comment DeleteComment(long commentId) {
+    public void DeleteComment(long commentId) {
         Comment deleteComment = entityManager.find(Comment.class, commentId);
         Board board = deleteComment.getBoardId();
 
@@ -80,7 +68,5 @@ public class CommentRepository {
 
         entityManager.flush();
         entityManager.close();
-
-        return deleteComment;
     }
 }
