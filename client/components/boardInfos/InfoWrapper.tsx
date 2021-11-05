@@ -4,7 +4,7 @@ import Stillcuts from "./Stillcuts";
 import styles from "../../styles/components/boardInfos/infowrapper.module.scss";
 import { useState } from "react";
 
-export default function InfoWrapper({ comments }: any) {
+export default function InfoWrapper({ comments, stills, casting }: any) {
   const [componentChanger, setComponentChanger] = useState<boolean>(false);
   const InfoStyler = (e: any) => {
     const highlight = document.getElementsByClassName(styles.highlight)[0];
@@ -14,22 +14,23 @@ export default function InfoWrapper({ comments }: any) {
     setComponentChanger(!componentChanger);
     e.target.classList.add(styles.highlight);
   };
+
+  const defaultState = (
+    <div>
+      <Cast casting={casting} />
+      <Stillcuts stills={stills} onFocus={false} />
+      <Comments comments={comments} />
+    </div>
+  );
   function InfoHandler() {
     const btn: any = document.getElementsByClassName(styles.highlight)[0];
-
     switch (btn.value) {
       case "default":
-        return (
-          <div>
-            <Cast />
-            <Stillcuts />
-            <Comments comments={comments} />
-          </div>
-        );
+        return defaultState;
       case "cast":
-        return <Cast />;
+        return <Cast casting={casting} />;
       case "stillcut":
-        return <Stillcuts />;
+        return <Stillcuts stills={stills} onFocus={true} />;
       case "rating":
         return <Comments comments={comments} />;
     }
@@ -54,18 +55,11 @@ export default function InfoWrapper({ comments }: any) {
           평점
         </button>
       </div>
-      {console.log(typeof document)}
-      {typeof document !== "undefined" ? (
-        document.getElementsByClassName(styles.highlight)[0] === undefined ? (
-          <div>
-            <Cast />
-            <Stillcuts />
-            <Comments comments={comments} />
-          </div>
-        ) : (
-          InfoHandler()
-        )
-      ) : null}
+      {typeof document !== "undefined"
+        ? document.getElementsByClassName(styles.highlight)[0] === undefined
+          ? defaultState
+          : InfoHandler()
+        : null}
     </>
   );
 }

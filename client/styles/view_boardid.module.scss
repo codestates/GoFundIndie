@@ -20,16 +20,9 @@ $impact-font-color: #ffffff;
   height: 300px;
   overflow: hidden;
   z-index: -1;
-  background: linear-gradient(
-    -180deg,
-    rgba(20, 20, 20, 0.3) 1%,
-    rgba(20, 20, 20, 0.5) 67%,
-    rgb(20, 20, 20) 98%
-  );
   .header__img {
     width: 100%;
     opacity: 0.9;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,10 +45,12 @@ $impact-font-color: #ffffff;
     width: 1200px;
   }
   .poster__img-wrapper {
-    width: 200px;
-    height: 300px;
+    width: 282px;
+    height: auto;
     border: 2px solid white;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
   }
   .poster__img {
     width: 100%;
@@ -64,9 +59,10 @@ $impact-font-color: #ffffff;
 }
 
 .filminfo__wrapper {
-  height: 300px;
-  margin-left: 220px;
+  height: 400px;
+  margin-left: 306px;
   z-index: -1;
+
   .filminfo__title {
     padding-top: 50px;
     font-size: 35px;

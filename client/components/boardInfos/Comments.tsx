@@ -2,9 +2,9 @@ import styles from "../../styles/components/boardInfos/comments.module.scss";
 export default function Comments({ comments }: { comments: Array<string> }) {
   return (
     <>
+      <div>코멘트</div>
       {comments.map((comment: any) => {
         return (
-          //고유한 키값이 없으면 경고문구가 나옴
           <div key={comment.userNickname}>
             <div className={styles["comment-block"]}>
               <div className={styles["comment"]}>
