@@ -75,7 +75,7 @@ public class BoardQuery {
         }
     }
 
-    public WrappingBoardGraphQLsDTO FindBoards(String type, int limit, DataFetchingEnvironment env) {
+    public WrappingBoardGraphQLsDTO FindBoards(SearchTypes type, int limit, DataFetchingEnvironment env) {
         if(type == null){
             return WrappingBoardGraphQLsDTO.builder()
                     .code(2000)
@@ -83,8 +83,7 @@ public class BoardQuery {
                     .build();
         }
         try {
-            SearchTypes searchType = SearchTypes.findSearchType(type);
-            switch (searchType) {
+            switch (type) {
                 //   - My = 내가 찜한 영화
                 case SEARCH_TYPES_MY:
                     try {
@@ -127,6 +126,7 @@ public class BoardQuery {
                             .code(2000)
                             .data(boardRepository.findBoards(false, limit))
                             .build();
+                //   - Approve_true = 승인된 보드
                 case SEARCH_TYPES_APPROVE_TRUE:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
@@ -148,7 +148,7 @@ public class BoardQuery {
                 default:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoardsByGenre(searchType, limit))
+                            .data(boardRepository.findBoardsByGenre(type, limit))
                             .build();
             }
         } catch (RuntimeException e) {
