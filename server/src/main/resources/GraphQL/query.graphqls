@@ -29,6 +29,9 @@ type Mutation {
     CompleteCasting(casting: completeCasting!): CastingCreate
     PutCasting(casting: putCasting!): CastingCreate
     DeleteCasting(id: ID!): onlyCode
+
+    LinkBoardGenre(boardId: ID!, genreId: ID!): WrappingLink
+    DisLinkBoardGenre(boardId: ID!, genreId: ID!): WrappingLink
 }
 
 type onlyCode {

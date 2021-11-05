@@ -29,7 +29,8 @@ public class BoardRepository {
 
     private final static String BOARD_GRAPHQL_DTO_QUERY_SELECT = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO(b.id, b.isApprove, b.title, b.posterImg, b.infoCountry, b.infoCreatedYear, b.infoCreatedDate, b.infoTime, b.infoLimit) ";
 
-    public Board findBoardId(long id) {
+    public Board findBoardId(Long id) {
+        if(id == null) return null;
         try {
             return entityManager.find(Board.class, id);
         } catch (NullPointerException | IllegalArgumentException e) {
@@ -84,7 +85,7 @@ public class BoardRepository {
             BOARD_GRAPHQL_DTO_QUERY_SELECT +
                     "FROM Board b " +
                     "WHERE b.isApprove = true " +
-                    "ORDER BY b.id DESC", BoardGraphQLDTO.class)
+                    "ORDER BY b.createdAt DESC", BoardGraphQLDTO.class)
                 .setMaxResults(limit).getResultList();
     }
 
