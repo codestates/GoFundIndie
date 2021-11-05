@@ -56,8 +56,16 @@ public class Mutation implements GraphQLMutationResolver {
         return boardMutation.CompleteBoard(dto, env);
     }
 
+    public OnlyCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
+        return boardMutation.DeleteBoard(id, env);
+    }
+
     public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
-        return boardMutation.ApproveBoard(id, env);
+        return boardMutation.ApproveBoard(id, true, env);
+    }
+
+    public OnlyCodeDTO DisapproveBoard(long id, DataFetchingEnvironment env) {
+        return boardMutation.ApproveBoard(id, false, env);
     }
 
     // ---- Casting ----

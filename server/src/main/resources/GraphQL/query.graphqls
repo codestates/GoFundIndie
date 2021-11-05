@@ -23,7 +23,9 @@ type Mutation {
 
     CreateTempBoard: BoardCreate
     CompleteBoard(board: boardInput!): BoardCreate
+    DeleteBoard(id: ID!): onlyCode
     ApproveBoard(id: ID!): onlyCode
+    DisapproveBoard(id: ID!): onlyCode
 
     CreateTempCasting(boardId: ID!): CastingCreate
     CompleteCasting(casting: completeCasting!): CastingCreate
