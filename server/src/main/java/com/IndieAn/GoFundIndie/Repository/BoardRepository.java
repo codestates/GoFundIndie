@@ -136,11 +136,17 @@ public class BoardRepository {
         return board.getId();
     }
 
-    public void ApproveBoard(Board board) {
-        board.setApprove(true);
+    public void ApproveBoard(Board board, boolean isApprove) {
+        board.setApprove(isApprove);
         board.setCreatedAt(new Date());
 
         entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
+    }
+
+    public void DeleteBoard(Board board) {
+        entityManager.remove(board);
         entityManager.flush();
         entityManager.close();
     }

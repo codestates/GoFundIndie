@@ -56,29 +56,33 @@ public class Mutation implements GraphQLMutationResolver {
         return boardMutation.CompleteBoard(dto, env);
     }
 
+    public OnlyCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
+        return boardMutation.DeleteBoard(id, env);
+    }
+
     public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
-        return boardMutation.ApproveBoard(id, env);
+        return boardMutation.ApproveBoard(id, true, env);
+    }
+
+    public OnlyCodeDTO DisapproveBoard(long id, DataFetchingEnvironment env) {
+        return boardMutation.ApproveBoard(id, false, env);
     }
 
     // ---- Casting ----
     //
 
-    // 캐스팅 임시
     public WrappingCreateTempCastingDTO CreateTempCasting(long id, DataFetchingEnvironment env) {
         return castingMutation.CreateTempCasting(id,env);
     }
 
-    // 캐스팅 등록
     public WrappingCreateTempCastingDTO CompleteCasting(CreateCastingCompleteDTO dto, DataFetchingEnvironment env) {
         return castingMutation.CompleteCasting(dto, env);
     }
 
-    // 캐스팅 수정
     public WrappingCreateTempCastingDTO PutCasting(PutCastingDTO dto, DataFetchingEnvironment env) {
         return castingMutation.PutCasting(dto, env);
     }
 
-    // 캐스팅 삭제
     public OnlyCodeDTO DeleteCasting(long id, DataFetchingEnvironment env) {
         return castingMutation.DeleteCasting(id, env);
     }

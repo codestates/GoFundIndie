@@ -135,7 +135,7 @@ public class BoardMutation {
         }
     }
 
-    public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
+    public OnlyCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
         try {
             context = env.getContext();
             request = context.getHttpServletRequest();
@@ -155,7 +155,7 @@ public class BoardMutation {
                 if(!user.isAdminRole())
                     return OnlyCodeDTO.builder().code(4300).build();
 
-                boardRepository.ApproveBoard(board);
+                boardRepository.DeleteBoard(board);
                 return OnlyCodeDTO.builder().code(2000).build();
             } else {
                 // Token Invalid
@@ -165,7 +165,45 @@ public class BoardMutation {
             }
 
             // Test Code : No Access Token
-//            boardRepository.ApproveBoard(boardRepository.findBoardId(id));
+//            boardRepository.DeleteBoard(boardRepository.findBoardId(id));
+//            return OnlyCodeDTO.builder().code(2000).build();
+
+        } catch (NullPointerException e) {
+            return OnlyCodeDTO.builder().code(4000).build();
+        }
+    }
+
+    public OnlyCodeDTO ApproveBoard(long id, boolean isApprove, DataFetchingEnvironment env) {
+        try {
+            context = env.getContext();
+            request = context.getHttpServletRequest();
+            accessToken = request.getHeader("accesstoken");
+
+            if(context == null || request == null || accessToken == null)
+                return OnlyCodeDTO.builder().code(4000).build();
+
+            checkToken = userService.CheckToken(accessToken);
+
+            if(checkToken.get("email") != null) {
+                Board board = boardRepository.findBoardId(id);
+                if(board == null)
+                    return OnlyCodeDTO.builder().code(4401).build();
+
+                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+                if(!user.isAdminRole())
+                    return OnlyCodeDTO.builder().code(4300).build();
+
+                boardRepository.ApproveBoard(board, isApprove);
+                return OnlyCodeDTO.builder().code(2000).build();
+            } else {
+                // Token Invalid
+                return OnlyCodeDTO.builder()
+                        .code(Integer.parseInt(checkToken.get("code").toString()))
+                        .build();
+            }
+
+            // Test Code : No Access Token
+//            boardRepository.ApproveBoard(boardRepository.findBoardId(id), isApprove);
 //            return OnlyCodeDTO.builder().code(2000).build();
 
         } catch (NullPointerException e) {
