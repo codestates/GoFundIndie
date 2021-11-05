@@ -59,14 +59,8 @@ public class CommentService {
     }
 
     // 각 보드에 대한 Comment들을 불러오는 서비스 기능
-    public HashMap<String, Object> GetCommentPage(long boardId, String email, String type, Integer page) {
+    public HashMap<String, Object> GetCommentPage(Board board, String email, String type, Integer page) {
         body = new HashMap<>();
-        Board board = commentRepository.FindBoardDB(boardId);
-        // board가 null이라면 코드 4401 응답을 낸다.
-        if(board == null) {
-            body.put("code", 4401);
-            return body;
-        }
 
         // email이 들어와 회원인 경우
         User user = null;
