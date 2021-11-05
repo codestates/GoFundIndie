@@ -7,6 +7,7 @@ import com.IndieAn.GoFundIndie.Domain.Entity.BoardLike;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.PutBoardDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -128,6 +129,39 @@ public class BoardRepository {
         board.setInfoLimit(dto.getInfoLimit());
         board.setInfoSubtitle(dto.isInfoSubtitle());
         board.setInfoCreatedDate(dto.getInfoCreatedDate());
+
+        entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
+
+        return board.getId();
+    }
+
+    public long PutBoard(Board board, PutBoardDTO dto) {
+        if(dto.getTitle()!=null)
+            board.setTitle(dto.getTitle());
+        if(dto.getInfoCountry()!=null)
+            board.setInfoCountry(dto.getInfoCountry());
+        if(dto.getInfoCreatedYear()!=null)
+            board.setInfoCreatedYear(dto.getInfoCreatedYear());
+        if(dto.getInfoTime()!=0)
+            board.setInfoTime(dto.getInfoTime());
+        if(dto.getInfoStory()!=null)
+            board.setInfoStory(dto.getInfoStory());
+        if(dto.getProducer()!=null)
+            board.setProducer(dto.getProducer());
+        if(dto.getDistributor()!=null)
+            board.setDistributor(dto.getDistributor());
+        if(dto.getPosterImg()!=null)
+            board.setPosterImg(dto.getPosterImg());
+        if(dto.getViewLink()!=null)
+            board.setViewLink(dto.getViewLink());
+        if(dto.getInfoLimit()!=0)
+            board.setInfoLimit(dto.getInfoLimit());
+        if(dto.getInfoSubtitle()!=null)
+            board.setInfoSubtitle(dto.getInfoSubtitle());
+        if(dto.getInfoCreatedDate()!=null)
+            board.setInfoCreatedDate(dto.getInfoCreatedDate());
 
         entityManager.persist(board);
         entityManager.flush();
