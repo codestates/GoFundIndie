@@ -12,7 +12,7 @@ export default function BoarDetails({ film }: any) {
   if (film === null) {
     return <></>;
   }
-  console.log(filmData);
+  
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
@@ -102,6 +102,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       } 
     }
 }`;
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),
