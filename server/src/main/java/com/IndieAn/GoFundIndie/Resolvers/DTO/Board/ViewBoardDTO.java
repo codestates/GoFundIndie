@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ViewBoardDTO {
     private long id;
-    private long userId;
     private boolean isApprove;
     private String title;
     private String producer;
@@ -32,6 +31,8 @@ public class ViewBoardDTO {
     private String infoStory;
     private boolean infoSubtitle;
     private String createdAt;
+    private int commentAmount;
+    private int likeAmount;
     private List<GenreGraphQLDTO> genre;
     private List<CastingGraphQLDTO> casting;
     private List<StillGraphQLDTO> still;
@@ -42,7 +43,6 @@ public class ViewBoardDTO {
     public static ViewBoardDTO from(Board en) {
         return ViewBoardDTO.builder()
                 .id(en.getId())
-                .userId(en.getUserId().getId())
                 .isApprove(en.isApprove())
                 .title(en.getTitle())
                 .producer(en.getProducer())
@@ -57,6 +57,8 @@ public class ViewBoardDTO {
                 .infoStory(en.getInfoStory())
                 .infoSubtitle(en.isInfoSubtitle())
                 .createdAt(en.getCreatedAt().toString())
+                .commentAmount(en.getCommentAmount())
+                .likeAmount(en.getLikeAmount())
                 .genre(
                         en.getBoardGenres().stream()
                                 .map(el -> GenreGraphQLDTO.from(el.getGenreId()))

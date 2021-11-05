@@ -57,7 +57,10 @@ public class CommentRepository {
         comment.setCreatedAt(new Date());
         comment.setSpoiler(commentInputDTO.isSpoiler());
 
+        board.setCommentAmount(board.getCommentAmount() + 1);
+
         entityManager.persist(comment);
+        entityManager.persist(board);
 
         entityManager.flush();
         entityManager.close();
@@ -68,6 +71,11 @@ public class CommentRepository {
     // DB Comment 테이블에 매개변수 commentId를 사용하여 Comment 정보를 삭제한다.
     public Comment DeleteComment(long commentId) {
         Comment deleteComment = entityManager.find(Comment.class, commentId);
+        Board board = deleteComment.getBoardId();
+
+        board.setCommentAmount(board.getCommentAmount() - 1);
+
+        entityManager.persist(board);
         entityManager.remove(deleteComment);
 
         entityManager.flush();

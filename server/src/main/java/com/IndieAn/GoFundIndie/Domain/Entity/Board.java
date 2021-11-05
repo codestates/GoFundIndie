@@ -62,6 +62,12 @@ public class Board {
     @Temporal(TemporalType.DATE)
     private Date createdAt;
 
+    @Column(name = "comment_amount", columnDefinition = "integer default 0")
+    private int commentAmount;
+
+    @Column(name = "like_amount", columnDefinition = "integer default 0")
+    private int likeAmount;
+
     @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BoardLike> boardLikes = new ArrayList<>();
 
@@ -208,6 +214,22 @@ public class Board {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getCommentAmount() {
+        return commentAmount;
+    }
+
+    public void setCommentAmount(int commentAmount) {
+        this.commentAmount = commentAmount;
+    }
+
+    public int getLikeAmount() {
+        return likeAmount;
+    }
+
+    public void setLikeAmount(int likeAmount) {
+        this.likeAmount = likeAmount;
     }
 
     public List<BoardLike> getBoardLikes() {

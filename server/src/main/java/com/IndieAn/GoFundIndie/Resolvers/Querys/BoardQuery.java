@@ -4,10 +4,7 @@ import com.IndieAn.GoFundIndie.Common.SearchTypes;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.ViewBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingBoardGraphQLsDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,13 +40,46 @@ public class BoardQuery {
         }
     }
 
+    public WrappingAdminViewBoardDTO FindBoardIdAdmin(Long id, DataFetchingEnvironment env) {
+        try {
+            GraphQLServletContext context = env.getContext();
+            HttpServletRequest request = context.getHttpServletRequest();
+            String accessToken = request.getHeader("accesstoken");
+
+            //   - No accessToken in the Header :
+            if(accessToken == null)
+                return WrappingAdminViewBoardDTO.builder().code(4000).build();
+
+            Map<String, Object> checkToken = userService.CheckToken(accessToken);
+
+            if(checkToken.get("email") == null) {
+                return WrappingAdminViewBoardDTO.builder()
+                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
+            } else if(!userService.FindUserUseEmail(checkToken.get("email").toString()).isAdminRole()) {
+                return WrappingAdminViewBoardDTO.builder().code(4300).build();
+            } else {
+                return WrappingAdminViewBoardDTO.builder()
+                        .code(2000)
+                        .data(AdminViewBoardDTO.from(boardRepository.findBoardId(id)))
+                        .build();
+            }
+
+            // Test Code
+//            return WrappingAdminViewBoardDTO.builder()
+//                    .code(2000)
+//                    .data(AdminViewBoardDTO.from(boardRepository.findBoardId(id)))
+//                    .build();
+
+        } catch (NullPointerException e) {
+            return WrappingAdminViewBoardDTO.builder().code(4000).build();
+        }
+    }
+
     public WrappingBoardGraphQLsDTO FindBoards(String type, int limit, DataFetchingEnvironment env) {
         if(type == null){
             return WrappingBoardGraphQLsDTO.builder()
                     .code(2000)
-                    .data(boardRepository.findBoards(true, limit).stream()
-                            .map(BoardGraphQLDTO::from)
-                            .collect(Collectors.toList()))
+                    .data(boardRepository.findBoards(true, limit))
                     .build();
         }
         try {
@@ -76,10 +105,9 @@ public class BoardQuery {
                         } else {
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
-                                    .data(boardRepository.findBoardsByLike(userService
-                                                    .FindUserUseEmail(checkToken.get("email").toString()), limit)
-                                            .stream().map(BoardGraphQLDTO::from)
-                                            .collect(Collectors.toList()))
+                                    .data(boardRepository.findBoardsByLike(
+                                            userService.FindUserUseEmail(
+                                                    checkToken.get("email").toString()), limit))
                                     .build();
                         }
 
@@ -87,10 +115,7 @@ public class BoardQuery {
 //                        return WrappingBoardGraphQLsDTO.builder()
 //                                .code(2000)
 //                                .data(boardRepository.findBoardsByLike(
-//                                                userRepository.FindUserByIdDB(7L)
-//                                        )
-//                                        .stream().map(BoardGraphQLDTO::from)
-//                                        .collect(Collectors.toList()))
+//                                                userRepository.FindUserByIdDB(7L), limit))
 //                                .build();
 
                     } catch (NullPointerException e) {
@@ -100,40 +125,30 @@ public class BoardQuery {
                 case SEARCH_TYPES_APPROVE_FALSE:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoards(false, limit).stream()
-                                    .map(BoardGraphQLDTO::from)
-                                    .collect(Collectors.toList()))
+                            .data(boardRepository.findBoards(false, limit))
                             .build();
                 case SEARCH_TYPES_APPROVE_TRUE:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoards(true, limit).stream()
-                                    .map(BoardGraphQLDTO::from)
-                                    .collect(Collectors.toList()))
+                            .data(boardRepository.findBoards(true, limit))
                             .build();
                 //   - All = 필터 없이 모든 보드
                 case SEARCH_TYPES_ALL:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findAllBoards().stream()
-                                    .map(BoardGraphQLDTO::from)
-                                    .collect(Collectors.toList()))
+                            .data(boardRepository.findAllBoards(limit))
                             .build();
                 //   - New = 최근 승인된 순으로 정렬
                 case SEARCH_TYPES_NEW:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoardsNew(limit)
-                                    .stream().map(BoardGraphQLDTO::from)
-                                    .collect(Collectors.toList()))
+                            .data(boardRepository.findBoardsNew(limit))
                             .build();
                 //   - Genre = 장르별 영화
                 default:
                     return WrappingBoardGraphQLsDTO.builder()
                             .code(2000)
-                            .data(boardRepository.findBoardsByGenre(searchType, limit)
-                                    .stream().map(BoardGraphQLDTO::from)
-                                    .collect(Collectors.toList()))
+                            .data(boardRepository.findBoardsByGenre(searchType, limit))
                             .build();
             }
         } catch (RuntimeException e) {
