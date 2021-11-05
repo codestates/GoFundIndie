@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.PutBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardGenre.WrappingLinkBoardGenreDTO;
@@ -54,6 +55,10 @@ public class Mutation implements GraphQLMutationResolver {
 
     public WrappingCreateTempBoardDTO CompleteBoard(CreateBoardCompleteDTO dto, DataFetchingEnvironment env) {
         return boardMutation.CompleteBoard(dto, env);
+    }
+
+    public WrappingCreateTempBoardDTO PutBoard(PutBoardDTO dto, DataFetchingEnvironment env) {
+        return boardMutation.PutBoard(dto, env);
     }
 
     public OnlyCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {

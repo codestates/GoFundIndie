@@ -4,10 +4,7 @@ import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
 import com.IndieAn.GoFundIndie.Service.BoardService;
 import com.IndieAn.GoFundIndie.Service.UserService;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -92,6 +90,12 @@ public class BoardMutation {
                 // Can not find board : 4401
                 if(board == null)
                     return WrappingCreateTempBoardDTO.builder().code(4401).build();
+                else if(board.getCastings().stream().noneMatch(el -> el.getPosition() == 1))
+                    // Can not find Director : 4403
+                    return WrappingCreateTempBoardDTO.builder().code(4403).build();
+                else if(board.getBoardGenres().size() == 0)
+                    // Can not find Genre : 4404
+                    return WrappingCreateTempBoardDTO.builder().code(4404).build();
 
                 User user = userService.FindUserUseEmail(checkToken.get("email").toString());
                 // Invalid User : 4301
@@ -128,6 +132,60 @@ public class BoardMutation {
 //                    .code(2000)
 //                    .data(CreateTempBoardDTO.builder().id(boardRepository
 //                            .CompleteBoard(dto).getId()).build())
+//                    .build();
+
+        } catch (NullPointerException e) {
+            return WrappingCreateTempBoardDTO.builder().code(4000).build();
+        }
+    }
+
+    // ! Only -- Admin --
+    public WrappingCreateTempBoardDTO PutBoard(PutBoardDTO dto, DataFetchingEnvironment env) {
+        try {
+            context = env.getContext();
+            request = context.getHttpServletRequest();
+            accessToken = request.getHeader("accesstoken");
+
+            // No token in the Header : 4000
+            if (context == null || request == null || accessToken == null)
+                return WrappingCreateTempBoardDTO.builder().code(4000).build();
+
+            checkToken = userService.CheckToken(accessToken);
+
+            if (checkToken.get("email") != null) {
+                Board board = boardRepository.findBoardId(dto.getBoardId());
+                // Can not find board : 4401
+                if (board == null)
+                    return WrappingCreateTempBoardDTO.builder().code(4401).build();
+
+                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+
+                // User != Admin : 4300
+                if (!user.isAdminRole()) {
+                    return WrappingCreateTempBoardDTO.builder()
+                            .code(4300)
+                            .build();
+                } else {
+                    return WrappingCreateTempBoardDTO.builder()
+                            .code(2000)
+                            .data(CreateTempBoardDTO.builder()
+                                    .id(boardRepository.PutBoard(board, dto)).build())
+                            .build();
+                }
+            } else {
+                // Token Invalid
+                return WrappingCreateTempBoardDTO.builder()
+                        .code(Integer.parseInt(checkToken.get("code").toString()))
+                        .build();
+            }
+
+            // Test Code : No Access Token
+//            return WrappingCreateTempBoardDTO.builder()
+//                    .code(2000)
+//                    .data(CreateTempBoardDTO.builder()
+//                            .id(boardRepository.PutBoard(
+//                                    boardRepository.findBoardId(dto.getBoardId()), dto
+//                            )).build())
 //                    .build();
 
         } catch (NullPointerException e) {
