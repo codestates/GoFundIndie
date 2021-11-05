@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  .reviewstill {
+    width: 282px;
+    height: 200px;
+    margin-right: 24px;
+    overflow: hidden;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    div {
+      color: white;
+      font-size: 3rem;
+      position: absolute;
+    }
+    img {
+      width: 500px;
+      height: auto;
+    }
+    &:last-child {
+      img {
+        opacity: 0.5;
+      }
+    }
+  }
+}

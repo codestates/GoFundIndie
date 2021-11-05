@@ -1,0 +1,27 @@
+.swiper-div {
+  justify-content: center;
+  width: auto;
+  img {
+    height: auto;
+    border: 0.1px solid #1b1b1b;
+    border-radius: 80px;
+    //todo: 마스크로 바꾸기
+  }
+}
+
+.poster__wrapper {
+  width: 400px;
+  margin-left: 50px;
+}
+
+.poster__div {
+  width: 200px;
+  height: 300px;
+  .poster {
+    width: 200px;
+    height: 300px;
+
+    position: relative;
+    display: block;
+  }
+}

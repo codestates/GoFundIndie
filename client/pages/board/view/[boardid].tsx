@@ -1,72 +1,122 @@
-import { useRouter } from "next/router";
-import Image from "next/dist/client/image";
 import styles from "../../../styles/view_boardid.module.scss";
+import { GetServerSideProps } from "next";
+import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-export default function BoarDetails() {
-  const filmData = {
-    title: "Alternative Math",
-    producer: "",
-    distributor: "",
-    poster_img:
-      "https://m.media-amazon.com/images/M/MV5BZjFhN2FhMTQtNTA2OS00MjUxLWIwN2UtOGY2ZWQ4NWRmOWE4XkEyXkFqcGdeQXVyMjI3MTE4MjU@._V1_.jpg",
-    view_link: "https://www.youtube.com/watch?v=Zh3Yz3PiXZw&ab_channel=Ideaman",
-    info_country: "미국",
-    info_created_at: 2017,
-    info_time: 9,
-    info_limit: 0,
-    info_story: "진실이 집단적으로 왜곡되는 현실을 기발하게 풍자한 단편",
-    info_subtitle: true,
-    info_genre: "코미디",
-  };
-  const router = useRouter();
-  const { boardid } = router.query;
+export default function BoarDetails({ film }: any) {
+  console.log(film.FindBoardId.data);
+  let filmData;
+  if (film !== null) {
+    filmData = film.FindBoardId.data;
+  }
+  if (film === null) {
+    return <></>;
+  }
+  
   return (
-    <div>
+    <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
-        <img
-          className={styles.header__img}
-          src={filmData.poster_img}
-          width="500"
-          height="500"
-        />
+        <div className={styles.header__img}>
+          {filmData.still[0] ? <img src={filmData.still[0].image} /> : null}
+        </div>
       </div>
       <div className={styles.poster__img__div}>
-        <img className={styles.poster__img} src={filmData.poster_img} />
-      </div>
-      <div className={styles.filminfo__wrapper}>
-        <div className={styles.filminfo__title}>{filmData.title}</div>
-        <div className={styles.filminfo__someinfo}>
-          <span className={styles.filminfo__someinfo__text}>
-            {filmData.info_created_at}
-          </span>
-          <span className={styles.filminfo__someinfo__text}>
-            {filmData.info_genre}
-          </span>
-          <span className={styles.filminfo__someinfo__text}>
-            {filmData.info_country}
-          </span>
+        <div className={styles["poster__img-positional"]}>
+          <div className={styles["poster__img-wrapper"]}>
+            <img className={styles.poster__img} src={filmData.posterImg} />
+          </div>
         </div>
       </div>
-      <div className={styles.filminfo__details}>
-        <div>기본 정보</div>
-        <div>영화</div>
-        <div>
-          <a href={filmData.view_link}>링크</a>
+      <div className={styles.content__wrapper}>
+        <div className={styles.content}>
+          <div className={styles.filminfo__wrapper}>
+            <div className={styles.filminfo__title}>{filmData.title}</div>
+            <div className={styles.filminfo__info}>
+              <span className={styles.filminfo__info__text}>
+                {filmData.infoCreatedYear}
+              </span>
+              <span className={styles.dot}>・</span>
+              <span className={styles.filminfo__info__text}>
+                {filmData.genre}
+              </span>
+              <span className={styles.dot}>・</span>
+              <span className={styles.filminfo__info__text}>
+                {filmData.infoCountry}
+              </span>
+            </div>
+          </div>
+          <div className={styles.filminfoStory}>
+            <div>지금 보고싶어요</div>
+            <div>
+              <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
+            </div>
+          </div>
+          <div></div>
+          <div>{filmData.infoStory}</div>
+          <InfoWrapper
+            casting={filmData.casting}
+            stills={filmData.still}
+            comments={filmData.comment}
+          />
         </div>
-        {/* <iframe
-          width="80%"
-          height="700px"
-          src={"https://www.youtube.com/embed/Zh3Yz3PiXZw"}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe> */}
-      </div>
-      <div>{filmData.info_story}</div>
-      <div>
-        <h1>영화 상세정보 ID : {boardid}</h1>
       </div>
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (context.params === undefined) return { props: {} };
+  const query = `{
+    FindBoardId(id: ${context.params.boardid}) {
+      data {
+        id
+        userId
+        isApprove
+        title
+        producer
+        distributor
+        posterImg
+        viewLink
+        infoCountry
+        infoCreatedYear
+        infoTime
+        infoLimit
+        infoStory
+        infoSubtitle
+        createdAt
+        genre {
+          name
+        }
+        casting {
+          name
+          position
+          image
+        }
+        still {
+          image
+        }
+        comment {
+          rating
+          userNickname
+        }
+      } 
+    }
+}`;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
+    method: "POST",
+    body: JSON.stringify({ query }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).catch((err) => {
+    return err;
+  });
+  const film = await (await res).json();
+  if (film === null) return { props: {} };
+  return {
+    props: {
+      film: film.data,
+    },
+  };
+};

@@ -28,7 +28,7 @@ public class Comment {
     @Column(length = 2000)
     private String body;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime default now()")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -40,6 +40,17 @@ public class Comment {
 
     @OneToMany(mappedBy = "commentId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CommentRating> commentRatings = new ArrayList<>();
+
+    @Column(columnDefinition = "integer default 0")
+    private int like;
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
 
     public Comment() {}
 

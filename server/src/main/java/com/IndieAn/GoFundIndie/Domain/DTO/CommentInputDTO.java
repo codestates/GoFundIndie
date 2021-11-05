@@ -6,6 +6,11 @@ public class CommentInputDTO {
     private long boardId;
     private int donation;
     private String commentBody;
+    private boolean spoiler;
+
+    public boolean isSpoiler() {
+        return spoiler;
+    }
 
     public int getRating() {
         return rating;

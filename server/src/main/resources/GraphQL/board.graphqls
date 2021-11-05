@@ -1,0 +1,100 @@
+type BoardCreate {
+    code: Int
+    data: BoardId
+}
+
+type BoardId {
+    id: ID
+}
+
+type WrappingBoard {
+    code: Int
+    data: viewBoard
+}
+
+type WrappingAdminBoard {
+    code: Int
+    data: adminBoard
+}
+
+type WrappingBoards {
+    code: Int
+    data: [Board]
+}
+
+input boardInput {
+    boardId: ID!
+    title: String!
+    infoCountry: String!
+    infoCreatedYear: String!
+    infoCreatedDate: String
+    infoTime: Int!
+    infoStory: String!
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoLimit: Int
+    infoSubtitle: Boolean
+}
+
+type Board {
+    id: ID
+    isApprove: Boolean
+    title: String
+    posterImg: String
+    infoCountry: String
+    infoCreatedYear: String
+    infoCreatedDate: String
+    infoTime: Int
+    infoLimit: Int
+}
+
+type viewBoard {
+    id: ID
+    isApprove: Boolean
+    title: String
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoCountry: String
+    infoCreatedYear: String
+    infoCreatedDate: String
+    infoTime: Int
+    infoLimit: Int
+    infoStory: String
+    infoSubtitle: Boolean
+    createdAt: String
+    commentAmount: Int
+    likeAmount: Int
+    genre: [genre]
+    casting: [casting]
+    still: [still]
+    comment: [comment]
+}
+
+type adminBoard {
+    id: ID
+    user: user
+    isApprove: Boolean
+    title: String
+    producer: String
+    distributor: String
+    posterImg: String
+    viewLink: String
+    infoCountry: String
+    infoCreatedYear: String
+    infoCreatedDate: String
+    infoTime: Int
+    infoLimit: Int
+    infoStory: String
+    infoSubtitle: Boolean
+    createdAt: String
+    commentAmount: Int
+    likeAmount: Int
+    genre: [genre]
+    casting: [casting]
+    still: [still]
+    comment: [comment]
+}

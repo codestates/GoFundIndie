@@ -1,0 +1,4 @@
+type still {
+    id: ID
+    image: String
+}

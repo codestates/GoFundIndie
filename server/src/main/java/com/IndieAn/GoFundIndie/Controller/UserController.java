@@ -17,15 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
     private final UserService userService;
-    private final HashMap<String, Object> body = new HashMap<>();
-    private final HashMap<String, Object> data = new HashMap<>();
     // accessToken 유효 시간
     private final static Long ACCESS_TIME = 1000 * 60 * 30L;
     // refreshToken 유효 시간
     private final static Long REFRESH_TIME = 1000 * 60 * 60 * 24L;
+    private HashMap<String, Object> body = new HashMap<>();
+    private HashMap<String, Object> data = new HashMap<>();
 
     @Autowired
     public UserController(UserService userService) {
@@ -140,7 +139,7 @@ public class UserController {
             }
 
             // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+            Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
             // token에 email정보가 있다면 로그아웃 과정을 수행한다.
             if(checkToken.get("email") != null) {
                 // 유저 정보가 확인되면 token 키 값을 가진 쿠키가 제거돼야 한다.
@@ -148,7 +147,7 @@ public class UserController {
                 // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
                 cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
-                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                User user = userService.FindUserUseEmail((String)checkToken.get("email"));
                 RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
@@ -163,8 +162,7 @@ public class UserController {
             }
             // 토큰에 email 정보가 없다면 그에 맞는 오류 응답을 낸다.
             else {
-                body.put("code", checkToken.get("code"));
-                return ResponseEntity.status(401).body(body);
+                return ResponseEntity.status(401).body(checkToken);
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
@@ -185,19 +183,18 @@ public class UserController {
                 return ResponseEntity.badRequest().body(body);
             }
             // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+            Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
 
             // token에 email정보가 있다면 정보를 가져오는 과정을 수행한다.
             if(checkToken.get("email") != null) {
-                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                User user = userService.FindUserUseEmail((String)checkToken.get("email"));
                 userService.MakeUserInfoRes(user, data);
                 body.put("code", 2000);
                 body.put("data", data);
                 return ResponseEntity.ok().body(body);
             }
             else {
-                body.put("code", checkToken.get("code"));
-                return ResponseEntity.status(401).body(body);
+                return ResponseEntity.status(401).body(checkToken);
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
@@ -219,26 +216,25 @@ public class UserController {
             }
 
             // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+            Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
 
             // token에 email정보가 있다면 정보를 수정하는 과정을 수행한다.
             if(checkToken.get("email") != null) {
                 // 요청 바디에 어떤 값도 들어오지 않으며, 광고수신 동의 값이 똑같을 때 4006 오류를 낸다.
                 if(userModifyDTO.getNickname() == null && userModifyDTO.getPassword() == null
-                        && userModifyDTO.getProfilePic() == null && userModifyDTO.isAdAgree() == userService.FindUserUseEmail(checkToken.get("email")).isAdAgree()) {
+                        && userModifyDTO.getProfilePic() == null && userModifyDTO.isAdAgree() == userService.FindUserUseEmail((String)checkToken.get("email")).isAdAgree()) {
                     body.put("code", 4006);
                     return ResponseEntity.badRequest().body(body);
                 }
 
-                User user = userService.ModifyUserData(userModifyDTO, checkToken.get("email"));
+                User user = userService.ModifyUserData(userModifyDTO, (String)checkToken.get("email"));
                 userService.MakeUserInfoRes(user, data);
                 body.put("code", 2000);
                 body.put("data", data);
                 return ResponseEntity.ok().body(body);
             }
             else {
-                body.put("code", checkToken.get("code"));
-                return ResponseEntity.status(401).body(body);
+                return ResponseEntity.status(401).body(checkToken);
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
@@ -261,7 +257,7 @@ public class UserController {
             }
 
             // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+            Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
 
             if(checkToken.get("email") != null) {
                 // 유저 정보가 확인되면 token 키 값을 가진 쿠키가 제거돼야 한다.
@@ -269,7 +265,7 @@ public class UserController {
                 // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
                 cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
-                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                User user = userService.FindUserUseEmail((String)checkToken.get("email"));
                 RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
@@ -278,15 +274,14 @@ public class UserController {
                     return ResponseEntity.status(404).body(body);
                 }
                 // DB에 유저 email과 refresh token 쌍이 제거됐다면, 해당 email을 가진 유저를 DB에서 삭제한다.
-                userService.DeleteUserData(checkToken.get("email"));
+                userService.DeleteUserData((String)checkToken.get("email"));
                 // 유저 정보가 삭제되면 클라이언트에 token 키 값을 가진 쿠키가 제거돼야 한다.
                 userService.ExpirationToken(response, "refreshToken");
                 body.put("code", 2000);
                 return ResponseEntity.ok().body(body);
             }
             else {
-                body.put("code", checkToken.get("code"));
-                return ResponseEntity.status(401).body(body);
+                return ResponseEntity.status(401).body(checkToken);
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
@@ -310,11 +305,11 @@ public class UserController {
             // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
             cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
             // 쿠키에 존재하는 refresh token을 가지고 유효성 검증을 한다.
-            Map<String, String> checkToken = userService.CheckToken(cookiesResult);
+            Map<String, Object> checkToken = userService.CheckToken(cookiesResult);
 
             if(checkToken.get("email") != null) {
                 // 해당 refresh token이 가지고 있는 email로 다시 access token을 발급한다.
-                User user = userService.FindUserUseEmail(checkToken.get("email"));
+                User user = userService.FindUserUseEmail((String)checkToken.get("email"));
                 RefreshToken rt = userService.FindRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token를 찾을 수 없을 때 응답을 해준다.
@@ -330,8 +325,7 @@ public class UserController {
             }
             // 토큰에 email 정보가 없다면 그에 맞는 오류 응답을 낸다.
             else {
-                body.put("code", checkToken.get("code"));
-                return ResponseEntity.status(401).body(body);
+                return ResponseEntity.status(401).body(checkToken);
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");

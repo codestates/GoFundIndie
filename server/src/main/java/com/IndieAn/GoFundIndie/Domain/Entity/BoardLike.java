@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Domain.Entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class BoardLike {
@@ -15,6 +16,10 @@ public class BoardLike {
     @ManyToOne(targetEntity = Board.class)
     @JoinColumn(name = "board_id", nullable = false)
     private Board boardId;
+
+    @Column(name = "created_at", columnDefinition = "datetime default now()")
+    @Temporal(TemporalType.DATE)
+    private Date createdAt;
 
     public BoardLike() {}
 
@@ -40,5 +45,13 @@ public class BoardLike {
 
     public void setBoardId(Board boardId) {
         this.boardId = boardId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }
