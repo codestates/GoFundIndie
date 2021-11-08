@@ -64,13 +64,41 @@ $impact-font-color: #ffffff;
   z-index: -1;
 
   .filminfo__title {
+    margin-bottom: 1rem;
     padding-top: 50px;
     font-size: 35px;
     color: white;
   }
-  .filminfo__info__text {
+}
+
+.filmLink {
+  color: white;
+  font-size: 1.3rem;
+  div {
+    margin: 1rem 0rem;
+  }
+}
+
+.bucket {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  img {
+    width: 20px;
+    height: 20px;
+  }
+  div {
+    color: #00c896;
+    margin-left: 0.2rem;
+  }
+}
+
+.filminfo__info {
+  margin-bottom: 1rem;
+  span {
     font-size: 18px;
     & + .dot {
+      margin: 0 0.2rem;
       font-size: 20px;
     }
   }

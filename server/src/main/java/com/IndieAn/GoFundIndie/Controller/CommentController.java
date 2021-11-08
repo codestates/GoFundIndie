@@ -2,14 +2,13 @@ package com.IndieAn.GoFundIndie.Controller;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.RatingInputDTO;
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Service.BoardService;
 import com.IndieAn.GoFundIndie.Service.CommentRatingService;
 import com.IndieAn.GoFundIndie.Service.CommentService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +20,16 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentRatingService commentRatingService;
     private final UserService userService;
+    private final BoardService boardService;
     private HashMap<String, Object> body = new HashMap<>();
 
     @Autowired
-    public CommentController(CommentService commentService, UserService userService, CommentRatingService commentRatingService) {
+    public CommentController(CommentService commentService, UserService userService,
+                             CommentRatingService commentRatingService, BoardService boardService) {
         this.commentService = commentService;
         this.userService = userService;
         this.commentRatingService = commentRatingService;
+        this.boardService = boardService;
     }
 
     @PostMapping(value = "/comment")
@@ -52,11 +54,11 @@ public class CommentController {
                     body.put("code", 4400);
                     return ResponseEntity.status(404).body(body);
                 }
-                // Board Controller 가 작성이 됐을 때 id로 board를 찾고, 없을 때의 응답을 추가한다.
-//                if(board를 찾는 메소드 == null) {
-//                    body.put("code", 4401);
-//                    return ResponseEntity.status(404).body(body);
-//                }
+                // Board id로 board를 찾고, 없을 때의 응답을 추가한다.
+                if(boardService.FindBoardId(commentInputDTO.getBoardId()) == null) {
+                    body.put("code", 4401);
+                    return ResponseEntity.status(404).body(body);
+                }
                 body = commentService.AddCommentData(commentInputDTO, user);
                 return ResponseEntity.status(body.get("code").equals(2000) ? 200 : 400).body(body);
             }
@@ -87,9 +89,14 @@ public class CommentController {
                 email = (String)checkToken.get("email");
             }
 
+            // Board id로 board를 찾고, 없을 때의 응답을 추가한다.
+            Board board = boardService.FindBoardId(boardId);
+            if(board == null) {
+                body.put("code", 4401);
+                return ResponseEntity.status(404).body(body);
+            }
             // token에 email정보가 유효하면 댓글을 가져오는 과정을 수행한다
-            System.out.println("여긴올것이고");
-            body = commentService.GetCommentPage(boardId, email, type, page);
+            body = commentService.GetCommentPage(board, email, type, page);
             return ResponseEntity.status(body.get("data") == null ? 404 : 200).body(body);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");

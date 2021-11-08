@@ -1,6 +1,7 @@
 .wrapper {
   display: flex;
   .reviewstill {
+    cursor: pointer;
     width: 282px;
     height: 200px;
     margin-right: 24px;
@@ -19,9 +20,43 @@
       height: auto;
     }
     &:last-child {
+      margin-right: 0px;
       img {
         opacity: 0.5;
       }
+    }
+  }
+}
+
+.still-wrapper {
+  margin: 1rem 0;
+  .head {
+    font-size: 1.5rem;
+    color: white;
+    margin: 1rem 0;
+  }
+}
+
+.fullwrapper {
+  display: flex;
+  flex-wrap: wrap;
+  .displaystill {
+    width: 588px;
+    height: auto;
+    max-height: 400px;
+    margin-bottom: 2rem;
+    margin-right: 24px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    img {
+      width: 700px;
+      height: auto;
+    }
+    &:nth-child(2n) {
+      margin-right: 0px;
     }
   }
 }
