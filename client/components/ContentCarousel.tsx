@@ -1,42 +1,56 @@
 import styles from "../styles/components/contentcarousel.module.scss";
-
-export default function ContentCarousel() {
+import Link from "next/link";
+export default function ContentCarousel({ film, catchphrase }: any) {
   let counter = 0;
-  const posters = (
-    <div className={styles.slide__wrapper}>
-      <div>
-        <img
-          width="282"
-          src="https://an2-img.amz.wtchn.net/image/v2/63456fa9804b8ba4729c5e61e4d540cb.jpg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaVlXTnJaM0p2ZFc1a0lqcDdJbklpT2pJMU5Td2laeUk2TWpVMUxDSmlJam95TlRWOUxDSmpjbTl3SWpwMGNuVmxMQ0pvWldsbmFIUWlPamN3TUN3aWNHRjBhQ0k2SWk5Mk1pOXpkRzl5WlM5cGJXRm5aUzh4TmpNeU56a3hPREk1TXpBeE16VTRNalE1SWl3aWNYVmhiR2wwZVNJNk9EQXNJbmRwWkhSb0lqbzBPVEI5Lkpxci1MZWF1Nmx3YTZLNVM4V2RUWkRhdDhqanNQWkUzQkloWXpaSnkyREU"
-        />
+  function poster(film0: any, film1: any, film2: any, film3: any): any {
+    return (
+      <div className={styles.slide__wrapper}>
+        <div>
+          <Link href="/board/view/[boardid]" as={`/board/view/${film0.id}`}>
+            {film0.posterImg ? (
+              <img width="282" src={film0.posterImg} />
+            ) : (
+              <img width="282" src="/noposter.png" />
+            )}
+          </Link>
+        </div>
+        <div>
+          <Link href="/board/view/[boardid]" as={`/board/view/${film1.id}`}>
+            {film1.posterImg ? (
+              <img width="282" src={film1.posterImg} />
+            ) : (
+              <img width="282" src="/noposter.png" />
+            )}
+          </Link>
+        </div>
+        <div>
+          <Link href="/board/view/[boardid]" as={`/board/view/${film2.id}`}>
+            {film2.posterImg ? (
+              <img width="282" src={film2.posterImg} />
+            ) : (
+              <img width="282" src="/noposter.png" />
+            )}
+          </Link>
+        </div>
+        <div>
+          <Link href="/board/view/[boardid]" as={`/board/view/${film3.id}`}>
+            {film3.posterImg ? (
+              <img width="282" src={film3.posterImg} />
+            ) : (
+              <img width="282" src="/noposter.png" />
+            )}
+          </Link>
+        </div>
       </div>
-      <div>
-        <img
-          width="282"
-          src="https://an2-img.amz.wtchn.net/image/v2/63456fa9804b8ba4729c5e61e4d540cb.jpg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaVlXTnJaM0p2ZFc1a0lqcDdJbklpT2pJMU5Td2laeUk2TWpVMUxDSmlJam95TlRWOUxDSmpjbTl3SWpwMGNuVmxMQ0pvWldsbmFIUWlPamN3TUN3aWNHRjBhQ0k2SWk5Mk1pOXpkRzl5WlM5cGJXRm5aUzh4TmpNeU56a3hPREk1TXpBeE16VTRNalE1SWl3aWNYVmhiR2wwZVNJNk9EQXNJbmRwWkhSb0lqbzBPVEI5Lkpxci1MZWF1Nmx3YTZLNVM4V2RUWkRhdDhqanNQWkUzQkloWXpaSnkyREU"
-        />
-      </div>
-      <div>
-        <img
-          width="282"
-          src="https://an2-img.amz.wtchn.net/image/v2/63456fa9804b8ba4729c5e61e4d540cb.jpg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaVlXTnJaM0p2ZFc1a0lqcDdJbklpT2pJMU5Td2laeUk2TWpVMUxDSmlJam95TlRWOUxDSmpjbTl3SWpwMGNuVmxMQ0pvWldsbmFIUWlPamN3TUN3aWNHRjBhQ0k2SWk5Mk1pOXpkRzl5WlM5cGJXRm5aUzh4TmpNeU56a3hPREk1TXpBeE16VTRNalE1SWl3aWNYVmhiR2wwZVNJNk9EQXNJbmRwWkhSb0lqbzBPVEI5Lkpxci1MZWF1Nmx3YTZLNVM4V2RUWkRhdDhqanNQWkUzQkloWXpaSnkyREU"
-        />
-      </div>
-      <div>
-        <img
-          width="282"
-          src="https://an2-img.amz.wtchn.net/image/v2/63456fa9804b8ba4729c5e61e4d540cb.jpg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaVlXTnJaM0p2ZFc1a0lqcDdJbklpT2pJMU5Td2laeUk2TWpVMUxDSmlJam95TlRWOUxDSmpjbTl3SWpwMGNuVmxMQ0pvWldsbmFIUWlPamN3TUN3aWNHRjBhQ0k2SWk5Mk1pOXpkRzl5WlM5cGJXRm5aUzh4TmpNeU56a3hPREk1TXpBeE16VTRNalE1SWl3aWNYVmhiR2wwZVNJNk9EQXNJbmRwWkhSb0lqbzBPVEI5Lkpxci1MZWF1Nmx3YTZLNVM4V2RUWkRhdDhqanNQWkUzQkloWXpaSnkyREU"
-        />
-      </div>
-    </div>
-  );
+    );
+  }
   return (
     <div className={styles.carousel}>
       <div className={styles.category__wrapper}>
-        <div className={styles.category}>내가 담아둔 영화</div>
+        <div className={styles.category}>{catchphrase}</div>
         <div id="posters" className={styles.poster__wrapper}>
-          {posters}
-          {posters}
+          {poster(film[0], film[1], film[2], film[3])}
+          {poster(film[4], film[5], film[6], film[7])}
         </div>
         <button
           className={styles["btn-prev"]}
@@ -55,43 +69,7 @@ export default function ContentCarousel() {
         <button
           className={styles["btn-next"]}
           onClick={(e) => {
-            if (counter === 4) return;
-            let eventtarget: any = e.target;
-            const target: any = eventtarget.parentNode.childNodes[1];
-            if (target === undefined) return;
-            target.style.transition = "transform 0.4s ease-in-out";
-            counter++;
-            target.style.transform = `translateX(${-1200 * counter}px)`;
-          }}
-        >
-          <img src="/next.png" />
-        </button>
-      </div>
-
-      <div className={styles.category__wrapper}>
-        <div className={styles.category}>내가 담아둔 영화</div>
-        <div id="posters" className={styles.poster__wrapper}>
-          {posters}
-          {posters}
-        </div>
-        <button
-          className={styles["btn-prev"]}
-          onClick={(e) => {
-            if (counter === 0) return;
-            let eventtarget: any = e.target;
-            const target: any = eventtarget.parentNode.childNodes[1];
-            if (target === undefined) return;
-            target.style.transition = "transform 0.4s ease-in-out";
-            counter--;
-            target.style.transform = `translateX(${-1200 * counter}px)`;
-          }}
-        >
-          <img src="/prev.png" />
-        </button>
-        <button
-          className={styles["btn-next"]}
-          onClick={(e) => {
-            if (counter === 4) return;
+            if (counter === 2) return;
             let eventtarget: any = e.target;
             const target: any = eventtarget.parentNode.childNodes[1];
             if (target === undefined) return;

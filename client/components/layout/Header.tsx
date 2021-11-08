@@ -35,12 +35,17 @@ export default function Header() {
   //쿠키 리프레쉬 토큰확인하여 엑세스토큰 받아오기
   useEffect(() => {
     if (Cookies.get("refreshToken")) {
-      Setaxios.getAxios("reissuance").then((res) => {
-        const resData: any = res.data;
-        Cookies.set("accesstoken", resData.data.accessToken);
-        axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
-        setUserLoginStatus(true);
-      });
+      Setaxios.getAxios("reissuance")
+        .then((res) => {
+          const resData: any = res.data;
+          Cookies.set("accesstoken", resData.data.accessToken);
+          axios.defaults.headers.common["accesstoken"] =
+            resData.data.accessToken;
+          setUserLoginStatus(true);
+        })
+        .catch((err) => {
+          alert(err);
+        });
     }
   }, []);
   const handleSignupModal = (): void => {

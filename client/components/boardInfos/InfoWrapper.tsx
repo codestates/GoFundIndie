@@ -36,7 +36,7 @@ export default function InfoWrapper({ comments, stills, cast }: any) {
     }
   }
   return (
-    <>
+    <div className={styles.infowrapper}>
       <div className={styles["menu-wrapper"]}>
         <button
           value="default"
@@ -60,6 +60,6 @@ export default function InfoWrapper({ comments, stills, cast }: any) {
           ? defaultState
           : InfoHandler()
         : null}
-    </>
+    </div>
   );
 }
