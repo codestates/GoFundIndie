@@ -8,7 +8,7 @@ public class Still {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String image;
 
     @ManyToOne(targetEntity = Board.class)

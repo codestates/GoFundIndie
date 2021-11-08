@@ -1,9 +1,11 @@
 package com.IndieAn.GoFundIndie.Resolvers;
 
 import com.IndieAn.GoFundIndie.Common.SearchTypes;
+import com.IndieAn.GoFundIndie.Repository.CommentRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingAdminViewBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingBoardGraphQLsDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.Querys.BoardQuery;
@@ -26,6 +28,8 @@ public class Query implements GraphQLQueryResolver {
     private final BoardQuery boardQuery;
     private final GenreQuery genreQuery;
     private final UserQuery userQuery;
+
+    private final CommentRepository cr;
 
     // ---- USER ----
     //
@@ -61,5 +65,9 @@ public class Query implements GraphQLQueryResolver {
     public WrappingBoardGraphQLsDTO FindBoards(SearchTypes type, Integer limit, DataFetchingEnvironment env) {
         if(limit == null) return boardQuery.FindBoards(type, 100000000, env);
         return boardQuery.FindBoards(type, limit, env);
+    }
+
+    public List<CommentGraphQLDTO> CommentTest(long id, int limit){
+        return cr.findCommentByBoard(id,limit);
     }
 }
