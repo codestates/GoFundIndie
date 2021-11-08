@@ -1,8 +1,8 @@
 import styles from "../../styles/components/boardInfos/comments.module.scss";
 export default function Comments({ comments }: { comments: Array<string> }) {
   return (
-    <>
-      <div>코멘트</div>
+    <div className={styles["comments-wrapper"]}>
+      <div className={styles.head}>코멘트</div>
       {comments.map((comment: any) => {
         return (
           <div key={comment.userNickname}>
@@ -36,6 +36,6 @@ export default function Comments({ comments }: { comments: Array<string> }) {
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
