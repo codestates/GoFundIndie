@@ -1,5 +1,8 @@
 import styles from "../../styles/components/boardInfos/comments.module.scss";
 export default function Comments({ comments }: { comments: Array<string> }) {
+  if (comments === null) {
+    return null;
+  }
   return (
     <div className={styles["comments-wrapper"]}>
       <div className={styles.head}>코멘트</div>
