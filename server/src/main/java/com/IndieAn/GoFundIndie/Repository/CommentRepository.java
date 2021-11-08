@@ -4,6 +4,7 @@ import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -68,5 +69,17 @@ public class CommentRepository {
 
         entityManager.flush();
         entityManager.close();
+    }
+
+    // ViewBoard gql comments
+    public List<CommentGraphQLDTO> findCommentByBoard(long boardId, int limit) {
+        return entityManager.createQuery(
+                "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO(c.id, c.rating, u.id, u.nickname, u.profilePicture, c.donation, c.body, c.spoiler, c.like, false) " +
+                        "FROM Comment c " +
+                        "JOIN c.boardId b " +
+                        "ON c.boardId = " + boardId + " " +
+                        "JOIN c.userId u " +
+                        "ORDER BY c.like DESC", CommentGraphQLDTO.class
+        ).setMaxResults(limit).getResultList();
     }
 }

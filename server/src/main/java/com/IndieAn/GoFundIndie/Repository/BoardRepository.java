@@ -1,13 +1,11 @@
 package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Common.SearchTypes;
-import com.IndieAn.GoFundIndie.Domain.Entity.Board;
-import com.IndieAn.GoFundIndie.Domain.Entity.BoardGenre;
-import com.IndieAn.GoFundIndie.Domain.Entity.BoardLike;
-import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Domain.Entity.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.PutBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -58,12 +56,13 @@ public class BoardRepository {
                 .getResultList();
     }
 
-    public List<BoardGraphQLDTO> findBoardsByLike(User user, int limit) {
+    public List<BoardGraphQLDTO> findBoardsByMy(User user, int limit) {
         return entityManager.createQuery(
             BOARD_GRAPHQL_DTO_QUERY_SELECT +
                     "FROM BoardLike l " +
                     "LEFT JOIN l.boardId b " +
-                    "WHERE l.userId = " + user.getId() + " AND b.isApprove = true " +
+                    "ON l.userId = " + user.getId() + " " +
+                    "WHERE b.isApprove = true " +
                     "ORDER BY l.createdAt DESC", BoardGraphQLDTO.class)
                 .setMaxResults(limit)
                 .getResultList();
@@ -75,7 +74,8 @@ public class BoardRepository {
             BOARD_GRAPHQL_DTO_QUERY_SELECT +
                     "FROM BoardGenre g " +
                     "LEFT JOIN g.boardId b " +
-                    "WHERE g.genreId = " + genreId + " AND b.isApprove = true " +
+                    "ON g.genreId = " + genreId + " " +
+                    "WHERE b.isApprove = true " +
                     "ORDER BY b.commentAmount DESC", BoardGraphQLDTO.class)
                 .setMaxResults(limit)
                 .getResultList();

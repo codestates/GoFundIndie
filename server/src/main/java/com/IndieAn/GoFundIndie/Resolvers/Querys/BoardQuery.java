@@ -104,7 +104,7 @@ public class BoardQuery {
                         } else {
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
-                                    .data(boardRepository.findBoardsByLike(
+                                    .data(boardRepository.findBoardsByMy(
                                             userService.FindUserUseEmail(
                                                     checkToken.get("email").toString()), limit))
                                     .build();
