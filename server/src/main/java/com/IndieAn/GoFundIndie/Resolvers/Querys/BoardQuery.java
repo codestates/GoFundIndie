@@ -2,8 +2,7 @@ package com.IndieAn.GoFundIndie.Resolvers.Querys;
 
 import com.IndieAn.GoFundIndie.Common.SearchTypes;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
-import com.IndieAn.GoFundIndie.Repository.BoardRepository;
-import com.IndieAn.GoFundIndie.Repository.UserRepository;
+import com.IndieAn.GoFundIndie.Repository.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
@@ -23,15 +22,24 @@ import java.util.Map;
 public class BoardQuery {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final CastingRepository castingRepository;
+    private final GenreRepository genreRepository;
+    private final ImageRepository imageRepository;
 
     private final UserService userService;
 
-    //TODO : Sort comment by like & limit 5
     public WrappingViewBoardDTO FindBoardId(Long id) {
         try {
+            ViewBoardDTO dto = ViewBoardDTO.from(boardRepository.findBoardId(id));
+            dto.setCasting(castingRepository.findCastingByBoard(id));
+            dto.setComment(commentRepository.findCommentByBoard(id,5));
+            dto.setGenre(genreRepository.findGenreByBoard(id));
+            dto.setStill(imageRepository.findStillByBoard(id));
+
             return WrappingViewBoardDTO.builder()
                     .code(2000)
-                    .data(ViewBoardDTO.from(boardRepository.findBoardId(id)))
+                    .data(dto)
                     .build();
         } catch (NullPointerException e) {
             return WrappingViewBoardDTO.builder()
@@ -58,9 +66,15 @@ public class BoardQuery {
             } else if(!userService.FindUserUseEmail(checkToken.get("email").toString()).isAdminRole()) {
                 return WrappingAdminViewBoardDTO.builder().code(4300).build();
             } else {
+                AdminViewBoardDTO dto = AdminViewBoardDTO.from(boardRepository.findBoardId(id));
+                dto.setCasting(castingRepository.findCastingByBoard(id));
+                dto.setComment(commentRepository.findCommentByBoard(id,5));
+                dto.setGenre(genreRepository.findGenreByBoard(id));
+                dto.setStill(imageRepository.findStillByBoard(id));
+
                 return WrappingAdminViewBoardDTO.builder()
                         .code(2000)
-                        .data(AdminViewBoardDTO.from(boardRepository.findBoardId(id)))
+                        .data(dto)
                         .build();
             }
 
@@ -116,6 +130,42 @@ public class BoardQuery {
 //                                .data(boardRepository.findBoardsByLike(
 //                                                userRepository.FindUserByIdDB(7L), limit))
 //                                .build();
+
+                    } catch (NullPointerException e) {
+                        return WrappingBoardGraphQLsDTO.builder().code(4000).build();
+                    }
+                case SEARCH_TYPES_MY_DONATION:
+                    try {
+//                        GraphQLServletContext context = env.getContext();
+//                        HttpServletRequest request = context.getHttpServletRequest();
+//                        String accessToken = request.getHeader("accesstoken");
+//
+//                        //   - No accessToken in the Header :
+//                        if(accessToken == null)
+//                            return WrappingBoardGraphQLsDTO.builder().code(4000).build();
+//
+//                        Map<String, Object> checkToken = userService.CheckToken(accessToken);
+//
+//                        //   - Token invalid case :
+//                        if(checkToken.get("email") == null) {
+//                            return WrappingBoardGraphQLsDTO.builder()
+//                                    .code(Integer.parseInt(checkToken.get("code").toString())).build();
+//                        } else {
+//                            return WrappingBoardGraphQLsDTO.builder()
+//                                    .code(2000)
+//                                    .data(boardRepository.findBoardsByMyDonation(
+//                                            userService.FindUserUseEmail(
+//                                                    checkToken.get("email").toString()), limit))
+//                                    .build();
+//                        }
+
+                        // Test Code
+                        return WrappingBoardGraphQLsDTO.builder()
+                                .code(2000)
+                                .data(boardRepository.findBoardsByMyDonation(
+                                        userRepository.FindUserByIdDB(3L), limit
+                                ))
+                                .build();
 
                     } catch (NullPointerException e) {
                         return WrappingBoardGraphQLsDTO.builder().code(4000).build();

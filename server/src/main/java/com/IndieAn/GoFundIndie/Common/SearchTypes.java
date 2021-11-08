@@ -17,6 +17,8 @@ public enum SearchTypes {
     SEARCH_TYPES_MUSICAL("Musical"),
     //   - My = 내가 찜한 영화
     SEARCH_TYPES_MY("My"),
+    //   - My_Donation = 내가 후원한 영화
+    SEARCH_TYPES_MY_DONATION("My_Donation"),
     //   - Approve_false = 미승인 보드
     SEARCH_TYPES_APPROVE_FALSE("Approve_false"),
     //   - Approve_true = 승인 보드

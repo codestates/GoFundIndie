@@ -58,19 +58,6 @@ public class AdminViewBoardDTO {
                 .createdAt(en.getCreatedAt().toString())
                 .commentAmount(en.getCommentAmount())
                 .likeAmount(en.getLikeAmount())
-                .genre(
-                        en.getBoardGenres().stream()
-                                .map(el -> GenreGraphQLDTO.from(el.getGenreId()))
-                                .collect(Collectors.toList()))
-                .casting(
-                        en.getCastings().stream()
-                                .map(CastingGraphQLDTO::from)
-                                .collect(Collectors.toList()))
-                .still(
-                        en.getStills().stream()
-                                .map(StillGraphQLDTO::from)
-                                .collect(Collectors.toList()))
-                .comment(null)
                 .build();
     }
 

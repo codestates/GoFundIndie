@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Genre;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +45,15 @@ public class GenreRepository {
         entityManager.flush();
         entityManager.close();
         return true;
+    }
+
+    public List<GenreGraphQLDTO> findGenreByBoard(long boardId) {
+        return entityManager.createQuery(
+                "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO" +
+                        "(g.id, g.name) " +
+                        "FROM BoardGenre bg " +
+                        "JOIN bg.genreId g " +
+                        "ON bg.boardId = " + boardId + " ", GenreGraphQLDTO.class
+        ).getResultList();
     }
 }
