@@ -7,6 +7,7 @@ import com.IndieAn.GoFundIndie.Domain.Entity.BoardLike;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.PutBoardDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -29,7 +30,8 @@ public class BoardRepository {
 
     private final static String BOARD_GRAPHQL_DTO_QUERY_SELECT = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO(b.id, b.isApprove, b.title, b.posterImg, b.infoCountry, b.infoCreatedYear, b.infoCreatedDate, b.infoTime, b.infoLimit) ";
 
-    public Board findBoardId(long id) {
+    public Board findBoardId(Long id) {
+        if(id == null) return null;
         try {
             return entityManager.find(Board.class, id);
         } catch (NullPointerException | IllegalArgumentException e) {
@@ -84,7 +86,7 @@ public class BoardRepository {
             BOARD_GRAPHQL_DTO_QUERY_SELECT +
                     "FROM Board b " +
                     "WHERE b.isApprove = true " +
-                    "ORDER BY b.id DESC", BoardGraphQLDTO.class)
+                    "ORDER BY b.createdAt DESC", BoardGraphQLDTO.class)
                 .setMaxResults(limit).getResultList();
     }
 
@@ -135,11 +137,50 @@ public class BoardRepository {
         return board.getId();
     }
 
-    public void ApproveBoard(Board board) {
-        board.setApprove(true);
+    public long PutBoard(Board board, PutBoardDTO dto) {
+        if(dto.getTitle()!=null)
+            board.setTitle(dto.getTitle());
+        if(dto.getInfoCountry()!=null)
+            board.setInfoCountry(dto.getInfoCountry());
+        if(dto.getInfoCreatedYear()!=null)
+            board.setInfoCreatedYear(dto.getInfoCreatedYear());
+        if(dto.getInfoTime()!=0)
+            board.setInfoTime(dto.getInfoTime());
+        if(dto.getInfoStory()!=null)
+            board.setInfoStory(dto.getInfoStory());
+        if(dto.getProducer()!=null)
+            board.setProducer(dto.getProducer());
+        if(dto.getDistributor()!=null)
+            board.setDistributor(dto.getDistributor());
+        if(dto.getPosterImg()!=null)
+            board.setPosterImg(dto.getPosterImg());
+        if(dto.getViewLink()!=null)
+            board.setViewLink(dto.getViewLink());
+        if(dto.getInfoLimit()!=0)
+            board.setInfoLimit(dto.getInfoLimit());
+        if(dto.getInfoSubtitle()!=null)
+            board.setInfoSubtitle(dto.getInfoSubtitle());
+        if(dto.getInfoCreatedDate()!=null)
+            board.setInfoCreatedDate(dto.getInfoCreatedDate());
+
+        entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
+
+        return board.getId();
+    }
+
+    public void ApproveBoard(Board board, boolean isApprove) {
+        board.setApprove(isApprove);
         board.setCreatedAt(new Date());
 
         entityManager.persist(board);
+        entityManager.flush();
+        entityManager.close();
+    }
+
+    public void DeleteBoard(Board board) {
+        entityManager.remove(board);
         entityManager.flush();
         entityManager.close();
     }

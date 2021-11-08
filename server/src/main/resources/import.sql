@@ -101,10 +101,6 @@ insert into `comment` (rating, user_id, board_id, donation, body) VALUES (2, 10,
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 2, 100, "영화 재밌어서 돈 드립니다");
 insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 4, 2, 2000, "좋은 영화 많이 만들어 주세요");
 
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (5, 3, 32, 0, "5점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (4, 4, 32, 0, "4점 드립니다");
-insert into `comment` (rating, user_id, board_id, donation, body) VALUES (3, 5, 32, 0, "3점 드립니다");
-
 insert into `comment` (rating, user_id, board_id) values (1,3,3);
 insert into `comment` (rating, user_id, board_id) values (1,4,3);
 insert into `comment` (rating, user_id, board_id) values (1,5,3);

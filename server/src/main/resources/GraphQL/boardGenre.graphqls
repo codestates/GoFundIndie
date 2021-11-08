@@ -1,0 +1,9 @@
+type WrappingLink {
+    code: Int
+    data: LinkInfo
+}
+
+type LinkInfo {
+    boardId: ID
+    genreId: ID
+}

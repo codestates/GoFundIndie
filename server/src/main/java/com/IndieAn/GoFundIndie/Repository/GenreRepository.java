@@ -15,7 +15,12 @@ public class GenreRepository {
     private final EntityManager entityManager;
 
     public Genre FindById(Long id) {
-        return entityManager.find(Genre.class, id);
+        if(id == null) return null;
+        try {
+            return entityManager.find(Genre.class, id);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public List<Genre> FindAll() {
