@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Setaxios from "../../fetching/Setaxios";
 import { useRouter } from "next/router";
 import axios from "axios";
-import cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 export default function Header() {
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
@@ -34,9 +34,10 @@ export default function Header() {
   }, [router.pathname]);
   //쿠키 리프레쉬 토큰확인하여 엑세스토큰 받아오기
   useEffect(() => {
-    if (cookies.get("refreshToken")) {
+    if (Cookies.get("refreshToken")) {
       Setaxios.getAxios("reissuance").then((res) => {
         const resData: any = res.data;
+        Cookies.set("accesstoken", resData.data.accessToken);
         axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
         setUserLoginStatus(true);
       });
@@ -57,6 +58,8 @@ export default function Header() {
       .then(() => {
         alert("로그아웃에 성공하였습니다");
         setUserLoginStatus(false);
+        Cookies.set("accesstoken", "");
+        router.push("/");
         delete axios.defaults.headers.common["accesstoken"];
       })
       .catch((err) => {

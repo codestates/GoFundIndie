@@ -43,7 +43,7 @@ export default function Signup({
       .then((res) => {
         console.log(res);
         alert("성공적으로 가입됐습니다");
-        Router.push("/");
+        handleSignupModal();
       })
       .catch((err) => {
         setErrormessage("가입에 실패했습니다");

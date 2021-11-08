@@ -106,4 +106,3 @@ export default function ContentCarousel() {
     </div>
   );
 }
-//transform: translateX(-1200px);

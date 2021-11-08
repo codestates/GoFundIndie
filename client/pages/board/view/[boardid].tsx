@@ -4,7 +4,7 @@ import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
-  console.log(film.FindBoardId.data);
+  console.log(film);
   let filmData;
   if (film !== null) {
     filmData = film.FindBoardId.data;
@@ -12,7 +12,7 @@ export default function BoarDetails({ film }: any) {
   if (film === null) {
     return <></>;
   }
-  
+
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
@@ -32,29 +32,26 @@ export default function BoarDetails({ film }: any) {
           <div className={styles.filminfo__wrapper}>
             <div className={styles.filminfo__title}>{filmData.title}</div>
             <div className={styles.filminfo__info}>
-              <span className={styles.filminfo__info__text}>
-                {filmData.infoCreatedYear}
-              </span>
+              <span>{filmData.infoCreatedYear}</span>
               <span className={styles.dot}>・</span>
-              <span className={styles.filminfo__info__text}>
-                {filmData.genre}
-              </span>
+              <span>{filmData.genre}</span>
               <span className={styles.dot}>・</span>
-              <span className={styles.filminfo__info__text}>
-                {filmData.infoCountry}
-              </span>
+              <span>{filmData.infoCountry}</span>
+            </div>
+            <div className={styles.bucket}>
+              <img src="/plusButton.png" alt="plus" />
+              <div>담아둘래요</div>
             </div>
           </div>
-          <div className={styles.filminfoStory}>
+          <div className={styles.filmLink}>
             <div>지금 보고싶어요</div>
             <div>
               <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
             </div>
           </div>
           <div></div>
-          <div>{filmData.infoStory}</div>
           <InfoWrapper
-            casting={filmData.casting}
+            cast={filmData.casting}
             stills={filmData.still}
             comments={filmData.comment}
           />
@@ -66,11 +63,11 @@ export default function BoarDetails({ film }: any) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (context.params === undefined) return { props: {} };
+  //TODO:query를 따로 관리하기
   const query = `{
     FindBoardId(id: ${context.params.boardid}) {
       data {
         id
-        userId
         isApprove
         title
         producer
@@ -79,27 +76,34 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         viewLink
         infoCountry
         infoCreatedYear
+        infoCreatedDate
         infoTime
         infoLimit
         infoStory
         infoSubtitle
         createdAt
+        commentAmount
+        likeAmount
         genre {
-          name
+            id
+            name
         }
         casting {
-          name
-          position
-          image
+            id
+            name
+            position
+            image
         }
         still {
-          image
+            id
+            image
         }
         comment {
-          rating
-          userNickname
+            id
+            rating
+            userNickname
         }
-      } 
+      }
     }
 }`;
 
@@ -112,7 +116,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }).catch((err) => {
     return err;
   });
+
   const film = await (await res).json();
+
   if (film === null) return { props: {} };
   return {
     props: {
