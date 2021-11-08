@@ -1,0 +1,38 @@
+.cast {
+  margin: 1rem 0;
+}
+.cast-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+.infos {
+  width: 180px;
+  margin-right: 24px;
+  .name {
+    color: white;
+    font-size: 1.2rem;
+  }
+  img {
+    border-radius: 20px;
+    width: 100%;
+  }
+  &:nth-child(6n) {
+    margin-right: 0px;
+  }
+}
+
+.head {
+  font-size: 1.5rem;
+  color: white;
+  display: flex;
+  margin: 1rem 0;
+  button {
+    all: unset;
+    background-color: #00c896;
+    font-size: 1rem;
+    padding: 0.3rem;
+    border-radius: 20px;
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+}

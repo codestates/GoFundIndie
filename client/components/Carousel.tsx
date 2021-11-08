@@ -1,6 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay, Pagination, Navigation } from "swiper";
 import styles from "../styles/components/carousel.module.scss";
+import Link from "next/link";
 
 SwiperCore.use([Autoplay, Pagination, Navigation]);
 export default function Carousel() {
@@ -24,31 +25,24 @@ export default function Carousel() {
         className="mySwiper"
       >
         <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
+          <Link href="/board/view/33">
+            <img
+              className={styles.image}
+              src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png"
+            />
+          </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
+          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
+          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
+          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="http://image.kmib.co.kr/online_image/2020/1112/611811110015211020_1.jpg" />
+          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
         </SwiperSlide>
       </Swiper>
     </div>

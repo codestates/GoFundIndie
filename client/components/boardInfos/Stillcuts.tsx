@@ -3,8 +3,8 @@ import styles from "../../styles/components/boardInfos/stills.module.scss";
 export default function Stillcuts({ stills, onFocus }: any) {
   let counter = 0;
   return (
-    <>
-      <div>갤러리</div>
+    <div className={styles["still-wrapper"]}>
+      <div className={styles.head}>갤러리</div>
       {!onFocus ? (
         <div className={styles.wrapper}>
           {stills.map((el: { image: string | undefined }) => {
@@ -14,11 +14,12 @@ export default function Stillcuts({ stills, onFocus }: any) {
             }
             return (
               <div
+                key={el.image}
                 className={styles.reviewstill}
                 onClick={
                   counter === 4
                     ? () => {
-                        //TODO 클릭하면 상위컴포넌트 바뀌게 어떻게하지
+                        //TODO 클릭하면 상위컴포넌트 바뀌게하기
                       }
                     : undefined
                 }
@@ -30,8 +31,16 @@ export default function Stillcuts({ stills, onFocus }: any) {
           })}
         </div>
       ) : (
-        <div></div>
+        <div className={styles.fullwrapper}>
+          {stills.map((el: { image: string | undefined }) => {
+            return (
+              <div key={el.image} className={styles.displaystill}>
+                <img src={el.image} />
+              </div>
+            );
+          })}
+        </div>
       )}
-    </>
+    </div>
   );
 }

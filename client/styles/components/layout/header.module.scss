@@ -1,7 +1,7 @@
 $backcolor: #1b1b1b;
 $buttoncolor: #bbbbbb;
 .header__div__wrapper {
-  min-width: 1200px !important;
+  min-width: 800px !important;
   overflow: scroll !important;
   width: 100%;
   position: fixed;
@@ -30,6 +30,9 @@ $buttoncolor: #bbbbbb;
     min-width: 4rem;
     color: $buttoncolor;
     cursor: pointer;
+    &:hover {
+      color: white;
+    }
   }
   .header__div {
     display: flex;
@@ -67,11 +70,11 @@ $buttoncolor: #bbbbbb;
     a {
       color: white;
       opacity: 0.7;
+      &:hover {
+        opacity: 1;
+      }
     }
-    div {
-      color: white;
-      opacity: 0.7;
-    }
+
     .header-searchbar {
       width: 274px;
       height: 40px;
