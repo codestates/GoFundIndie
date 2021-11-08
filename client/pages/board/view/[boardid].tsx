@@ -1,10 +1,9 @@
 import styles from "../../../styles/view_boardid.module.scss";
-import { GetServerSideProps } from "next";
 import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
+import { GetServerSideProps } from "next";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
-  console.log(film);
   let filmData;
   if (film !== null) {
     filmData = film.FindBoardId.data;
@@ -12,7 +11,7 @@ export default function BoarDetails({ film }: any) {
   if (film === null) {
     return <></>;
   }
-
+  //보드테이블에 평점계산해서 내보는게 없네
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
