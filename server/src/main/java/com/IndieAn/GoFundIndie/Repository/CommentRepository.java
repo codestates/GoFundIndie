@@ -72,6 +72,7 @@ public class CommentRepository {
     }
 
     // ViewBoard gql comments
+    // TODO Rating Check
     public List<CommentGraphQLDTO> findCommentByBoard(long boardId, int limit) {
         return entityManager.createQuery(
                 "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO(c.id, c.rating, u.id, u.nickname, u.profilePicture, c.donation, c.body, c.spoiler, c.like, false) " +

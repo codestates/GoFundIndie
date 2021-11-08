@@ -68,6 +68,18 @@ public class BoardRepository {
                 .getResultList();
     }
 
+    public List<BoardGraphQLDTO> findBoardsByMyDonation(User user, int limit) {
+        return entityManager.createQuery(
+            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+                    "FROM Comment c " +
+                    "JOIN c.boardId b " +
+                    "ON c.userId = " + user.getId() + " " +
+                    "WHERE c.donation > 0 " +
+                    "ORDER BY c.createdAt DESC", BoardGraphQLDTO.class)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     public List<BoardGraphQLDTO> findBoardsByGenre(SearchTypes type, int limit) {
         int genreId = Arrays.asList(SearchTypes.values()).indexOf(type) + 1;
         return entityManager.createQuery(
