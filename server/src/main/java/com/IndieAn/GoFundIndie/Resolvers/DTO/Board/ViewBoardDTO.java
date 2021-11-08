@@ -71,10 +71,7 @@ public class ViewBoardDTO {
                         en.getStills().stream()
                                 .map(StillGraphQLDTO::from)
                                 .collect(Collectors.toList()))
-                .comment(
-                        en.getComments().stream()
-                                .map(CommentGraphQLDTO::from)
-                                .collect(Collectors.toList()))
+                .comment(null)
                 .build();
     }
 }

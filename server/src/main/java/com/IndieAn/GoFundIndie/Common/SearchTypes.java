@@ -14,6 +14,7 @@ public enum SearchTypes {
     SEARCH_TYPES_ANI("Animation"),
     SEARCH_TYPES_ACTION("Action"),
     SEARCH_TYPES_SF("SF"),
+    SEARCH_TYPES_MUSICAL("Musical"),
     //   - My = 내가 찜한 영화
     SEARCH_TYPES_MY("My"),
     //   - Approve_false = 미승인 보드
