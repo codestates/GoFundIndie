@@ -42,7 +42,6 @@ export default function Mypage({ userInfo }: any) {
   );
 }
 
-//헤더에 엑세스토큰을 체크하네? 내가 헤더에 넣어야하나?
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies: any = context.req.headers.cookie;
   if (cookies.length < 20) {
