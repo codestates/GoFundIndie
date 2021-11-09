@@ -5,10 +5,13 @@ import com.IndieAn.GoFundIndie.Repository.CommentRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingAdminViewBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingBoardGraphQLsDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportGraphQLDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportsGraphqlDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.Querys.BoardQuery;
+import com.IndieAn.GoFundIndie.Resolvers.Querys.BoardReportQuery;
 import com.IndieAn.GoFundIndie.Resolvers.Querys.GenreQuery;
 import com.IndieAn.GoFundIndie.Resolvers.Querys.UserQuery;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -28,6 +31,7 @@ public class Query implements GraphQLQueryResolver {
     private final BoardQuery boardQuery;
     private final GenreQuery genreQuery;
     private final UserQuery userQuery;
+    private final BoardReportQuery boardReportQuery;
 
     private final CommentRepository cr;
 
@@ -69,5 +73,15 @@ public class Query implements GraphQLQueryResolver {
 
     public List<CommentGraphQLDTO> CommentTest(long id, int limit){
         return cr.findCommentByBoard(id,limit);
+    }
+
+    // ---- BOARD REPORT ----
+    //
+    public WrappingBoardReportGraphQLDTO FindBoardReport(Long id, DataFetchingEnvironment env) {
+        return boardReportQuery.FindBoardReport(id, env);
+    }
+
+    public WrappingBoardReportsGraphqlDTO FindBoardReports(DataFetchingEnvironment env) {
+        return boardReportQuery.FindBoardReports(env);
     }
 }

@@ -2,15 +2,14 @@ package com.IndieAn.GoFundIndie.Resolvers;
 
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.PutBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardGenre.WrappingLinkBoardGenreDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.CreateBoardReportDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.CreateCastingCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.PutCastingDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.WrappingCastingGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.WrappingCreateTempCastingDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.GqlResponseCodeDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.Mutations.*;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -30,6 +29,8 @@ public class Mutation implements GraphQLMutationResolver {
     private final GenreMutation genreMutation;
     private final UserMutation userMutation;
     private final BoardGenreMutation boardGenreMutation;
+    private final BoardLikeMutation boardLikeMutation;
+    private final BoardReportMutation boardReportMutation;
 
     // ---- USER ----
     //
@@ -39,12 +40,12 @@ public class Mutation implements GraphQLMutationResolver {
 
     // ---- GENRE ----
     //
-    public int CreateGenre(GenreGraphQLDTO dto) {
-        return genreMutation.CreateGenre(dto);
+    public GqlResponseCodeDTO CreateGenre(GenreGraphQLDTO dto, DataFetchingEnvironment env) {
+        return genreMutation.CreateGenre(dto, env);
     }
 
-    public int DeleteGenreId(Long id) {
-        return genreMutation.DeleteGenreId(id);
+    public GqlResponseCodeDTO DeleteGenreId(Long id, DataFetchingEnvironment env) {
+        return genreMutation.DeleteGenreId(id, env);
     }
 
     // ---- BOARD ----
@@ -61,20 +62,20 @@ public class Mutation implements GraphQLMutationResolver {
         return boardMutation.PutBoard(dto, env);
     }
 
-    public OnlyCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
         return boardMutation.DeleteBoard(id, env);
     }
 
-    public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
         return boardMutation.ApproveBoard(id, true, env);
     }
 
-    public OnlyCodeDTO DisapproveBoard(long id, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO DisapproveBoard(long id, DataFetchingEnvironment env) {
         return boardMutation.ApproveBoard(id, false, env);
     }
 
-    public OnlyCodeDTO SwitchLikeBoard(long boardId, DataFetchingEnvironment env) {
-        return boardMutation.SwitchLikeBoard(boardId, env);
+    public GqlResponseCodeDTO SwitchLikeBoard(long boardId, DataFetchingEnvironment env) {
+        return boardLikeMutation.SwitchLikeBoard(boardId, env);
     }
 
     // ---- Casting ----
@@ -92,7 +93,7 @@ public class Mutation implements GraphQLMutationResolver {
         return castingMutation.PutCasting(dto, env);
     }
 
-    public OnlyCodeDTO DeleteCasting(long id, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO DeleteCasting(long id, DataFetchingEnvironment env) {
         return castingMutation.DeleteCasting(id, env);
     }
 
@@ -105,5 +106,16 @@ public class Mutation implements GraphQLMutationResolver {
 
     public WrappingLinkBoardGenreDTO DisLinkBoardGenre(Long boardId, Long genreId, DataFetchingEnvironment env) {
         return boardGenreMutation.LinkBoardGenre(boardId, genreId, false, env);
+    }
+
+    // ---- BoardReport ----
+    //
+
+    public GqlResponseCodeDTO ReportBoard(CreateBoardReportDTO dto, DataFetchingEnvironment env) {
+        return boardReportMutation.ReportBoard(dto, env);
+    }
+
+    public GqlResponseCodeDTO DeleteReport(Long id, DataFetchingEnvironment env) {
+        return boardReportMutation.DeleteReport(id, env);
     }
 }
