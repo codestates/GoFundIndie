@@ -22,6 +22,8 @@ import java.util.HashMap;
 public class KakaoPayService {
     private static final String HOST = "https://kapi.kakao.com";
     private HashMap<String, Object> body;
+    private String tid;
+    private Integer amount;
 
     @Value("#{info['gofund.kko.adminkey']}")
     private String KKO_ADMIN_KEY;
@@ -29,6 +31,7 @@ public class KakaoPayService {
     // 카카오 페이 결제 요청 서비스
     public HashMap<String, Object> KakaoPayReady(Integer amount) {
         body = new HashMap<>();
+        this.amount = amount;
         KakaoPayReadyVO kakaoPayReadyVO;
         RestTemplate restTemplate = new RestTemplate();
 
@@ -45,7 +48,7 @@ public class KakaoPayService {
         params.add("partner_user_id", "partner_user_id");
         params.add("item_name", "Movie Donation");
         params.add("quantity", "1");
-        params.add("total_amount", Integer.toString(amount));
+        params.add("total_amount", Integer.toString(this.amount));
         params.add("tax_free_amount", "0");
         params.add("approval_url", "https://localhost:3000");
         params.add("cancel_url", "https://localhost:3000");
@@ -59,6 +62,7 @@ public class KakaoPayService {
             log.info("" + kakaoPayReadyVO);
 
             if(kakaoPayReadyVO != null) {
+                tid = kakaoPayReadyVO.getTid();
                 body.put("code", 2000);
                 body.put("data", kakaoPayReadyVO);
             }
@@ -92,11 +96,11 @@ public class KakaoPayService {
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
-        params.add("tid", kakaoPayApproveInputDTO.getTid());
+        params.add("tid", tid);
         params.add("partner_order_id", "partner_order_id");
         params.add("partner_user_id", "partner_user_id");
         params.add("pg_token", kakaoPayApproveInputDTO.getPg_token());
-        params.add("total_amount", Integer.toString(kakaoPayApproveInputDTO.getAmount()));
+        params.add("total_amount", Integer.toString(this.amount));
 
         HttpEntity<MultiValueMap<String, String>> postBody = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
