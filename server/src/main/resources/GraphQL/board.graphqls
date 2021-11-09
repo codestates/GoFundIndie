@@ -44,6 +44,16 @@ type WrappingBoards {
     data: [Board]
 }
 
+type WrappingRandomBoards {
+    code: Int
+    data: [RandomBoard]
+}
+
+type RandomBoard {
+    phrase: String
+    data: [Board]
+}
+
 input boardInput {
     boardId: ID!
     title: String!

@@ -4,6 +4,7 @@ import com.IndieAn.GoFundIndie.Common.SearchTypes;
 import com.IndieAn.GoFundIndie.Repository.CommentRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingAdminViewBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingBoardGraphQLsDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingRandomBoardsDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportsGraphqlDTO;
@@ -73,6 +74,10 @@ public class Query implements GraphQLQueryResolver {
 
     public List<CommentGraphQLDTO> CommentTest(long id, int limit){
         return cr.findCommentByBoard(id,limit);
+    }
+
+    public WrappingRandomBoardsDTO FindRandomBoard(DataFetchingEnvironment env) {
+        return boardQuery.FindRandomBoard(env);
     }
 
     // ---- BOARD REPORT ----

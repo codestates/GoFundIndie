@@ -1,17 +1,29 @@
 package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
-@Getter
-@Builder
-@AllArgsConstructor
 public class WrappingBoardGraphQLsDTO {
     private int code;
     private List<BoardGraphQLDTO> data;
 
     public WrappingBoardGraphQLsDTO() {}
+
+    @Builder
+    public WrappingBoardGraphQLsDTO(int code, List<BoardGraphQLDTO> data) {
+        Assert.notNull(data, "data not null");
+
+        this.code = code;
+        this.data = data;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public List<BoardGraphQLDTO> getData() {
+        return data;
+    }
 }
