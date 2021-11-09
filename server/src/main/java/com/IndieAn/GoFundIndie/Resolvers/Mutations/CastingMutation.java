@@ -11,6 +11,7 @@ import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.CreateTempCastingDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.PutCastingDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.WrappingCreateTempCastingDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
+import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
@@ -32,39 +33,24 @@ public class CastingMutation {
     private final UserRepository userRepository;
 
     private final UserService userService;
-
-    String accessToken = null;
-    Map<String, Object> checkToken = null;
-
-    GraphQLServletContext context = null;
-    HttpServletRequest request = null;
+    private final GqlUserValidService gqlUserValidService;
 
     // TODO 보드가 승인나면 관리자만 할수 있게
-
     // 캐스팅 임시
     public WrappingCreateTempCastingDTO CreateTempCasting(long id, DataFetchingEnvironment env) {
         try {
-            context = env.getContext();
-            request = context.getHttpServletRequest();
-            accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            // No token in the Header : 4000
-            if(context == null || request == null || accessToken == null)
-                return WrappingCreateTempCastingDTO.builder().code(4000).build();
-
-            checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") == null){
+            if(code != 0) {
                 // Token Invalid
-                return WrappingCreateTempCastingDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                return WrappingCreateTempCastingDTO.builder().code(code).build();
             } else {
                 Board board = boardRepository.findBoardId(id);
                 // Can not find board_id : 4401
                 if(board == null)
                     return WrappingCreateTempCastingDTO.builder().code(4401).build();
 
-                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+                User user = gqlUserValidService.findUser(env);
                 // No authorization : 4301
                 if(!user.isAdminRole() && board.getUserId().getId() != user.getId())
                     return WrappingCreateTempCastingDTO.builder().code(4301).build();
@@ -93,20 +79,11 @@ public class CastingMutation {
     // 캐스팅 등록
     public WrappingCreateTempCastingDTO CompleteCasting(CreateCastingCompleteDTO dto, DataFetchingEnvironment env) {
         try {
-            context = env.getContext();
-            request = context.getHttpServletRequest();
-            accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            // No token in the Header : 4000
-            if(context == null || request == null || accessToken == null)
-                return WrappingCreateTempCastingDTO.builder().code(4000).build();
-
-            checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") == null){
+            if(code != 0) {
                 // Token Invalid
-                return WrappingCreateTempCastingDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                return WrappingCreateTempCastingDTO.builder().code(code).build();
             } else {
                 Casting casting = castingRepository.findCastingById(dto.getCastingId());
                 if(casting == null)
@@ -135,20 +112,11 @@ public class CastingMutation {
     // 캐스팅 수정
     public WrappingCreateTempCastingDTO PutCasting(PutCastingDTO dto, DataFetchingEnvironment env) {
         try {
-            context = env.getContext();
-            request = context.getHttpServletRequest();
-            accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            // No token in the Header : 4000
-            if(context == null || request == null || accessToken == null)
-                return WrappingCreateTempCastingDTO.builder().code(4000).build();
-
-            checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") == null){
+            if(code != 0) {
                 // Token Invalid
-                return WrappingCreateTempCastingDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                return WrappingCreateTempCastingDTO.builder().code(code).build();
             } else {
                 Casting casting = castingRepository.findCastingById(dto.getCastingId());
                 if(casting == null)
@@ -177,20 +145,11 @@ public class CastingMutation {
     // 캐스팅 삭제
     public OnlyCodeDTO DeleteCasting(long id, DataFetchingEnvironment env) {
         try {
-            context = env.getContext();
-            request = context.getHttpServletRequest();
-            accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            // No token in the Header : 4000
-            if(context == null || request == null || accessToken == null)
-                return OnlyCodeDTO.builder().code(4000).build();
-
-            checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") == null){
+            if(code != 0) {
                 // Token Invalid
-                return OnlyCodeDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                return OnlyCodeDTO.builder().code(code).build();
             } else {
                 Casting casting = castingRepository.findCastingById(id);
                 if(casting == null)

@@ -8,6 +8,7 @@ import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardGenre.LinkBoardGenreDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardGenre.WrappingLinkBoardGenreDTO;
 import com.IndieAn.GoFundIndie.Service.BoardService;
 import com.IndieAn.GoFundIndie.Service.GenreService;
+import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
@@ -29,6 +30,7 @@ public class BoardGenreMutation {
     private final UserService userService;
     private final BoardService boardService;
     private final GenreService genreService;
+    private final GqlUserValidService gqlUserValidService;
 
     public WrappingLinkBoardGenreDTO LinkBoardGenre(Long boardId, Long genreId, boolean CreateOrDisLink, DataFetchingEnvironment env) {
         if(boardId == null || genreId == null)
@@ -36,22 +38,13 @@ public class BoardGenreMutation {
             return WrappingLinkBoardGenreDTO.builder().code(4009).build();
 
         try{
-            GraphQLServletContext context = env.getContext();
-            HttpServletRequest request = context.getHttpServletRequest();
-            String accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            // No accessToken in the Header : 4000
-            if(accessToken == null)
-                return WrappingLinkBoardGenreDTO.builder().code(4000).build();
-
-            Map<String, Object> checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") == null) {
+            if(code != 0) {
                 // Token invalid
-                return WrappingLinkBoardGenreDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                return WrappingLinkBoardGenreDTO.builder().code(code).build();
             } else {
-                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+                User user = gqlUserValidService.findUser(env);
                 // User not found : 4400
                 if(user == null) return WrappingLinkBoardGenreDTO.builder().code(4400).build();
 

@@ -20,8 +20,8 @@ type Query {
 type Mutation {
     CreateUser(user: userInput!): Int
 
-    CreateGenre(genre: genreInput!): Int
-    DeleteGenreId(id: ID!): Int
+    CreateGenre(genre: genreInput!): onlyCode
+    DeleteGenreId(id: ID!): onlyCode
 
     CreateTempBoard: BoardCreate
     CompleteBoard(board: boardInput!): BoardCreate

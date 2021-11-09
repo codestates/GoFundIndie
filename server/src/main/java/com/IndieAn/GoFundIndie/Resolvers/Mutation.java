@@ -30,6 +30,7 @@ public class Mutation implements GraphQLMutationResolver {
     private final GenreMutation genreMutation;
     private final UserMutation userMutation;
     private final BoardGenreMutation boardGenreMutation;
+    private final BoardLikeMutation boardLikeMutation;
 
     // ---- USER ----
     //
@@ -39,12 +40,12 @@ public class Mutation implements GraphQLMutationResolver {
 
     // ---- GENRE ----
     //
-    public int CreateGenre(GenreGraphQLDTO dto) {
-        return genreMutation.CreateGenre(dto);
+    public OnlyCodeDTO CreateGenre(GenreGraphQLDTO dto, DataFetchingEnvironment env) {
+        return genreMutation.CreateGenre(dto, env);
     }
 
-    public int DeleteGenreId(Long id) {
-        return genreMutation.DeleteGenreId(id);
+    public OnlyCodeDTO DeleteGenreId(Long id, DataFetchingEnvironment env) {
+        return genreMutation.DeleteGenreId(id, env);
     }
 
     // ---- BOARD ----
@@ -74,7 +75,7 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public OnlyCodeDTO SwitchLikeBoard(long boardId, DataFetchingEnvironment env) {
-        return boardMutation.SwitchLikeBoard(boardId, env);
+        return boardLikeMutation.SwitchLikeBoard(boardId, env);
     }
 
     // ---- Casting ----

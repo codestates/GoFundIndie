@@ -4,6 +4,7 @@ import com.IndieAn.GoFundIndie.Common.SearchTypes;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
+import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
@@ -28,6 +29,7 @@ public class BoardQuery {
     private final ImageRepository imageRepository;
 
     private final UserService userService;
+    private final GqlUserValidService gqlUserValidService;
 
     public WrappingViewBoardDTO FindBoardId(Long id) {
         try {
@@ -50,20 +52,11 @@ public class BoardQuery {
 
     public WrappingAdminViewBoardDTO FindBoardIdAdmin(Long id, DataFetchingEnvironment env) {
         try {
-            GraphQLServletContext context = env.getContext();
-            HttpServletRequest request = context.getHttpServletRequest();
-            String accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            //   - No accessToken in the Header :
-            if(accessToken == null)
-                return WrappingAdminViewBoardDTO.builder().code(4000).build();
-
-            Map<String, Object> checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") == null) {
-                return WrappingAdminViewBoardDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
-            } else if(!userService.FindUserUseEmail(checkToken.get("email").toString()).isAdminRole()) {
+            if(code != 0) {
+                return WrappingAdminViewBoardDTO.builder().code(code).build();
+            } else if(!gqlUserValidService.findUser(env).isAdminRole()) {
                 return WrappingAdminViewBoardDTO.builder().code(4300).build();
             } else {
                 AdminViewBoardDTO dto = AdminViewBoardDTO.from(boardRepository.findBoardId(id));
@@ -101,26 +94,15 @@ public class BoardQuery {
                 //   - My = 내가 찜한 영화
                 case SEARCH_TYPES_MY:
                     try {
-                        GraphQLServletContext context = env.getContext();
-                        HttpServletRequest request = context.getHttpServletRequest();
-                        String accessToken = request.getHeader("accesstoken");
+                        int code = gqlUserValidService.envValidCheck(env);
 
-                        //   - No accessToken in the Header :
-                        if(accessToken == null)
-                            return WrappingBoardGraphQLsDTO.builder().code(4000).build();
-
-                        Map<String, Object> checkToken = userService.CheckToken(accessToken);
-
-                        //   - Token invalid case :
-                        if(checkToken.get("email") == null) {
-                            return WrappingBoardGraphQLsDTO.builder()
-                                    .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                        if(code != 0) {
+                            return WrappingBoardGraphQLsDTO.builder().code(code).build();
                         } else {
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
                                     .data(boardRepository.findBoardsByMy(
-                                            userService.FindUserUseEmail(
-                                                    checkToken.get("email").toString()), limit))
+                                            gqlUserValidService.findUser(env), limit))
                                     .build();
                         }
 
@@ -136,26 +118,15 @@ public class BoardQuery {
                     }
                 case SEARCH_TYPES_MY_DONATION:
                     try {
-                        GraphQLServletContext context = env.getContext();
-                        HttpServletRequest request = context.getHttpServletRequest();
-                        String accessToken = request.getHeader("accesstoken");
+                        int code = gqlUserValidService.envValidCheck(env);
 
-                        //   - No accessToken in the Header :
-                        if(accessToken == null)
-                            return WrappingBoardGraphQLsDTO.builder().code(4000).build();
-
-                        Map<String, Object> checkToken = userService.CheckToken(accessToken);
-
-                        //   - Token invalid case :
-                        if(checkToken.get("email") == null) {
-                            return WrappingBoardGraphQLsDTO.builder()
-                                    .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                        if(code != 0) {
+                            return WrappingBoardGraphQLsDTO.builder().code(code).build();
                         } else {
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
                                     .data(boardRepository.findBoardsByMyDonation(
-                                            userService.FindUserUseEmail(
-                                                    checkToken.get("email").toString()), limit))
+                                            gqlUserValidService.findUser(env), limit))
                                     .build();
                         }
 
