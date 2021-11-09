@@ -2,6 +2,9 @@ import styles from "../../../styles/view_boardid.module.scss";
 import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
 import { GetServerSideProps } from "next";
 import Rating from "../../../components/boardInfos/Rating";
+import Setaxios from "../../../fetching/Setaxios";
+import Cookies from "js-cookie";
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
@@ -12,6 +15,22 @@ export default function BoarDetails({ film }: any) {
     return <></>;
   }
   console.log(filmData);
+  function Payment() {
+    Setaxios.getAxios("pay/ready?amount=3000").then((res) => {
+      const urlcomp: any = res.data;
+      console.log(urlcomp);
+      Cookies.set("tid", urlcomp.data.tid);
+      const payment: Window | null = window.open(
+        urlcomp.data.next_redirect_pc_url,
+        "_blank",
+        "width=600,height=500"
+      );
+      if (payment === null) return;
+      payment.addEventListener("unload", () => {
+        alert("창이닫혔습니다");
+      });
+    });
+  }
   // 보드테이블에 평점계산해서 내보는게 없네
   return (
     <div className={styles["board-detail__wrapper"]}>
@@ -42,7 +61,7 @@ export default function BoarDetails({ film }: any) {
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
             </div>
-            <button>후원하기</button>
+            <button onClick={Payment}>후원하기</button>
             <Rating />
           </div>
           <div className={styles.filmLink}>

@@ -1,7 +1,6 @@
 import styles from "../styles/mypage.module.scss";
 import { GetServerSideProps } from "next";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 export default function Mypage({ userInfo }: any) {
   if (userInfo === null) {
     return <div className={styles.error}>로그인이 필요합니다</div>;
@@ -57,6 +56,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   const userData = await (await res).json();
-  console.log(userData);
   return { props: { userInfo: userData.data } };
 };
