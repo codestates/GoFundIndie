@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class CommentRatingRepository {
+public class CommentRatingRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
 
     @Autowired
@@ -41,8 +41,7 @@ public class CommentRatingRepository {
 
         entityManager.persist(commentRating);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return commentRating;
     }
@@ -54,8 +53,7 @@ public class CommentRatingRepository {
         comment.setLike(comment.getLike()-1);
         entityManager.remove(deleteRating);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return deleteRating;
     }

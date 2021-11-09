@@ -19,9 +19,8 @@ import java.util.List;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class BoardRepository {
+public class BoardRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
-    private final EntityManagerExtend eme;
 
     private final String SELECT_BoardGraphQLDTO = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO(b.id, b.isApprove, b.title, b.posterImg, b.infoCountry, b.infoCreatedYear, b.infoCreatedDate, b.infoTime, b.infoLimit) ";
 
@@ -102,7 +101,7 @@ public class BoardRepository {
     // Upload or Update poster image
     public void updateBoardImg(Board board, String img) {
         board.setPosterImg(img);
-        eme.singlePersist(board);
+        singlePersist(board, entityManager);
     }
 
     // Create Temp Board
@@ -112,7 +111,7 @@ public class BoardRepository {
         board.setUserId(user);
         board.setInfoCountry("TEMP");
 
-        eme.singlePersist(board);
+        singlePersist(board, entityManager);
 
         return board.getId();
     }
@@ -135,7 +134,7 @@ public class BoardRepository {
         board.setInfoSubtitle(dto.isInfoSubtitle());
         board.setInfoCreatedDate(dto.getInfoCreatedDate());
 
-        eme.singlePersist(board);
+        singlePersist(board, entityManager);
 
         return board.getId();
     }
@@ -166,7 +165,7 @@ public class BoardRepository {
         if(dto.getInfoCreatedDate()!=null)
             board.setInfoCreatedDate(dto.getInfoCreatedDate());
 
-        eme.singlePersist(board);
+        singlePersist(board, entityManager);
 
         return board.getId();
     }
@@ -175,14 +174,14 @@ public class BoardRepository {
         board.setApprove(isApprove);
         board.setCreatedAt(new Date());
 
-        eme.singlePersist(board);
+        singlePersist(board, entityManager);
     }
 
     public void DeleteBoard(Board board) {
-        eme.singleRemove(board);
+        singleRemove(board, entityManager);
     }
 
     public void DeleteBoards(List<Board> boards) {
-        eme.listRemove(boards);
+        listRemove(boards, entityManager);
     }
 }
