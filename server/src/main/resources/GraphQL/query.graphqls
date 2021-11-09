@@ -15,6 +15,9 @@ type Query {
     FindAllGenre: [genre]
 
     CommentTest(id: ID!, limit: Int): [comment]
+
+    FindBoardReport(id: ID!): WrappingReport
+    FindBoardReports: WrappingReports
 }
 
 type Mutation {

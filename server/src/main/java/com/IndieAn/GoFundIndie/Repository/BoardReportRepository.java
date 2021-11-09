@@ -14,9 +14,8 @@ import java.util.List;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class BoardReportRepository {
+public class BoardReportRepository extends EntityManagerExtend {
     private final EntityManager entityManager;
-    private final EntityManagerExtend eme;
 
     private final String SELECT_BoardReportGraphQLDTO = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.BoardReportGraphQLDTO" + "(br.id, b.id, b.title, r.id, r.nickname, d.id, d.nickname, br.body) ";
 
@@ -27,11 +26,11 @@ public class BoardReportRepository {
                         "WHERE br.userId = " + user.getId() + " " +
                         "AND br.boardId = " + board.getId(), BoardReport.class
         ).getResultList().size() == 0) {
-            eme.singlePersist(BoardReport.builder()
+            singlePersist(BoardReport.builder()
                     .userId(user)
                     .boardId(board)
                     .body(body)
-                    .build());
+                    .build(), entityManager);
             return true;
         } else {
             return false;
@@ -40,7 +39,7 @@ public class BoardReportRepository {
 
     public boolean DeleteReport(long id) {
         try {
-            eme.singleRemove(entityManager.find(BoardReport.class, id));
+            singleRemove(entityManager.find(BoardReport.class, id), entityManager);
             return true;
         } catch (NullPointerException e) {
             return false;

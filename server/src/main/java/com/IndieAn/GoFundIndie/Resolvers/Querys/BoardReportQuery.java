@@ -1,7 +1,6 @@
 package com.IndieAn.GoFundIndie.Resolvers.Querys;
 
 import com.IndieAn.GoFundIndie.Repository.BoardReportRepository;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.BoardReportGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportsGraphqlDTO;
 import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
