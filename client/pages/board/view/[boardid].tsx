@@ -1,17 +1,18 @@
 import styles from "../../../styles/view_boardid.module.scss";
 import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
 import { GetServerSideProps } from "next";
+import Rating from "../../../components/boardInfos/Rating";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
   let filmData;
   if (film !== null) {
     filmData = film.FindBoardId.data;
-  }
-  if (film === null) {
+  } else {
     return <></>;
   }
-  //보드테이블에 평점계산해서 내보는게 없네
+  console.log(filmData);
+  // 보드테이블에 평점계산해서 내보는게 없네
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
@@ -33,7 +34,7 @@ export default function BoarDetails({ film }: any) {
             <div className={styles.filminfo__info}>
               <span>{filmData.infoCreatedYear}</span>
               <span className={styles.dot}>・</span>
-              <span>{filmData.genre}</span>
+              <span>{filmData.genre.map((el: any) => el.name)}</span>
               <span className={styles.dot}>・</span>
               <span>{filmData.infoCountry}</span>
             </div>
@@ -41,6 +42,8 @@ export default function BoarDetails({ film }: any) {
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
             </div>
+            <button>후원하기</button>
+            <Rating />
           </div>
           <div className={styles.filmLink}>
             <div>지금 보고싶어요</div>
@@ -48,7 +51,6 @@ export default function BoarDetails({ film }: any) {
               <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
             </div>
           </div>
-          <div></div>
           <InfoWrapper
             cast={filmData.casting}
             stills={filmData.still}
@@ -117,7 +119,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   const film = await (await res).json();
-
   if (film === null) return { props: {} };
   return {
     props: {

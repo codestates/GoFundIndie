@@ -1,0 +1,17 @@
+.rating {
+  all: unset;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  img {
+    width: 50px;
+    height: 50px;
+  }
+  div {
+    width: 25px;
+    height: 50px;
+    position: absolute;
+    background-color: red;
+    top: 0%;
+  }
+}

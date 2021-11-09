@@ -8,36 +8,37 @@ export default function ContentCarousel({ film, catchphrase }: any) {
         <div>
           <Link href="/board/view/[boardid]" as={`/board/view/${film0.id}`}>
             {film0.posterImg ? (
-              <img width="282" src={film0.posterImg} />
+              // <img style={{ backgroundImage: `url("${film.posterImg}")` }} />
+              <img src={film0.posterImg} />
             ) : (
-              <img width="282" src="/noposter.png" />
+              <img src="/noposter.png" />
             )}
           </Link>
         </div>
         <div>
           <Link href="/board/view/[boardid]" as={`/board/view/${film1.id}`}>
             {film1.posterImg ? (
-              <img width="282" src={film1.posterImg} />
+              <img src={film1.posterImg} />
             ) : (
-              <img width="282" src="/noposter.png" />
+              <img src="/noposter.png" />
             )}
           </Link>
         </div>
         <div>
           <Link href="/board/view/[boardid]" as={`/board/view/${film2.id}`}>
             {film2.posterImg ? (
-              <img width="282" src={film2.posterImg} />
+              <img src={film2.posterImg} />
             ) : (
-              <img width="282" src="/noposter.png" />
+              <img src="/noposter.png" />
             )}
           </Link>
         </div>
         <div>
           <Link href="/board/view/[boardid]" as={`/board/view/${film3.id}`}>
             {film3.posterImg ? (
-              <img width="282" src={film3.posterImg} />
+              <img src={film3.posterImg} />
             ) : (
-              <img width="282" src="/noposter.png" />
+              <img src="/noposter.png" />
             )}
           </Link>
         </div>
@@ -69,7 +70,7 @@ export default function ContentCarousel({ film, catchphrase }: any) {
         <button
           className={styles["btn-next"]}
           onClick={(e) => {
-            if (counter === 2) return;
+            if (counter === 1) return;
             let eventtarget: any = e.target;
             const target: any = eventtarget.parentNode.childNodes[1];
             if (target === undefined) return;

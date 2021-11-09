@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }).catch((err) => {
     return err;
   });
-
+  if (res === null) return { props: {} };
   const film = await (await res).json();
   if (film === null) return { props: {} };
   return {

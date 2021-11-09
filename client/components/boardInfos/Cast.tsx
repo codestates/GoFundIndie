@@ -3,15 +3,7 @@ import styles from "../../styles/components/boardInfos/cast.module.scss";
 export default function Cast({ cast, onFocus }: any) {
   const [component, setComponent] = useState<boolean>(false);
 
-  let testcast = [
-    { ...cast[0] },
-    { id: 35, name: "테스트", image: cast[0].image, position: 2 },
-    { id: 36, name: "테스트", image: cast[0].image, position: 2 },
-    { id: 37, name: "테스트", image: cast[0].image, position: 2 },
-    { id: 38, name: "테스트", image: cast[0].image, position: 2 },
-    { id: 39, name: "테스트", image: cast[0].image, position: 2 },
-    { id: 40, name: "테스트", image: cast[0].image, position: 3 },
-  ];
+  let testcast = [{ ...cast[0] }];
   let count = 0;
   function Positioner(num: Number) {
     switch (num) {
