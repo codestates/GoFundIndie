@@ -6,21 +6,15 @@ import com.IndieAn.GoFundIndie.Repository.BoardLikeRepository;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.GqlResponseCodeDTO;
 import com.IndieAn.GoFundIndie.Service.BoardService;
 import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
-import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -160,24 +154,24 @@ public class BoardMutation {
         }
     }
 
-    public OnlyCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
         try {
             int code = gqlUserValidService.envValidCheck(env);
 
             if (code == 0) {
                 Board board = boardRepository.findBoardId(id);
                 if(board == null)
-                    return OnlyCodeDTO.builder().code(4401).build();
+                    return GqlResponseCodeDTO.builder().code(4401).build();
 
                 User user = gqlUserValidService.findUser(env);
                 if(!user.isAdminRole())
-                    return OnlyCodeDTO.builder().code(4300).build();
+                    return GqlResponseCodeDTO.builder().code(4300).build();
 
                 boardRepository.DeleteBoard(board);
-                return OnlyCodeDTO.builder().code(2000).build();
+                return GqlResponseCodeDTO.builder().code(2000).build();
             } else {
                 // Token Invalid
-                return OnlyCodeDTO.builder().code(code).build();
+                return GqlResponseCodeDTO.builder().code(code).build();
             }
 
             // Test Code : No Access Token
@@ -185,28 +179,28 @@ public class BoardMutation {
 //            return OnlyCodeDTO.builder().code(2000).build();
 
         } catch (NullPointerException e) {
-            return OnlyCodeDTO.builder().code(4000).build();
+            return GqlResponseCodeDTO.builder().code(4000).build();
         }
     }
 
-    public OnlyCodeDTO ApproveBoard(long id, boolean isApprove, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO ApproveBoard(long id, boolean isApprove, DataFetchingEnvironment env) {
         try {
             int code = gqlUserValidService.envValidCheck(env);
 
             if (code == 0) {
                 Board board = boardRepository.findBoardId(id);
                 if(board == null)
-                    return OnlyCodeDTO.builder().code(4401).build();
+                    return GqlResponseCodeDTO.builder().code(4401).build();
 
                 User user = gqlUserValidService.findUser(env);
                 if(!user.isAdminRole())
-                    return OnlyCodeDTO.builder().code(4300).build();
+                    return GqlResponseCodeDTO.builder().code(4300).build();
 
                 boardRepository.ApproveBoard(board, isApprove);
-                return OnlyCodeDTO.builder().code(2000).build();
+                return GqlResponseCodeDTO.builder().code(2000).build();
             } else {
                 // Token Invalid
-                return OnlyCodeDTO.builder().code(code).build();
+                return GqlResponseCodeDTO.builder().code(code).build();
             }
 
             // Test Code : No Access Token
@@ -214,7 +208,7 @@ public class BoardMutation {
 //            return OnlyCodeDTO.builder().code(2000).build();
 
         } catch (NullPointerException e) {
-            return OnlyCodeDTO.builder().code(4000).build();
+            return GqlResponseCodeDTO.builder().code(4000).build();
         }
     }
 }

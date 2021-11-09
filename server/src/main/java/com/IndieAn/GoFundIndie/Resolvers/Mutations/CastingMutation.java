@@ -10,18 +10,14 @@ import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.CreateCastingCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.CreateTempCastingDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.PutCastingDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Casting.WrappingCreateTempCastingDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.GqlResponseCodeDTO;
 import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
-import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -143,20 +139,20 @@ public class CastingMutation {
     }
 
     // 캐스팅 삭제
-    public OnlyCodeDTO DeleteCasting(long id, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO DeleteCasting(long id, DataFetchingEnvironment env) {
         try {
             int code = gqlUserValidService.envValidCheck(env);
 
             if(code != 0) {
                 // Token Invalid
-                return OnlyCodeDTO.builder().code(code).build();
+                return GqlResponseCodeDTO.builder().code(code).build();
             } else {
                 Casting casting = castingRepository.findCastingById(id);
                 if(casting == null)
-                    return OnlyCodeDTO.builder().code(4403).build();
+                    return GqlResponseCodeDTO.builder().code(4403).build();
 
                 castingRepository.RemoveCasting(casting);
-                return OnlyCodeDTO.builder().code(2000).build();
+                return GqlResponseCodeDTO.builder().code(2000).build();
             }
 
             // Test Code
@@ -164,7 +160,7 @@ public class CastingMutation {
 //            return OnlyCodeDTO.builder().code(2000).build();
 
         } catch (NullPointerException e) {
-            return OnlyCodeDTO.builder().code(4000).build();
+            return GqlResponseCodeDTO.builder().code(4000).build();
         }
     }
 }

@@ -1,0 +1,4 @@
+input CreateBoardReport {
+    boardId: ID!
+    body: String!
+}

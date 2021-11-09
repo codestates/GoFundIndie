@@ -37,8 +37,16 @@ type Mutation {
 
     LinkBoardGenre(boardId: ID!, genreId: ID!): WrappingLink
     DisLinkBoardGenre(boardId: ID!, genreId: ID!): WrappingLink
+
+    ReportBoard(report: CreateBoardReport): onlyCode
+    DeleteReport(reportId: ID!): onlyCode
 }
 
 type onlyCode {
     code: Int
+}
+
+type codeAndId {
+    code: Int
+    id: ID
 }

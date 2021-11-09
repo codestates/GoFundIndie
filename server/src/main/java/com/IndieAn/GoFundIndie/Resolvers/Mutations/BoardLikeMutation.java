@@ -3,7 +3,7 @@ package com.IndieAn.GoFundIndie.Resolvers.Mutations;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Repository.BoardLikeRepository;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.GqlResponseCodeDTO;
 import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +20,23 @@ public class BoardLikeMutation {
     private final BoardLikeRepository boardLikeRepository;
 
     private final GqlUserValidService gqlUserValidService;
-    public OnlyCodeDTO SwitchLikeBoard(long id, DataFetchingEnvironment env) {
+    public GqlResponseCodeDTO SwitchLikeBoard(long id, DataFetchingEnvironment env) {
         try {
             int code = gqlUserValidService.envValidCheck(env);
 
             if (code == 0) {
                 Board board = boardRepository.findBoardId(id);
                 if(board == null)
-                    return OnlyCodeDTO.builder().code(4401).build();
+                    return GqlResponseCodeDTO.builder().code(4401).build();
 
                 boardLikeRepository.LikeBoardSwitch(gqlUserValidService.findUser(env), board);
-                return OnlyCodeDTO.builder().code(2000).build();
+                return GqlResponseCodeDTO.builder().code(2000).build();
             } else {
                 // Token Invalid
-                return OnlyCodeDTO.builder().code(code).build();
+                return GqlResponseCodeDTO.builder().code(code).build();
             }
         } catch (NullPointerException e) {
-            return OnlyCodeDTO.builder().code(4000).build();
+            return GqlResponseCodeDTO.builder().code(4000).build();
         }
 
         // Test Code
