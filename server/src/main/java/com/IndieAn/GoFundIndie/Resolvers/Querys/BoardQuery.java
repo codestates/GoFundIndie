@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -178,5 +180,37 @@ public class BoardQuery {
                     .code(4009)
                     .build();
         }
+    }
+
+    public WrappingRandomBoardsDTO FindRandomBoard(DataFetchingEnvironment env) {
+        List<RandomBoardDTO> list = new ArrayList<>();
+
+        // TEST HARD CORD
+        list.add(RandomBoardDTO.builder()
+                .phrase("드라마 장르 추천 문구")
+                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_DRAMA, 12))
+                .build());
+
+        list.add(RandomBoardDTO.builder()
+                .phrase("#로멘스 #멜로")
+                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_ROMANCE, 12))
+                .build());
+
+        list.add(RandomBoardDTO.builder()
+                .phrase("#DOCUMENTARY #생생함")
+                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_DOCU, 12))
+                .build());
+
+        list.add(RandomBoardDTO.builder()
+                .phrase("하루의 마무리를 즐거운 코미디 영화와 함께")
+                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_COMEDY, 12))
+                .build());
+
+        list.add(RandomBoardDTO.builder()
+                .phrase("동화책 같은 추천 애니메이션 영화")
+                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_ANI, 12))
+                .build());
+
+        return WrappingRandomBoardsDTO.builder().code(2000).data(list).build();
     }
 }
