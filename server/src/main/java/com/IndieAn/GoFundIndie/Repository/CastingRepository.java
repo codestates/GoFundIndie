@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @RequiredArgsConstructor
 public class CastingRepository {
     private final EntityManager entityManager;
+    private final EntityManagerExtend eme;
 
     private final AtomicBoolean isChange = new AtomicBoolean(false);
 
@@ -28,9 +29,7 @@ public class CastingRepository {
         Casting casting = new Casting();
         casting.setBoardId(board);
 
-        entityManager.persist(casting);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(casting);
 
         return casting.getId();
     }
@@ -39,9 +38,7 @@ public class CastingRepository {
         casting.setName(dto.getName());
         casting.setPosition(dto.getPosition());
 
-        entityManager.persist(casting);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(casting);
 
         return casting.getId();
     }
@@ -63,9 +60,7 @@ public class CastingRepository {
         }
 
         if(isChange.get()){
-            entityManager.persist(casting);
-            entityManager.flush();
-            entityManager.close();
+            eme.singlePersist(casting);
         }
 
         return casting.getId();
@@ -73,9 +68,7 @@ public class CastingRepository {
 
     public void updateCastingImage(Casting casting, String image) {
         casting.setImage(image);
-        entityManager.persist(casting);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(casting);
     }
 
     public Casting findCastingById(Long id) {
@@ -87,9 +80,7 @@ public class CastingRepository {
     }
 
     public void RemoveCasting(Casting casting) {
-        entityManager.remove(casting);
-        entityManager.flush();
-        entityManager.close();
+        eme.singleRemove(casting);
     }
 
     public List<CastingGraphQLDTO> findCastingByBoard(long boardId) {

@@ -136,36 +136,36 @@ public class BoardQuery {
                     }
                 case SEARCH_TYPES_MY_DONATION:
                     try {
-//                        GraphQLServletContext context = env.getContext();
-//                        HttpServletRequest request = context.getHttpServletRequest();
-//                        String accessToken = request.getHeader("accesstoken");
-//
-//                        //   - No accessToken in the Header :
-//                        if(accessToken == null)
-//                            return WrappingBoardGraphQLsDTO.builder().code(4000).build();
-//
-//                        Map<String, Object> checkToken = userService.CheckToken(accessToken);
-//
-//                        //   - Token invalid case :
-//                        if(checkToken.get("email") == null) {
-//                            return WrappingBoardGraphQLsDTO.builder()
-//                                    .code(Integer.parseInt(checkToken.get("code").toString())).build();
-//                        } else {
-//                            return WrappingBoardGraphQLsDTO.builder()
-//                                    .code(2000)
-//                                    .data(boardRepository.findBoardsByMyDonation(
-//                                            userService.FindUserUseEmail(
-//                                                    checkToken.get("email").toString()), limit))
-//                                    .build();
-//                        }
+                        GraphQLServletContext context = env.getContext();
+                        HttpServletRequest request = context.getHttpServletRequest();
+                        String accessToken = request.getHeader("accesstoken");
+
+                        //   - No accessToken in the Header :
+                        if(accessToken == null)
+                            return WrappingBoardGraphQLsDTO.builder().code(4000).build();
+
+                        Map<String, Object> checkToken = userService.CheckToken(accessToken);
+
+                        //   - Token invalid case :
+                        if(checkToken.get("email") == null) {
+                            return WrappingBoardGraphQLsDTO.builder()
+                                    .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                        } else {
+                            return WrappingBoardGraphQLsDTO.builder()
+                                    .code(2000)
+                                    .data(boardRepository.findBoardsByMyDonation(
+                                            userService.FindUserUseEmail(
+                                                    checkToken.get("email").toString()), limit))
+                                    .build();
+                        }
 
                         // Test Code
-                        return WrappingBoardGraphQLsDTO.builder()
-                                .code(2000)
-                                .data(boardRepository.findBoardsByMyDonation(
-                                        userRepository.FindUserByIdDB(3L), limit
-                                ))
-                                .build();
+//                        return WrappingBoardGraphQLsDTO.builder()
+//                                .code(2000)
+//                                .data(boardRepository.findBoardsByMyDonation(
+//                                        userRepository.FindUserByIdDB(3L), limit
+//                                ))
+//                                .build();
 
                     } catch (NullPointerException e) {
                         return WrappingBoardGraphQLsDTO.builder().code(4000).build();

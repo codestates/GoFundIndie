@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenreRepository {
     private final EntityManager entityManager;
+    private final EntityManagerExtend eme;
 
     public Genre FindById(Long id) {
         if(id == null) return null;
@@ -31,9 +32,7 @@ public class GenreRepository {
     }
 
     public void RegisterDatabase(Genre genre) {
-        entityManager.persist(genre);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(genre);
     }
 
     public boolean Delete(Long id) {
@@ -41,9 +40,7 @@ public class GenreRepository {
                 "SELECT el FROM Genre el WHERE id=" + id + "", Genre.class)
                 .getResultList();
         if(list.size() == 0) return false;
-        entityManager.remove(list.get(0));
-        entityManager.flush();
-        entityManager.close();
+        eme.singleRemove(list.get(0));
         return true;
     }
 
