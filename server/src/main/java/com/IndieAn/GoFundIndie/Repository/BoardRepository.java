@@ -5,19 +5,15 @@ import com.IndieAn.GoFundIndie.Domain.Entity.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.PutBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -27,7 +23,7 @@ public class BoardRepository {
     private final EntityManager entityManager;
     private final EntityManagerExtend eme;
 
-    private final static String BOARD_GRAPHQL_DTO_QUERY_SELECT = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO(b.id, b.isApprove, b.title, b.posterImg, b.infoCountry, b.infoCreatedYear, b.infoCreatedDate, b.infoTime, b.infoLimit) ";
+    private final String SELECT_BoardGraphQLDTO = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO(b.id, b.isApprove, b.title, b.posterImg, b.infoCountry, b.infoCreatedYear, b.infoCreatedDate, b.infoTime, b.infoLimit) ";
 
     public Board findBoardId(Long id) {
         if(id == null) return null;
@@ -40,7 +36,7 @@ public class BoardRepository {
 
     public List<BoardGraphQLDTO> findBoards(boolean isApprove, int limit) {
         return entityManager.createQuery(
-            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+            SELECT_BoardGraphQLDTO +
                     "FROM Board b " +
                     "WHERE b.isApprove=" + isApprove + " " +
                     "ORDER BY b.commentAmount DESC", BoardGraphQLDTO.class)
@@ -50,7 +46,7 @@ public class BoardRepository {
 
     public List<BoardGraphQLDTO> findAllBoards(int limit) {
         return entityManager.createQuery(
-            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+            SELECT_BoardGraphQLDTO +
                     "FROM Board b " +
                     "ORDER BY b.id DESC", BoardGraphQLDTO.class)
                 .setMaxResults(limit)
@@ -59,7 +55,7 @@ public class BoardRepository {
 
     public List<BoardGraphQLDTO> findBoardsByMy(User user, int limit) {
         return entityManager.createQuery(
-            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+            SELECT_BoardGraphQLDTO +
                     "FROM BoardLike l " +
                     "LEFT JOIN l.boardId b " +
                     "ON l.userId = " + user.getId() + " " +
@@ -71,7 +67,7 @@ public class BoardRepository {
 
     public List<BoardGraphQLDTO> findBoardsByMyDonation(User user, int limit) {
         return entityManager.createQuery(
-            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+            SELECT_BoardGraphQLDTO +
                     "FROM Comment c " +
                     "JOIN c.boardId b " +
                     "ON c.userId = " + user.getId() + " " +
@@ -84,7 +80,7 @@ public class BoardRepository {
     public List<BoardGraphQLDTO> findBoardsByGenre(SearchTypes type, int limit) {
         int genreId = Arrays.asList(SearchTypes.values()).indexOf(type) + 1;
         return entityManager.createQuery(
-            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+            SELECT_BoardGraphQLDTO +
                     "FROM BoardGenre g " +
                     "LEFT JOIN g.boardId b " +
                     "ON g.genreId = " + genreId + " " +
@@ -96,7 +92,7 @@ public class BoardRepository {
 
     public List<BoardGraphQLDTO> findBoardsNew(int limit) {
         return entityManager.createQuery(
-            BOARD_GRAPHQL_DTO_QUERY_SELECT +
+            SELECT_BoardGraphQLDTO +
                     "FROM Board b " +
                     "WHERE b.isApprove = true " +
                     "ORDER BY b.createdAt DESC", BoardGraphQLDTO.class)
