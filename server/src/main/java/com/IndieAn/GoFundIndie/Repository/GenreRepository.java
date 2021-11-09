@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Genre;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenreRepository {
     private final EntityManager entityManager;
+    private final EntityManagerExtend eme;
 
     public Genre FindById(Long id) {
         if(id == null) return null;
@@ -30,9 +32,7 @@ public class GenreRepository {
     }
 
     public void RegisterDatabase(Genre genre) {
-        entityManager.persist(genre);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(genre);
     }
 
     public boolean Delete(Long id) {
@@ -40,9 +40,17 @@ public class GenreRepository {
                 "SELECT el FROM Genre el WHERE id=" + id + "", Genre.class)
                 .getResultList();
         if(list.size() == 0) return false;
-        entityManager.remove(list.get(0));
-        entityManager.flush();
-        entityManager.close();
+        eme.singleRemove(list.get(0));
         return true;
+    }
+
+    public List<GenreGraphQLDTO> findGenreByBoard(long boardId) {
+        return entityManager.createQuery(
+                "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO" +
+                        "(g.id, g.name) " +
+                        "FROM BoardGenre bg " +
+                        "JOIN bg.genreId g " +
+                        "ON bg.boardId = " + boardId + " ", GenreGraphQLDTO.class
+        ).getResultList();
     }
 }

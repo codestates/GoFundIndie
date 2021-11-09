@@ -73,6 +73,10 @@ public class Mutation implements GraphQLMutationResolver {
         return boardMutation.ApproveBoard(id, false, env);
     }
 
+    public OnlyCodeDTO SwitchLikeBoard(long boardId, DataFetchingEnvironment env) {
+        return boardMutation.SwitchLikeBoard(boardId, env);
+    }
+
     // ---- Casting ----
     //
 

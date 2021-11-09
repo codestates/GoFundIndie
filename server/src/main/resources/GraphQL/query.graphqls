@@ -28,6 +28,7 @@ type Mutation {
     DeleteBoard(id: ID!): onlyCode
     ApproveBoard(id: ID!): onlyCode
     DisapproveBoard(id: ID!): onlyCode
+    SwitchLikeBoard(boardId: ID!): onlyCode
 
     CreateTempCasting(boardId: ID!): CastingCreate
     CompleteCasting(casting: completeCasting!): CastingCreate

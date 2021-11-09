@@ -12,9 +12,7 @@ import lombok.Getter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
 @Builder
-@AllArgsConstructor
 public class ViewBoardDTO {
     private long id;
     private boolean isApprove;
@@ -40,6 +38,198 @@ public class ViewBoardDTO {
 
     public ViewBoardDTO() {}
 
+    public ViewBoardDTO(long id, boolean isApprove, String title, String producer, String distributor, String posterImg, String viewLink, String infoCountry, String infoCreatedYear, String infoCreatedDate, int infoTime, int infoLimit, String infoStory, boolean infoSubtitle, String createdAt, int commentAmount, int likeAmount, List<GenreGraphQLDTO> genre, List<CastingGraphQLDTO> casting, List<StillGraphQLDTO> still, List<CommentGraphQLDTO> comment) {
+        this.id = id;
+        this.isApprove = isApprove;
+        this.title = title;
+        this.producer = producer;
+        this.distributor = distributor;
+        this.posterImg = posterImg;
+        this.viewLink = viewLink;
+        this.infoCountry = infoCountry;
+        this.infoCreatedYear = infoCreatedYear;
+        this.infoCreatedDate = infoCreatedDate;
+        this.infoTime = infoTime;
+        this.infoLimit = infoLimit;
+        this.infoStory = infoStory;
+        this.infoSubtitle = infoSubtitle;
+        this.createdAt = createdAt;
+        this.commentAmount = commentAmount;
+        this.likeAmount = likeAmount;
+        this.genre = genre;
+        this.casting = casting;
+        this.still = still;
+        this.comment = comment;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isApprove() {
+        return isApprove;
+    }
+
+    public void setApprove(boolean approve) {
+        isApprove = approve;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getProducer() {
+        return producer;
+    }
+
+    public void setProducer(String producer) {
+        this.producer = producer;
+    }
+
+    public String getDistributor() {
+        return distributor;
+    }
+
+    public void setDistributor(String distributor) {
+        this.distributor = distributor;
+    }
+
+    public String getPosterImg() {
+        return posterImg;
+    }
+
+    public void setPosterImg(String posterImg) {
+        this.posterImg = posterImg;
+    }
+
+    public String getViewLink() {
+        return viewLink;
+    }
+
+    public void setViewLink(String viewLink) {
+        this.viewLink = viewLink;
+    }
+
+    public String getInfoCountry() {
+        return infoCountry;
+    }
+
+    public void setInfoCountry(String infoCountry) {
+        this.infoCountry = infoCountry;
+    }
+
+    public String getInfoCreatedYear() {
+        return infoCreatedYear;
+    }
+
+    public void setInfoCreatedYear(String infoCreatedYear) {
+        this.infoCreatedYear = infoCreatedYear;
+    }
+
+    public String getInfoCreatedDate() {
+        return infoCreatedDate;
+    }
+
+    public void setInfoCreatedDate(String infoCreatedDate) {
+        this.infoCreatedDate = infoCreatedDate;
+    }
+
+    public int getInfoTime() {
+        return infoTime;
+    }
+
+    public void setInfoTime(int infoTime) {
+        this.infoTime = infoTime;
+    }
+
+    public int getInfoLimit() {
+        return infoLimit;
+    }
+
+    public void setInfoLimit(int infoLimit) {
+        this.infoLimit = infoLimit;
+    }
+
+    public String getInfoStory() {
+        return infoStory;
+    }
+
+    public void setInfoStory(String infoStory) {
+        this.infoStory = infoStory;
+    }
+
+    public boolean isInfoSubtitle() {
+        return infoSubtitle;
+    }
+
+    public void setInfoSubtitle(boolean infoSubtitle) {
+        this.infoSubtitle = infoSubtitle;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getCommentAmount() {
+        return commentAmount;
+    }
+
+    public void setCommentAmount(int commentAmount) {
+        this.commentAmount = commentAmount;
+    }
+
+    public int getLikeAmount() {
+        return likeAmount;
+    }
+
+    public void setLikeAmount(int likeAmount) {
+        this.likeAmount = likeAmount;
+    }
+
+    public List<GenreGraphQLDTO> getGenre() {
+        return genre;
+    }
+
+    public void setGenre(List<GenreGraphQLDTO> genre) {
+        this.genre = genre;
+    }
+
+    public List<CastingGraphQLDTO> getCasting() {
+        return casting;
+    }
+
+    public void setCasting(List<CastingGraphQLDTO> casting) {
+        this.casting = casting;
+    }
+
+    public List<StillGraphQLDTO> getStill() {
+        return still;
+    }
+
+    public void setStill(List<StillGraphQLDTO> still) {
+        this.still = still;
+    }
+
+    public List<CommentGraphQLDTO> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<CommentGraphQLDTO> comment) {
+        this.comment = comment;
+    }
+
     public static ViewBoardDTO from(Board en) {
         return ViewBoardDTO.builder()
                 .id(en.getId())
@@ -59,19 +249,6 @@ public class ViewBoardDTO {
                 .createdAt(en.getCreatedAt().toString())
                 .commentAmount(en.getCommentAmount())
                 .likeAmount(en.getLikeAmount())
-                .genre(
-                        en.getBoardGenres().stream()
-                                .map(el -> GenreGraphQLDTO.from(el.getGenreId()))
-                                .collect(Collectors.toList()))
-                .casting(
-                        en.getCastings().stream()
-                                .map(CastingGraphQLDTO::from)
-                                .collect(Collectors.toList()))
-                .still(
-                        en.getStills().stream()
-                                .map(StillGraphQLDTO::from)
-                                .collect(Collectors.toList()))
-                .comment(null)
                 .build();
     }
 }

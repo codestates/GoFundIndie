@@ -30,6 +30,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.google.code.gson:gson:2.8.6'
 
+	// JSON Parsing을 위해서 추가했습니다. (by 조현기)
+	implementation 'com.google.code.gson:gson:2.8.6'
+
 	// AWS
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
