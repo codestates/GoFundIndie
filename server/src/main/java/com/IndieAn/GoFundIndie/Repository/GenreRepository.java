@@ -12,9 +12,8 @@ import java.util.List;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class GenreRepository {
+public class GenreRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
-    private final EntityManagerExtend eme;
 
     public Genre FindById(Long id) {
         if(id == null) return null;
@@ -32,7 +31,7 @@ public class GenreRepository {
     }
 
     public void RegisterDatabase(Genre genre) {
-        eme.singlePersist(genre);
+        singlePersist(genre, entityManager);
     }
 
     public boolean Delete(Long id) {
@@ -40,7 +39,7 @@ public class GenreRepository {
                 "SELECT el FROM Genre el WHERE id=" + id + "", Genre.class)
                 .getResultList();
         if(list.size() == 0) return false;
-        eme.singleRemove(list.get(0));
+        singleRemove(list.get(0), entityManager);
         return true;
     }
 

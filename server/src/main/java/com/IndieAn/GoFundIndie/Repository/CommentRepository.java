@@ -15,14 +15,12 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class CommentRepository {
+public class CommentRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
-    private final EntityManagerExtend eme;
 
     @Autowired
-    public CommentRepository(EntityManager entityManager, EntityManagerExtend eme) {
+    public CommentRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.eme = eme;
     }
 
     // DB Comment 테이블의 모든 comment 정보를 리턴한다.
@@ -55,7 +53,7 @@ public class CommentRepository {
         entityManager.persist(comment);
         entityManager.persist(board);
 
-        eme.end();
+        end(entityManager);
     }
 
     // DB Comment 테이블에 매개변수 commentId를 사용하여 Comment 정보를 삭제한다.
@@ -68,7 +66,7 @@ public class CommentRepository {
         entityManager.persist(board);
         entityManager.remove(deleteComment);
 
-        eme.end();
+        end(entityManager);
     }
 
     // ViewBoard gql comments

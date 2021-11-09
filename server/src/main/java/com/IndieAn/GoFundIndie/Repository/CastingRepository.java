@@ -19,9 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class CastingRepository {
+public class CastingRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
-    private final EntityManagerExtend eme;
 
     private final AtomicBoolean isChange = new AtomicBoolean(false);
 
@@ -29,7 +28,7 @@ public class CastingRepository {
         Casting casting = new Casting();
         casting.setBoardId(board);
 
-        eme.singlePersist(casting);
+        singlePersist(casting, entityManager);
 
         return casting.getId();
     }
@@ -38,7 +37,7 @@ public class CastingRepository {
         casting.setName(dto.getName());
         casting.setPosition(dto.getPosition());
 
-        eme.singlePersist(casting);
+        singlePersist(casting, entityManager);
 
         return casting.getId();
     }
@@ -60,7 +59,7 @@ public class CastingRepository {
         }
 
         if(isChange.get()){
-            eme.singlePersist(casting);
+            singlePersist(casting, entityManager);
         }
 
         return casting.getId();
@@ -68,7 +67,7 @@ public class CastingRepository {
 
     public void updateCastingImage(Casting casting, String image) {
         casting.setImage(image);
-        eme.singlePersist(casting);
+        singlePersist(casting, entityManager);
     }
 
     public Casting findCastingById(Long id) {
@@ -80,7 +79,7 @@ public class CastingRepository {
     }
 
     public void RemoveCasting(Casting casting) {
-        eme.singleRemove(casting);
+        singleRemove(casting, entityManager);
     }
 
     public List<CastingGraphQLDTO> findCastingByBoard(long boardId) {
