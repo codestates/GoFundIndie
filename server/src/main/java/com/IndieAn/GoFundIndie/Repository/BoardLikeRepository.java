@@ -16,9 +16,8 @@ import java.util.List;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class BoardLikeRepository {
+public class BoardLikeRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
-    private final EntityManagerExtend entityManagerExtend;
 
     public void LikeBoardSwitch(User user, Board board) {
         List<BoardLike> list = entityManager.createQuery(
@@ -33,9 +32,9 @@ public class BoardLikeRepository {
             bl.setBoardId(board);
             bl.setUserId(user);
             bl.setCreatedAt(new Date());
-            entityManagerExtend.singlePersist(bl);
+            singlePersist(bl, entityManager);
         } else {
-            entityManagerExtend.listRemove(list);
+            listRemove(list, entityManager);
         }
     }
 }

@@ -13,15 +13,14 @@ import java.util.List;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class ImageRepository {
+public class ImageRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
-    private final EntityManagerExtend eme;
 
     public void addStillInfo(Board board, String image) {
         Still still = new Still();
         still.setBoardId(board);
         still.setImage(image);
-        eme.singlePersist(still);
+        singlePersist(still, entityManager);
     }
 
     public Still findStillById(Long id){
@@ -33,7 +32,7 @@ public class ImageRepository {
     }
 
     public void deleteStill(Still still){
-        eme.singleRemove(still);
+        singleRemove(still, entityManager);
     }
 
     public List<StillGraphQLDTO> findStillByBoard(long boardId) {

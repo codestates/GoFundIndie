@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class UserRepository {
+public class UserRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
 
     @Autowired
@@ -41,8 +41,7 @@ public class UserRepository {
         user.setAdAgree(userSignUpDTO.isAdAgree());
         entityManager.persist(user);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return user;
     }
@@ -71,8 +70,7 @@ public class UserRepository {
         if(userModifyDTO.getProfilePic() != null) modifyUser.setProfilePicture(userModifyDTO.getProfilePic());
         modifyUser.setAdAgree(userModifyDTO.isAdAgree());
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return modifyUser;
     }
@@ -82,8 +80,7 @@ public class UserRepository {
         User deleteUser = entityManager.find(User.class, userId);
         entityManager.remove(deleteUser);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return deleteUser;
     }
@@ -92,8 +89,7 @@ public class UserRepository {
     public void UpdateUserImg(User user, String img) {
         user.setProfilePicture(img);
         entityManager.persist(user);
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
     }
 
     // DB User 테이블에 모든 유저 정보를 리턴한다.
@@ -116,8 +112,7 @@ public class UserRepository {
 
         entityManager.persist(token);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return token;
     }
@@ -136,8 +131,7 @@ public class UserRepository {
 
         entityManager.remove(rt);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return rt;
     }
