@@ -9,30 +9,28 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class EntityManagerExtend {
-    private final EntityManager em;
-
-    public void end() {
+    public void end(EntityManager em) {
         em.flush();
         em.close();
     }
 
-    public void singlePersist(Object e) {
+    public void singlePersist(Object e, EntityManager em) {
         em.persist(e);
-        end();
+        end(em);
     }
 
-    public void singleRemove(Object e) {
+    public void singleRemove(Object e, EntityManager em) {
         em.remove(e);
-        end();
+        end(em);
     }
 
-    public void listPersist(List<?> eList) {
+    public void listPersist(List<?> eList, EntityManager em) {
         eList.forEach(em::persist);
-        end();
+        end(em);
     }
 
-    public void listRemove(List<?> eList) {
+    public void listRemove(List<?> eList, EntityManager em) {
         eList.forEach(em::remove);
-        end();
+        end(em);
     }
 }
