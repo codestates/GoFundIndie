@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardRepository {
     private final EntityManager entityManager;
+    private final EntityManagerExtend eme;
 
     private final static String BOARD_GRAPHQL_DTO_QUERY_SELECT = "SELECT new com.IndieAn.GoFundIndie.Resolvers.DTO.Board.BoardGraphQLDTO(b.id, b.isApprove, b.title, b.posterImg, b.infoCountry, b.infoCreatedYear, b.infoCreatedDate, b.infoTime, b.infoLimit) ";
 
@@ -105,9 +106,7 @@ public class BoardRepository {
     // Upload or Update poster image
     public void updateBoardImg(Board board, String img) {
         board.setPosterImg(img);
-        entityManager.persist(board);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(board);
     }
 
     // Create Temp Board
@@ -117,9 +116,7 @@ public class BoardRepository {
         board.setUserId(user);
         board.setInfoCountry("TEMP");
 
-        entityManager.persist(board);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(board);
 
         return board.getId();
     }
@@ -142,9 +139,7 @@ public class BoardRepository {
         board.setInfoSubtitle(dto.isInfoSubtitle());
         board.setInfoCreatedDate(dto.getInfoCreatedDate());
 
-        entityManager.persist(board);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(board);
 
         return board.getId();
     }
@@ -175,9 +170,7 @@ public class BoardRepository {
         if(dto.getInfoCreatedDate()!=null)
             board.setInfoCreatedDate(dto.getInfoCreatedDate());
 
-        entityManager.persist(board);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(board);
 
         return board.getId();
     }
@@ -186,14 +179,14 @@ public class BoardRepository {
         board.setApprove(isApprove);
         board.setCreatedAt(new Date());
 
-        entityManager.persist(board);
-        entityManager.flush();
-        entityManager.close();
+        eme.singlePersist(board);
     }
 
     public void DeleteBoard(Board board) {
-        entityManager.remove(board);
-        entityManager.flush();
-        entityManager.close();
+        eme.singleRemove(board);
+    }
+
+    public void DeleteBoards(List<Board> boards) {
+        eme.listRemove(boards);
     }
 }
