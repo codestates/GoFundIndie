@@ -43,7 +43,7 @@ public class BoardQuery {
 
             ViewBoardDTO dto = ViewBoardDTO.from(board);
             dto.setCasting(castingRepository.findCastingByBoard(id));
-            dto.setComment(commentList.);
+            dto.setComment(commentList);
             dto.setGenre(genreRepository.findGenreByBoard(id));
             dto.setStill(imageRepository.findStillByBoard(id));
             dto.setAverageRating(3);
