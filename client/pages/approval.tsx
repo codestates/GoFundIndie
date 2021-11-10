@@ -6,10 +6,8 @@ export default function Approval() {
   const router = useRouter();
   useEffect(() => {
     if (!router.isReady) return;
-    console.log(router.query.pg_token);
-    console.log(Cookies.get("tid"));
+
     Setaxios.postAxios("pay/approve", {
-      amount: 3000,
       tid: Cookies.get("tid"),
       pg_token: router.query.pg_token,
     })

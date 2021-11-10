@@ -17,6 +17,12 @@ export default function Page({ film }: any) {
             catchphrase={"소중했던 일상, 다시 찾아 떠나요"}
           />
         </div>
+        <div className={styles.home__div__wrapper}>
+          <ContentCarousel
+            film={film.documentary.data}
+            catchphrase={"꼭 알아야만 하는 것"}
+          />
+        </div>
       </div>
     </div>
   );

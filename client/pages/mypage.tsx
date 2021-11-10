@@ -55,6 +55,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return err;
   });
 
+  const query = `{
+    FindBoards(Type: SEARCH_TYPES_MY, Limit: 4) {
+      data {
+        id
+        title
+        posterImg
+        infoCountry
+        infoCreatedYear
+        infoTime
+        infoLimit
+      }
+    }
+}`;
+
+  const res2 = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
+    method: "POST",
+    body: JSON.stringify({ query }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).catch((err) => {
+    return err;
+  });
+  const film = await (await res2).json();
+  console.log(film);
   const userData = await (await res).json();
   return { props: { userInfo: userData.data } };
 };

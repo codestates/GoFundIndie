@@ -14,7 +14,6 @@ export default function BoarDetails({ film }: any) {
   } else {
     return <></>;
   }
-  console.log(filmData);
   function Payment() {
     Setaxios.getAxios("pay/ready?amount=3000").then((res) => {
       const urlcomp: any = res.data;
@@ -27,9 +26,25 @@ export default function BoarDetails({ film }: any) {
       );
       if (payment === null) return;
       payment.addEventListener("unload", () => {
-        alert("창이닫혔습니다");
+        location.reload();
       });
     });
+  }
+  async function SwitchLikeBoard() {
+    const query = `mutation SwitchLikeBoard($boardId: ID!){
+      SwitchLikeBoard(boardId: $boardId){
+        code
+      }
+    }`;
+    Setaxios.postgraphql("graphql", query, 33)
+      .then((res) => {
+        const data: any = res.data;
+        console.log(res);
+        if (data.data.SwitchLikeBoard.code === 2000) {
+          alert("성공적으로 담아두었습니다");
+        }
+      })
+      .catch((err) => alert(err));
   }
   // 보드테이블에 평점계산해서 내보는게 없네
   return (
@@ -57,11 +72,13 @@ export default function BoarDetails({ film }: any) {
               <span className={styles.dot}>・</span>
               <span>{filmData.infoCountry}</span>
             </div>
-            <div className={styles.bucket}>
+            <div className={styles.bucket} onClick={SwitchLikeBoard}>
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
             </div>
-            <button onClick={Payment}>후원하기</button>
+            <button className={styles.donation} onClick={Payment}>
+              후원하기
+            </button>
             <Rating />
           </div>
           <div className={styles.filmLink}>
@@ -122,6 +139,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             id
             rating
             userNickname
+            profilePicture
+            donation
+            body
+            spoiler
+            like
+            ratingChecked
         }
       }
     }
@@ -138,6 +161,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   const film = await (await res).json();
+
   if (film === null) return { props: {} };
   return {
     props: {

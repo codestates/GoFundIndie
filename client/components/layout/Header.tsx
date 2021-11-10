@@ -12,6 +12,7 @@ export default function Header() {
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
   const [signupModalOpen, setSignupModalOpen] = useState<boolean>(false);
   const [userLoginStatus, setUserLoginStatus] = useState<boolean>(false);
+  const [userAdminStatus, setUserAdminStatus] = useState<boolean>(false);
   const router = useRouter();
   //헤더 상단 투명처리
   //TODO::/효율적인 방법 찾기
@@ -42,6 +43,14 @@ export default function Header() {
           axios.defaults.headers.common["accesstoken"] =
             resData.data.accessToken;
           setUserLoginStatus(true);
+          Setaxios.getAxios("user")
+            .then((res) => {
+              let userdata: any = res.data;
+              if (userdata.admin_role) {
+                setUserAdminStatus(true);
+              }
+            })
+            .catch((err) => null);
         })
         .catch((err) => {
           alert(err);
@@ -104,6 +113,11 @@ export default function Header() {
                 </div>
               </li> */}
               <div className={styles["flex-end"]}>
+                {userAdminStatus ? (
+                  <li>
+                    <Link href="/management">관리 페이지</Link>
+                  </li>
+                ) : null}
                 {userLoginStatus ? (
                   <>
                     <li>

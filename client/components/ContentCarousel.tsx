@@ -3,6 +3,7 @@ import Link from "next/link";
 export default function ContentCarousel({ film, catchphrase }: any) {
   let counter = 0;
   function poster(film0: any, film1: any, film2: any, film3: any): any {
+    if (!film0 || !film1 || !film2 || !film3) return;
     return (
       <div className={styles.slide__wrapper}>
         <div>
