@@ -13,8 +13,6 @@ public class WrappingBoardGraphQLsDTO {
 
     @Builder
     public WrappingBoardGraphQLsDTO(int code, List<BoardGraphQLDTO> data) {
-        Assert.notNull(data, "data not null");
-
         this.code = code;
         this.data = data;
     }

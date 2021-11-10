@@ -71,14 +71,22 @@ public class CommentRepository extends EntityManagerExtend{
 
     // ViewBoard gql comments
     // TODO Rating Check
-    public List<CommentGraphQLDTO> findCommentByBoard(long boardId, int limit) {
-        return entityManager.createQuery(
-                "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO(c.id, c.rating, u.id, u.nickname, u.profilePicture, c.donation, c.body, c.spoiler, c.like, false) " +
-                        "FROM Comment c " +
-                        "JOIN c.boardId b " +
-                        "ON c.boardId = " + boardId + " " +
-                        "JOIN c.userId u " +
-                        "ORDER BY c.like DESC", CommentGraphQLDTO.class
-        ).setMaxResults(limit).getResultList();
+    public List<CommentGraphQLDTO> findCommentByBoard(long boardId, Integer limit) {
+        String query = "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO" +
+                       "(c.id, c.rating, u.id, u.nickname, u.profilePicture, c.donation, c.body, c.spoiler, c.like, false) " +
+                       "FROM Comment c " +
+                       "JOIN c.boardId b " +
+                       "ON c.boardId = " + boardId + " " +
+                       "JOIN c.userId u " +
+                       "ORDER BY c.like DESC";
+
+        if(limit == null) {
+            return entityManager.createQuery(query, CommentGraphQLDTO.class)
+                    .getResultList();
+        } else {
+            return entityManager.createQuery(query, CommentGraphQLDTO.class)
+                    .setMaxResults(limit)
+                    .getResultList();
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.IndieAn.GoFundIndie.Resolvers.Querys;
 
 import com.IndieAn.GoFundIndie.Common.SearchTypes;
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
@@ -29,17 +31,31 @@ public class BoardQuery {
     private final CastingRepository castingRepository;
     private final GenreRepository genreRepository;
     private final ImageRepository imageRepository;
+    private final BoardLikeRepository boardLikeRepository;
 
     private final UserService userService;
     private final GqlUserValidService gqlUserValidService;
 
     public WrappingViewBoardDTO FindBoardId(Long id, DataFetchingEnvironment env) {
         try {
-            ViewBoardDTO dto = ViewBoardDTO.from(boardRepository.findBoardId(id));
+            Board board = boardRepository.findBoardId(id);
+            List<CommentGraphQLDTO> commentList = commentRepository.findCommentByBoard(id, null);
+
+            ViewBoardDTO dto = ViewBoardDTO.from(board);
             dto.setCasting(castingRepository.findCastingByBoard(id));
-            dto.setComment(commentRepository.findCommentByBoard(id,5));
+            dto.setComment(commentList.);
             dto.setGenre(genreRepository.findGenreByBoard(id));
             dto.setStill(imageRepository.findStillByBoard(id));
+            dto.setAverageRating(3);
+
+            int code = gqlUserValidService.envValidCheck(env);
+
+            if(code == 0) {
+                dto.setLiked(boardLikeRepository
+                        .isLikedBoard(gqlUserValidService.findUser(env),board));
+            } else {
+                dto.setLiked(false);
+            }
 
             return WrappingViewBoardDTO.builder()
                     .code(2000)

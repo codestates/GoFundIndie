@@ -12,7 +12,6 @@ import lombok.Getter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Builder
 public class ViewBoardDTO {
     private long id;
     private boolean isApprove;
@@ -31,6 +30,8 @@ public class ViewBoardDTO {
     private String createdAt;
     private int commentAmount;
     private int likeAmount;
+    private int averageRating;
+    private boolean isLiked;
     private List<GenreGraphQLDTO> genre;
     private List<CastingGraphQLDTO> casting;
     private List<StillGraphQLDTO> still;
@@ -38,7 +39,8 @@ public class ViewBoardDTO {
 
     public ViewBoardDTO() {}
 
-    public ViewBoardDTO(long id, boolean isApprove, String title, String producer, String distributor, String posterImg, String viewLink, String infoCountry, String infoCreatedYear, String infoCreatedDate, int infoTime, int infoLimit, String infoStory, boolean infoSubtitle, String createdAt, int commentAmount, int likeAmount, List<GenreGraphQLDTO> genre, List<CastingGraphQLDTO> casting, List<StillGraphQLDTO> still, List<CommentGraphQLDTO> comment) {
+    @Builder
+    public ViewBoardDTO(long id, boolean isApprove, String title, String producer, String distributor, String posterImg, String viewLink, String infoCountry, String infoCreatedYear, String infoCreatedDate, int infoTime, int infoLimit, String infoStory, boolean infoSubtitle, String createdAt, int commentAmount, int likeAmount, int averageRating, boolean isLiked) {
         this.id = id;
         this.isApprove = isApprove;
         this.title = title;
@@ -56,10 +58,8 @@ public class ViewBoardDTO {
         this.createdAt = createdAt;
         this.commentAmount = commentAmount;
         this.likeAmount = likeAmount;
-        this.genre = genre;
-        this.casting = casting;
-        this.still = still;
-        this.comment = comment;
+        this.averageRating = averageRating;
+        this.isLiked = isLiked;
     }
 
     public long getId() {
@@ -196,6 +196,22 @@ public class ViewBoardDTO {
 
     public void setLikeAmount(int likeAmount) {
         this.likeAmount = likeAmount;
+    }
+
+    public int getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(int averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
     public List<GenreGraphQLDTO> getGenre() {
