@@ -1,9 +1,8 @@
 import { useState } from "react";
 import styles from "../../styles/components/boardInfos/cast.module.scss";
 export default function Cast({ cast, onFocus }: any) {
+  console.log(cast);
   const [component, setComponent] = useState<boolean>(false);
-
-  let testcast = [{ ...cast[0] }];
   let count = 0;
   function Positioner(num: Number) {
     switch (num) {
@@ -31,14 +30,16 @@ export default function Cast({ cast, onFocus }: any) {
       </div>
       {!component && !onFocus ? null : (
         <div className={styles["cast-wrapper"]}>
-          {testcast.map((el) => {
+          {cast.map((el: any) => {
             count++;
             if (!onFocus && count > 6) {
               return;
             }
             return (
               <div className={styles.infos} key={el.id}>
-                <img src={el.image} />
+                <div className={styles.imagebox}>
+                  <img src={el.image} />
+                </div>
                 <div className={styles.name}>{el.name}</div>
                 <div className={styles.role}>{Positioner(el.position)}</div>
               </div>

@@ -1,87 +1,91 @@
 import styles from "../styles/components/contentcarousel.module.scss";
 import Link from "next/link";
-export default function ContentCarousel({ film, catchphrase }: any) {
+export default function ContentCarousel({ film }: any) {
+  if (film.data.length <= 4) return <></>;
   let counter = 0;
-  function poster(film0: any, film1: any, film2: any, film3: any): any {
-    if (!film0 || !film1 || !film2 || !film3) return;
+  let sliderstack: any[] = [];
+
+  const posterWrapper = (
+    movie1: any,
+    movie2: any,
+    movie3: any,
+    movie4: any
+  ) => {
+    sliderstack = [];
     return (
       <div className={styles.slide__wrapper}>
-        <div>
-          <Link href="/board/view/[boardid]" as={`/board/view/${film0.id}`}>
-            {film0.posterImg ? (
-              // <img style={{ backgroundImage: `url("${film.posterImg}")` }} />
-              <img src={film0.posterImg} />
-            ) : (
-              <img src="/noposter.png" />
-            )}
-          </Link>
-        </div>
-        <div>
-          <Link href="/board/view/[boardid]" as={`/board/view/${film1.id}`}>
-            {film1.posterImg ? (
-              <img src={film1.posterImg} />
-            ) : (
-              <img src="/noposter.png" />
-            )}
-          </Link>
-        </div>
-        <div>
-          <Link href="/board/view/[boardid]" as={`/board/view/${film2.id}`}>
-            {film2.posterImg ? (
-              <img src={film2.posterImg} />
-            ) : (
-              <img src="/noposter.png" />
-            )}
-          </Link>
-        </div>
-        <div>
-          <Link href="/board/view/[boardid]" as={`/board/view/${film3.id}`}>
-            {film3.posterImg ? (
-              <img src={film3.posterImg} />
-            ) : (
-              <img src="/noposter.png" />
-            )}
-          </Link>
-        </div>
+        {poster(movie1)}
+        {poster(movie2)}
+        {poster(movie3)}
+        {poster(movie4)}
+      </div>
+    );
+  };
+  function poster(movie: any) {
+    return (
+      <div>
+        <Link href="/board/view/[boardid]" as={`/board/view/${movie.id}`}>
+          {movie.posterImg ? (
+            // <img style={{ backgroundImage: `url("${film.posterImg}")` }} />
+            <img src={movie.posterImg} />
+          ) : (
+            <img src="/noposter.png" />
+          )}
+        </Link>
+        <div className={styles.title}>{movie.title}</div>
       </div>
     );
   }
   return (
     <div className={styles.carousel}>
       <div className={styles.category__wrapper}>
-        <div className={styles.category}>{catchphrase}</div>
+        <div className={styles.category}>{film.phrase}</div>
         <div id="posters" className={styles.poster__wrapper}>
-          {poster(film[0], film[1], film[2], film[3])}
-          {poster(film[4], film[5], film[6], film[7])}
+          {film.data.map((movie: any) => {
+            sliderstack.push(movie);
+            if (sliderstack.length === 4) {
+              return posterWrapper(
+                sliderstack[0],
+                sliderstack[1],
+                sliderstack[2],
+                sliderstack[3]
+              );
+            }
+          })}
         </div>
-        <button
-          className={styles["btn-prev"]}
-          onClick={(e) => {
-            if (counter === 0) return;
-            let eventtarget: any = e.target;
-            const target: any = eventtarget.parentNode.childNodes[1];
-            if (target === undefined) return;
-            target.style.transition = "transform 0.4s ease-in-out";
-            counter--;
-            target.style.transform = `translateX(${-1200 * counter}px)`;
-          }}
-        >
-          <img src="/prev.png" />
-        </button>
-        <button
-          className={styles["btn-next"]}
-          onClick={(e) => {
-            if (counter === 1) return;
-            let eventtarget: any = e.target;
-            const target: any = eventtarget.parentNode.childNodes[1];
-            if (target === undefined) return;
-            target.style.transition = "transform 0.4s ease-in-out";
-            counter++;
-            target.style.transform = `translateX(${-1200 * counter}px)`;
-          }}
-        >
-          <img src="/next.png" />
-        </button>
+        {film.data.length < 8 ? null : (
+          <button
+            className={styles["btn-prev"]}
+            onClick={(e) => {
+              if (counter === 0) return;
+              let eventtarget: any = e.target;
+              const target: any = eventtarget.parentNode.childNodes[1];
+              if (target === undefined) return;
+              target.style.transition = "transform 0.4s ease-in-out";
+              counter--;
+              target.style.transform = `translateX(${-1200 * counter}px)`;
+            }}
+          >
+            <img src="/prev.png" />
+          </button>
+        )}
+
+        {film.data.length < 8 ? null : (
+          <button
+            className={styles["btn-next"]}
+            onClick={(e) => {
+              if (counter !== 0 && counter + 1 >= film.data.length / 4) return;
+              let eventtarget: any = e.target;
+              const target: any = eventtarget.parentNode.childNodes[1];
+              if (target === undefined) return;
+              target.style.transition = "transform 0.4s ease-in-out";
+              counter++;
+              target.style.transform = `translateX(${-1200 * counter}px)`;
+            }}
+          >
+            <img src="/next.png" />
+          </button>
+        )}
       </div>
     </div>
   );

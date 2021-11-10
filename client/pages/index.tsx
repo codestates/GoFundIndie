@@ -6,31 +6,31 @@ import { GetServerSideProps } from "next";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function Page({ film }: any) {
+  const recommend: any = film.FindRandomBoard.data;
   return (
     <div>
       <div className={styles.home__div}>
         <div className={styles.header__blank__div} />
         <Carousel />
-        <div className={styles.home__div__wrapper}>
-          <ContentCarousel
-            film={film.drama.data}
-            catchphrase={"소중했던 일상, 다시 찾아 떠나요"}
-          />
-        </div>
-        <div className={styles.home__div__wrapper}>
-          <ContentCarousel
-            film={film.documentary.data}
-            catchphrase={"꼭 알아야만 하는 것"}
-          />
-        </div>
+        {recommend.map((theme: any) => {
+          return (
+            <div className={styles.home__div__wrapper}>
+              <ContentCarousel film={theme} />
+            </div>
+          );
+        })}
+        <div className={styles.home__div__wrapper}></div>
       </div>
     </div>
   );
 }
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query = `{
-    drama: FindBoards (Type: SEARCH_TYPES_DRAMA, Limit: 8) {
-      code
+FindRandomBoard (Limit: 20) {
+  code
+  data {
+      phrase
       data {
           id
           isApprove
@@ -43,19 +43,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           infoLimit
       }
   }
-  documentary: FindBoards (Type: SEARCH_TYPES_DOCU, Limit: 8) {
-    code
-    data {
-        id
-        isApprove
-        title
-        posterImg
-        infoCountry
-        infoCreatedYear
-        infoCreatedDate
-        infoTime
-        infoLimit
-    }
 }
 }`;
 
@@ -77,3 +64,32 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
+
+// drama: FindBoards (Type: SEARCH_TYPES_DRAMA, Limit: 8) {
+//   code
+//   data {
+//       id
+//       isApprove
+//       title
+//       posterImg
+//       infoCountry
+//       infoCreatedYear
+//       infoCreatedDate
+//       infoTime
+//       infoLimit
+//   }
+// }
+// documentary: FindBoards (Type: SEARCH_TYPES_DOCU, Limit: 8) {
+// code
+// data {
+//     id
+//     isApprove
+//     title
+//     posterImg
+//     infoCountry
+//     infoCreatedYear
+//     infoCreatedDate
+//     infoTime
+//     infoLimit
+// }
+// }

@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
+  console.log(film);
   let filmData;
   if (film !== null) {
     filmData = film.FindBoardId.data;

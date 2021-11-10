@@ -6,23 +6,23 @@ import styles from "../styles/approval.module.scss";
 export default function Approval() {
   const router = useRouter();
   const [timer, setTimer] = useState(0);
-  //   useEffect(() => {
-  //     const timeout = setTimeout(() => setTimer(timer + 1), 1000);
-  //     if (!router.isReady) return;
+  useEffect(() => {
+    const timeout = setTimeout(() => setTimer(timer + 1), 1000);
+    if (!router.isReady) return;
 
-  //     Setaxios.postAxios("pay/approve", {
-  //       pg_token: router.query.pg_token,
-  //     })
-  //       .then((res) => {
-  //         alert("정상적으로 결제됐습니다");
-  //         window.close();
-  //       })
-  //       .catch((err) => {
-  //         alert(err.response.data.code);
-  //         window.close();
-  //       });
-  //     return () => clearTimeout(timeout);
-  //   }, [timer]);
+    Setaxios.postAxios("pay/approve", {
+      pg_token: router.query.pg_token,
+    })
+      .then((res) => {
+        alert("정상적으로 결제됐습니다");
+        window.close();
+      })
+      .catch((err) => {
+        alert(err.response.data.code);
+        window.close();
+      });
+    return () => clearTimeout(timeout);
+  }, [timer]);
   return (
     <div className={styles.payment}>
       <div className={styles.loader}></div>
