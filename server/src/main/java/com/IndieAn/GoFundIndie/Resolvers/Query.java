@@ -59,8 +59,8 @@ public class Query implements GraphQLQueryResolver {
 
     // ---- BOARD ----
     //
-    public WrappingViewBoardDTO FindBoardId(Long id) {
-        return boardQuery.FindBoardId(id);
+    public WrappingViewBoardDTO FindBoardId(Long id, DataFetchingEnvironment env) {
+        return boardQuery.FindBoardId(id, env);
     }
 
     public WrappingAdminViewBoardDTO FindBoardIdAdmin(Long id, DataFetchingEnvironment env) {

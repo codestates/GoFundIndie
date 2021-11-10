@@ -25,6 +25,10 @@ public enum SearchTypes {
     SEARCH_TYPES_APPROVE_TRUE("Approve_true"),
     //   - All = isApprove 구분없이 전부
     SEARCH_TYPES_ALL("All"),
+    //   - Random = 완전 랜덤
+    SEARCH_TYPES_RANDOM("Random"),
+    //   - Seoul2020 = 서울독립영화 2020 수상작
+    SEARCH_TYPES_SEOUL2020("Seoul2020"),
     //   - New = 최근 등록한 영화
     SEARCH_TYPES_NEW("New");
 

@@ -17,6 +17,7 @@ public class GqlUserValidService {
     private final UserService userService;
 
     public int envValidCheck(DataFetchingEnvironment env) {
+        if(env == null) return 4000;
         try {
             GraphQLServletContext context = env.getContext();
             HttpServletRequest request = context.getHttpServletRequest();
@@ -41,8 +42,7 @@ public class GqlUserValidService {
         HttpServletRequest request = context.getHttpServletRequest();
 
         return userService.FindUserUseEmail(
-                userService.CheckToken(request
-                                .getHeader("accesstoken"))
+                userService.CheckToken(request.getHeader("accesstoken"))
                         .get("email").toString());
     }
 }

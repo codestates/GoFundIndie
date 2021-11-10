@@ -33,7 +33,7 @@ public class BoardQuery {
     private final UserService userService;
     private final GqlUserValidService gqlUserValidService;
 
-    public WrappingViewBoardDTO FindBoardId(Long id) {
+    public WrappingViewBoardDTO FindBoardId(Long id, DataFetchingEnvironment env) {
         try {
             ViewBoardDTO dto = ViewBoardDTO.from(boardRepository.findBoardId(id));
             dto.setCasting(castingRepository.findCastingByBoard(id));

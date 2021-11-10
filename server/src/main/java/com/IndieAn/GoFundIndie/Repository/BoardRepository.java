@@ -56,7 +56,7 @@ public class BoardRepository extends EntityManagerExtend{
         return entityManager.createQuery(
             SELECT_BoardGraphQLDTO +
                     "FROM BoardLike l " +
-                    "LEFT JOIN l.boardId b " +
+                    "JOIN l.boardId b " +
                     "ON l.userId = " + user.getId() + " " +
                     "WHERE b.isApprove = true " +
                     "ORDER BY l.createdAt DESC", BoardGraphQLDTO.class)
