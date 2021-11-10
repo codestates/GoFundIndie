@@ -1,6 +1,8 @@
 package com.IndieAn.GoFundIndie.Controller;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportDeleteDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportInputDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.RatingInputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
@@ -152,6 +154,24 @@ public class CommentController {
             else {
                 return ResponseEntity.status(401).body(checkToken);
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @PostMapping(value = "comment/report")
+    public ResponseEntity<?> CreateReport(@RequestBody CommentReportInputDTO commentReportInputDTO, @RequestHeader Map<String, String> requestHeader) {
+        try {
+            return commentService.AddReport(commentReportInputDTO, requestHeader);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @DeleteMapping(value = "comment/report")
+    public ResponseEntity<?> DeleteReport(@RequestBody CommentReportDeleteDTO commentReportDeleteDTO, @RequestHeader Map<String, String> requestHeader) {
+        try {
+            return commentService.RemoveReport(commentReportDeleteDTO, requestHeader);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
