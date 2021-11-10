@@ -33,41 +33,59 @@ public class CommentService {
     private final CommentRatingRepository commentRatingRepository;
     private final CommentReportRepository commentReportRepository;
     private final UserService userService;
+    private final BoardService boardService;
     private HashMap<String, Object> body;
 
     @Autowired
     public CommentService(CommentRepository commentRepository, CommentJPAInterface commentJPAInterface,
                           UserRepository userRepository, CommentRatingRepository commentRatingRepository,
-                          CommentReportRepository commentReportRepository, UserService userService) {
+                          CommentReportRepository commentReportRepository, UserService userService,
+                          BoardService boardService) {
         this.commentRepository = commentRepository;
         this.commentJPAInterface = commentJPAInterface;
         this.userRepository = userRepository;
         this.commentRatingRepository = commentRatingRepository;
         this.commentReportRepository = commentReportRepository;
         this.userService = userService;
+        this.boardService = boardService;
     }
 
     // Comment를 생성하는 기능을 하는 서비스 기능
-    public HashMap<String, Object> AddCommentData(CommentInputDTO commentInputDTO, User user) {
+    public ResponseEntity<?> WriteCommentData(Map<String, String> requestHeader, CommentInputDTO commentInputDTO) {
         body = new HashMap<>();
-
-        // 토큰으로 얻은 email의 pk와 입력으로 들어온 user의 pk가 다르다면 400 응답을 한다.
-        if(user.getId() != commentInputDTO.getUserId()) {
-            body.put("code", 4014);
+        // 헤더에 accesstoken이 없으면 4000 응답을 한다.
+        if(requestHeader.get("accesstoken") == null) {
+            body.put("code", 4000);
+            return ResponseEntity.badRequest().body(body);
         }
-        else {
+
+        // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+        Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+
+        // 토큰이 유효하다면 작성 기능을 수행한다.
+        if(checkToken.get("email") != null) {
+            User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            // Board id로 board를 찾고, 없을 때의 응답을 추가한다.
+            if(boardService.FindBoardId(commentInputDTO.getBoardId()) == null) {
+                body.put("code", 4401);
+                return ResponseEntity.status(404).body(body);
+            }
+
             // comment들 중에 한 board id 에 한 user id가 있는지 확인한다. 있다면 이미 comment를 작성한 것이기 때문에 4004응답을 한다.
             for(Comment c : commentRepository.FindCommentList()) {
-                if(c.getBoardId().getId() == commentInputDTO.getBoardId() && c.getUserId().getId() == commentInputDTO.getUserId()) {
+                if(c.getBoardId().getId() == commentInputDTO.getBoardId() && c.getUserId().getId() == user.getId()) {
                     body.put("code", 4004);
-                    return body;
+                    return ResponseEntity.badRequest().body(body);
                 }
             }
             // comment 작성을 한다.
-            commentRepository.AddComment(commentInputDTO);
+            commentRepository.AddComment(commentInputDTO, user);
             body.put("code", 2000);
+            return ResponseEntity.status(201).body(body);
         }
-        return body;
+        else {
+            return ResponseEntity.status(401).body(checkToken);
+        }
     }
 
     // 각 보드에 대한 Comment들을 불러오는 서비스 기능
