@@ -35,9 +35,8 @@ public class CommentRepository extends EntityManagerExtend{
     }
 
     // DB Comment 테이블에 매개변수 commentInputDTO의 데이터를 사용하여 Comment 정보를 저장한다.
-    public void AddComment(CommentInputDTO commentInputDTO) {
+    public void AddComment(CommentInputDTO commentInputDTO, User user) {
         Comment comment = new Comment();
-        User user = entityManager.find(User.class, commentInputDTO.getUserId());
         Board board = entityManager.find(Board.class, commentInputDTO.getBoardId());
 
         comment.setRating(commentInputDTO.getRating());
