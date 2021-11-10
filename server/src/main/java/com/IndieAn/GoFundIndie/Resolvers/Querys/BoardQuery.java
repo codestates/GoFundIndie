@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -179,6 +180,18 @@ public class BoardQuery {
                             .code(2000)
                             .data(boardRepository.findBoardsNew(limit))
                             .build();
+                //   - Random = 승인된 보드들 중 랜덤 추천
+                case SEARCH_TYPES_RANDOM:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findBoardsRandom(limit))
+                            .build();
+                //   - SEOUL 2020
+                case SEARCH_TYPES_SEOUL2020:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findBoardsSeoul2020(limit))
+                            .build();
                 //   - Genre = 장르별 영화
                 default:
                     return WrappingBoardGraphQLsDTO.builder()
@@ -230,34 +243,25 @@ public class BoardQuery {
         }
     }
 
-    public WrappingRandomBoardsDTO FindRandomBoard(DataFetchingEnvironment env) {
-        List<RandomBoardDTO> list = new ArrayList<>();
+    public WrappingRandomBoardsDTO FindRandomBoard(int limit, DataFetchingEnvironment env) {
+        List<RandomBoardDTO> list;
+        List<SearchTypes> types;
 
-        // TEST HARD CORD
-        list.add(RandomBoardDTO.builder()
-                .phrase("드라마 장르 추천 문구")
-                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_DRAMA, 12))
-                .build());
+        try {
+            int code = gqlUserValidService.envValidCheck(env);
 
-        list.add(RandomBoardDTO.builder()
-                .phrase("#로멘스 #멜로")
-                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_ROMANCE, 12))
-                .build());
+            if (code != 0) types = SearchTypes.getRandomType(limit, false);
+            else types = SearchTypes.getRandomType(limit, true);
+        } catch (NullPointerException e) {
+            types = SearchTypes.getRandomType(limit, false);
+        }
 
-        list.add(RandomBoardDTO.builder()
-                .phrase("#DOCUMENTARY #생생함")
-                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_DOCU, 12))
-                .build());
+        list = types.stream().map(type -> RandomBoardDTO.builder()
+                .phrase(SearchTypes.getPhrase(type))
 
-        list.add(RandomBoardDTO.builder()
-                .phrase("하루의 마무리를 즐거운 코미디 영화와 함께")
-                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_COMEDY, 12))
-                .build());
-
-        list.add(RandomBoardDTO.builder()
-                .phrase("동화책 같은 추천 애니메이션 영화")
-                .data(boardRepository.findBoardsByGenre(SearchTypes.SEARCH_TYPES_ANI, 12))
-                .build());
+                // TODO DTO 포장지 없애기
+                .data(FindBoards(type, 12, env).getData())
+                .build()).collect(Collectors.toList());
 
         return WrappingRandomBoardsDTO.builder().code(2000).data(list).build();
     }

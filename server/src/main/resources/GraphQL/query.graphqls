@@ -12,7 +12,7 @@ type Query {
     FindBoards(Type: SearchTypes, Limit: Int): WrappingBoards
     FindDonationBoards(Limit: Int): WrappingDonationBoards
     FindLikeBoards(Limit: Int): WrappingLikeBoards
-    FindRandomBoard: WrappingRandomBoards
+    FindRandomBoard(Limit: Int): WrappingRandomBoards
 
     FindGenreId(id: ID!): genre
     FindAllGenre: [genre]
