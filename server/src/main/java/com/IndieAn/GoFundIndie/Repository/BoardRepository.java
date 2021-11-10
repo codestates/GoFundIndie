@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -123,6 +124,23 @@ public class BoardRepository extends EntityManagerExtend{
                     "WHERE b.isApprove = true " +
                     "ORDER BY b.createdAt DESC", BoardGraphQLDTO.class)
                 .setMaxResults(limit).getResultList();
+    }
+
+    public List<BoardGraphQLDTO> findBoardsRandom(int limit) {
+        List<BoardGraphQLDTO> list = findBoards(true, Integer.MAX_VALUE - 1);
+        Collections.shuffle(list);
+        return list.subList(0, limit);
+    }
+
+    // TODO 관리자가 만들수 있게끔
+    public List<BoardGraphQLDTO> findBoardsSeoul2020(int limit) {
+        return entityManager.createQuery(
+            SELECT_BoardGraphQLDTO +
+                    "FROM Board b " +
+                    "WHERE b.id < 81 " +
+                    "AND b.id > 74 " +
+                    "ORDER BY b.id" ,BoardGraphQLDTO.class
+        ).setMaxResults(limit).getResultList();
     }
 
     // Upload or Update poster image
