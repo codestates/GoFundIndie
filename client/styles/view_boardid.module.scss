@@ -83,6 +83,7 @@ $impact-font-color: #ffffff;
   display: flex;
   cursor: pointer;
   align-items: center;
+  margin: 1rem 0;
   img {
     width: 20px;
     height: 20px;
@@ -102,4 +103,14 @@ $impact-font-color: #ffffff;
       font-size: 20px;
     }
   }
+}
+
+.donation {
+  all: unset;
+  background-color: #00c896;
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  height: 2rem;
+  width: 282px;
 }

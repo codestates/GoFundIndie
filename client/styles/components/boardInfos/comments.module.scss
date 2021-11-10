@@ -74,3 +74,18 @@ $buttoncolor: #00c896;
 .comments-wrapper {
   margin: 2rem 0;
 }
+
+.nocomments {
+  background-color: #37393d;
+  margin-top: 1rem;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 7rem;
+  .message {
+    color: #bbbbbb;
+    padding: 1rem;
+    font-size: 1.3rem;
+  }
+}

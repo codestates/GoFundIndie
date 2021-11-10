@@ -1,7 +1,15 @@
 import styles from "../../styles/components/boardInfos/comments.module.scss";
+
 export default function Comments({ comments }: { comments: Array<string> }) {
-  if (comments === null) {
-    return null;
+  if (comments === null || comments.length === 0) {
+    return (
+      <div className={styles.head}>
+        코멘트
+        <div className={styles.nocomments}>
+          <div className={styles.message}>등록된 코멘트가 없습니다</div>
+        </div>
+      </div>
+    );
   }
   return (
     <div className={styles["comments-wrapper"]}>
@@ -32,7 +40,7 @@ export default function Comments({ comments }: { comments: Array<string> }) {
               <div className={styles["comment"]}>
                 <div className={styles["comment-body"]}>
                   {/* <div>{comment.body}</div> */}
-                  <div>임시 코멘트 정말 재미있었어요</div>
+                  <div>{comment.body}</div>
                 </div>
               </div>
             </div>

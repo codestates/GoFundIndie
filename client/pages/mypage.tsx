@@ -1,7 +1,6 @@
 import styles from "../styles/mypage.module.scss";
 import { GetServerSideProps } from "next";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 export default function Mypage({ userInfo }: any) {
   if (userInfo === null) {
     return <div className={styles.error}>로그인이 필요합니다</div>;
@@ -56,7 +55,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return err;
   });
 
+  const query = `{
+    FindBoards(Type: SEARCH_TYPES_MY, Limit: 4) {
+      data {
+        id
+        title
+        posterImg
+        infoCountry
+        infoCreatedYear
+        infoTime
+        infoLimit
+      }
+    }
+}`;
+
+  const res2 = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
+    method: "POST",
+    body: JSON.stringify({ query }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).catch((err) => {
+    return err;
+  });
+  const film = await (await res2).json();
+  console.log(film);
   const userData = await (await res).json();
-  console.log(userData);
   return { props: { userInfo: userData.data } };
 };

@@ -1,17 +1,52 @@
 import styles from "../../../styles/view_boardid.module.scss";
 import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
 import { GetServerSideProps } from "next";
+import Rating from "../../../components/boardInfos/Rating";
+import Setaxios from "../../../fetching/Setaxios";
+import Cookies from "js-cookie";
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
   let filmData;
   if (film !== null) {
     filmData = film.FindBoardId.data;
-  }
-  if (film === null) {
+  } else {
     return <></>;
   }
-  //보드테이블에 평점계산해서 내보는게 없네
+  function Payment() {
+    Setaxios.getAxios("pay/ready?amount=3000").then((res) => {
+      const urlcomp: any = res.data;
+      console.log(urlcomp);
+      Cookies.set("tid", urlcomp.data.tid);
+      const payment: Window | null = window.open(
+        urlcomp.data.next_redirect_pc_url,
+        "_blank",
+        "width=600,height=500"
+      );
+      if (payment === null) return;
+      payment.addEventListener("unload", () => {
+        location.reload();
+      });
+    });
+  }
+  async function SwitchLikeBoard() {
+    const query = `mutation SwitchLikeBoard($boardId: ID!){
+      SwitchLikeBoard(boardId: $boardId){
+        code
+      }
+    }`;
+    Setaxios.postgraphql("graphql", query, 33)
+      .then((res) => {
+        const data: any = res.data;
+        console.log(res);
+        if (data.data.SwitchLikeBoard.code === 2000) {
+          alert("성공적으로 담아두었습니다");
+        }
+      })
+      .catch((err) => alert(err));
+  }
+  // 보드테이블에 평점계산해서 내보는게 없네
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
@@ -33,14 +68,18 @@ export default function BoarDetails({ film }: any) {
             <div className={styles.filminfo__info}>
               <span>{filmData.infoCreatedYear}</span>
               <span className={styles.dot}>・</span>
-              <span>{filmData.genre}</span>
+              <span>{filmData.genre.map((el: any) => el.name)}</span>
               <span className={styles.dot}>・</span>
               <span>{filmData.infoCountry}</span>
             </div>
-            <div className={styles.bucket}>
+            <div className={styles.bucket} onClick={SwitchLikeBoard}>
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
             </div>
+            <button className={styles.donation} onClick={Payment}>
+              후원하기
+            </button>
+            <Rating />
           </div>
           <div className={styles.filmLink}>
             <div>지금 보고싶어요</div>
@@ -48,7 +87,6 @@ export default function BoarDetails({ film }: any) {
               <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
             </div>
           </div>
-          <div></div>
           <InfoWrapper
             cast={filmData.casting}
             stills={filmData.still}
@@ -101,6 +139,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             id
             rating
             userNickname
+            profilePicture
+            donation
+            body
+            spoiler
+            like
+            ratingChecked
         }
       }
     }
