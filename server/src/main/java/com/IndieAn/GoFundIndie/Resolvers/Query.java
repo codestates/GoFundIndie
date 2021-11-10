@@ -83,8 +83,8 @@ public class Query implements GraphQLQueryResolver {
         return boardQuery.FindLikeBoards(Objects.requireNonNullElse(limit, limitMax), env);
     }
 
-    public WrappingRandomBoardsDTO FindRandomBoard(DataFetchingEnvironment env) {
-        return boardQuery.FindRandomBoard(env);
+    public WrappingRandomBoardsDTO FindRandomBoard(Integer limit, DataFetchingEnvironment env) {
+        return boardQuery.FindRandomBoard(Objects.requireNonNullElse(limit, limitMax), env);
     }
 
     // ---- BOARD REPORT ----
