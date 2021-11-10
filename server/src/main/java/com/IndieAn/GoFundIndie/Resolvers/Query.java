@@ -2,10 +2,7 @@ package com.IndieAn.GoFundIndie.Resolvers;
 
 import com.IndieAn.GoFundIndie.Common.SearchTypes;
 import com.IndieAn.GoFundIndie.Repository.CommentRepository;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingAdminViewBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingBoardGraphQLsDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingRandomBoardsDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingViewBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportsGraphqlDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
@@ -23,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -35,6 +33,8 @@ public class Query implements GraphQLQueryResolver {
     private final BoardReportQuery boardReportQuery;
 
     private final CommentRepository cr;
+
+    private final int limitMax = 100000000;
 
     // ---- USER ----
     //
@@ -68,12 +68,19 @@ public class Query implements GraphQLQueryResolver {
     }
 
     public WrappingBoardGraphQLsDTO FindBoards(SearchTypes type, Integer limit, DataFetchingEnvironment env) {
-        if(limit == null) return boardQuery.FindBoards(type, 100000000, env);
-        return boardQuery.FindBoards(type, limit, env);
+        return boardQuery.FindBoards(type, Objects.requireNonNullElse(limit, limitMax), env);
     }
 
     public List<CommentGraphQLDTO> CommentTest(long id, int limit){
         return cr.findCommentByBoard(id,limit);
+    }
+
+    public WrappingDonationBoardGraphQLDTO FindDonationBoards(Integer limit, DataFetchingEnvironment env) {
+        return boardQuery.FindDonationBoards(Objects.requireNonNullElse(limit, limitMax), env);
+    }
+
+    public WrappingLikeBoardGraphQLDTO FindLikeBoards(Integer limit, DataFetchingEnvironment env) {
+        return boardQuery.FindLikeBoards(Objects.requireNonNullElse(limit, limitMax), env);
     }
 
     public WrappingRandomBoardsDTO FindRandomBoard(DataFetchingEnvironment env) {

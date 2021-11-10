@@ -4,7 +4,7 @@ import lombok.Builder;
 
 public class CommentGraphQLDTO {
     private long id;
-    private Integer rating;
+    private int rating;
     private long userId;
     private String userNickname;
     private String profilePicture;
@@ -17,7 +17,7 @@ public class CommentGraphQLDTO {
     public CommentGraphQLDTO() {}
 
     @Builder
-    public CommentGraphQLDTO(long id, Integer rating, long userId, String userNickname, String profilePicture, Integer donation, String body, boolean spoiler, int like, Boolean ratingChecked) {
+    public CommentGraphQLDTO(long id, int rating, long userId, String userNickname, String profilePicture, Integer donation, String body, boolean spoiler, int like, Boolean ratingChecked) {
         this.id = id;
         this.rating = rating;
         this.userId = userId;
@@ -38,11 +38,11 @@ public class CommentGraphQLDTO {
         this.id = id;
     }
 
-    public Integer getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
