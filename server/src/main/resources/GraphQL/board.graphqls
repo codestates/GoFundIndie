@@ -44,6 +44,16 @@ type WrappingBoards {
     data: [Board]
 }
 
+type WrappingDonationBoards {
+    code: Int
+    data: [DonationBoard]
+}
+
+type WrappingLikeBoards {
+    code: Int
+    data: [LikeBoard]
+}
+
 type WrappingRandomBoards {
     code: Int
     data: [RandomBoard]
@@ -82,6 +92,31 @@ type Board {
     infoLimit: Int
 }
 
+type DonationBoard {
+    id: ID
+    isApprove: Boolean
+    title: String
+    posterImg: String
+    infoCreatedYear: String
+    infoCreatedDate: String
+    donationAmount: Int
+    donationCreatedAt: String
+}
+
+type LikeBoard {
+    id: ID
+    isApprove: Boolean
+    title: String
+    posterImg: String
+    infoCountry: String
+    infoCreatedYear: String
+    infoCreatedDate: String
+    infoTime: Int
+    infoLimit: Int
+    infoStory: String
+    genre: [genre]
+}
+
 type viewBoard {
     id: ID
     isApprove: Boolean
@@ -100,6 +135,8 @@ type viewBoard {
     createdAt: String
     commentAmount: Int
     likeAmount: Int
+    averageRating: Int
+    isLiked: Boolean
     genre: [genre]
     casting: [casting]
     still: [still]

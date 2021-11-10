@@ -19,6 +19,15 @@ import java.util.List;
 public class BoardLikeRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
 
+    public boolean isLikedBoard(User user, Board board) {
+        return entityManager.createQuery(
+            "SELECT bl " +
+                    "FROM BoardLike bl " +
+                    "WHERE bl.userId = " + user.getId() + " " +
+                    "AND bl.boardId = " + board.getId() + "", BoardLike.class
+        ).getResultList().size() > 0;
+    }
+
     public void LikeBoardSwitch(User user, Board board) {
         List<BoardLike> list = entityManager.createQuery(
         "SELECT bl " +
