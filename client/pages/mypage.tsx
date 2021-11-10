@@ -8,24 +8,24 @@ export default function Mypage({ userInfo, film }: any) {
   }
   console.log(userInfo);
   const mybuckets = () => {
-    return film.map((movie: any) => {
-      return (
-        <div key={movie.id} className={styles["information"]}>
-          <div className={styles.posterimg}>
-            <img src={movie.posterImg} />
-          </div>
-          <div className={styles.blankedinfos}>
-            <div>{movie.title}</div>
-            <div>{movie.infoCreatedYear}</div>
-            <div>{movie.infoTime}</div>
-            <div>{movie.infoCountry}</div>
-            <Link href="/board/view/[boardid]" as={`/board/view/${movie.id}`}>
-              상세페이지로
-            </Link>
-          </div>
-        </div>
-      );
-    });
+    // return film.map((movie: any) => {
+    //   return (
+    //     <div key={movie.id} className={styles["information"]}>
+    //       <div className={styles.posterimg}>
+    //         <img src={movie.posterImg} />
+    //       </div>
+    //       <div className={styles.blankedinfos}>
+    //         <div>{movie.title}</div>
+    //         <div>{movie.infoCreatedYear}</div>
+    //         <div>{movie.infoTime}</div>
+    //         <div>{movie.infoCountry}</div>
+    //         <Link href="/board/view/[boardid]" as={`/board/view/${movie.id}`}>
+    //           상세페이지로
+    //         </Link>
+    //       </div>
+    //     </div>
+    //   );
+    // });
   };
   return (
     <div className={styles.mypage}>
@@ -86,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   const query = `{
-    FindBoards(Type: SEARCH_TYPES_MY, Limit: 4) {
+    FindLikeBoards(Limit : 4) {
       data {
         id
         title
@@ -95,7 +95,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         infoCreatedYear
         infoTime
         infoLimit
+        infoStory
+        genre{
+            name
+        }
       }
+    }
+    FindDonationBoards(Limit : 4){
+        data{
+            id
+            title
+            donationAmount
+            donationCreatedAt
+        }
     }
 }`;
 
@@ -110,8 +122,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return err;
   });
   const film = await (await res2).json();
+  console.log(film);
   const userData = await (await res).json();
   return {
-    props: { userInfo: userData.data, film: film.data.FindBoards.data },
+    props: { userInfo: userData.data, film: film },
   };
 };

@@ -15,20 +15,23 @@ export default function BoarDetails({ film }: any) {
     return <></>;
   }
   function Payment() {
-    Setaxios.getAxios("pay/ready?amount=3000").then((res) => {
-      const urlcomp: any = res.data;
-      console.log(urlcomp);
-      Cookies.set("tid", urlcomp.data.tid);
-      const payment: Window | null = window.open(
-        urlcomp.data.next_redirect_pc_url,
-        "_blank",
-        "width=600,height=500"
-      );
-      if (payment === null) return;
-      payment.addEventListener("unload", () => {
-        location.reload();
+    Setaxios.getAxios("pay/ready?amount=3000")
+      .then((res) => {
+        const urlcomp: any = res.data;
+        Cookies.set("tid", urlcomp.data.tid);
+        const payment: Window | null = window.open(
+          urlcomp.data.next_redirect_pc_url,
+          "_blank",
+          "width=600,height=500"
+        );
+        if (payment === null) return;
+        payment.addEventListener("unload", () => {
+          location.reload();
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
       });
-    });
   }
   async function SwitchLikeBoard() {
     const query = `mutation SwitchLikeBoard($boardId: ID!){

@@ -41,7 +41,9 @@ export default function Login({
         handleLoginStatus();
       })
       .catch((err) => {
-        alert(err);
+        if (err.response.data.code === 4001) alert("비밀번호가 틀렸습니다");
+        if (err.response.data.code === 4003)
+          alert("존재하지 않는 이메일입니다");
       });
   }
 
