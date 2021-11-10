@@ -1,0 +1,70 @@
+.carousel {
+  width: 1200px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.category {
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.poster__wrapper {
+  width: 100%;
+  display: flex;
+  position: relative;
+  height: 25rem;
+
+  .slide__wrapper {
+    display: flex;
+    img {
+      width: auto;
+      height: 25rem;
+    }
+    div {
+      width: 282px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 1.1rem;
+      align-items: center;
+      margin-right: 24px;
+      &:nth-child(4n) {
+        margin-right: 0px;
+      }
+    }
+  }
+}
+.category__wrapper {
+  position: relative;
+  width: 100%;
+  .btn-prev,
+  .btn-next {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    cursor: pointer;
+    opacity: 0.7;
+    img {
+      width: 40px;
+      height: 40px;
+      pointer-events: none;
+    }
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .btn-next {
+    right: 0%;
+  }
+}
+.poster_name {
+  display: block;
+  margin-left: 4rem;
+  padding: auto;
+  color: #a5a5a5;
+  background-color: #252525;
+}

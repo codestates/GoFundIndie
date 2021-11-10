@@ -1,0 +1,74 @@
+.mypage {
+  background-color: #f3f3f3;
+  width: 100%;
+  min-height: 90vh;
+  .header__blank__div {
+    background-color: #1b1b1b;
+    width: 100%;
+    height: 74px;
+  }
+}
+.info-header {
+  color: #333333;
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
+.myinfo-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  .myinfo {
+    width: 1200px;
+    height: 100px;
+  }
+}
+.dividingline {
+  width: 100%;
+  margin: 1rem 0;
+  border-bottom: solid 1px #999999;
+}
+.information {
+  display: flex;
+  .blankarea {
+    width: 282px;
+  }
+}
+
+.password,
+.nickname {
+  display: flex;
+  margin: 1rem 0;
+  align-items: center;
+  button {
+    all: unset;
+    cursor: pointer;
+    color: #009063;
+  }
+  .text {
+    width: 50%;
+  }
+  .button {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.blankedinfos {
+  width: 100%;
+}
+.cardinfoline {
+  width: 100%;
+  border-bottom: 1px solid #999999;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 3rem;
+  color: white;
+  opacity: 0.7;
+}

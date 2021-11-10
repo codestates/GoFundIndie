@@ -1,0 +1,12 @@
+type comment {
+    id: ID
+    rating: Int
+    userId: ID
+    userNickname: String
+    profilePicture: String
+    donation: Int
+    body: String
+    spoiler: Boolean
+    like: Int
+    ratingChecked: Boolean
+}

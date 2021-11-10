@@ -1,0 +1,81 @@
+@use "../modal.module.scss" as modal;
+
+@function padding_handler($n) {
+  @return 100%-$n;
+}
+.screen-wrapper {
+  z-index: 500;
+  @include modal.screen_wrapper();
+  .loginmodal-wrapper {
+    @include modal.modal_wrapper();
+    .loginmodal {
+      @include modal.modal_block(modal.$modal-width, modal.$modal-height);
+      .loginmodal__form {
+        width: 400px;
+        height: 400px;
+        button {
+          @include modal.button();
+          & + div {
+            display: flex;
+            justify-content: center;
+            color: #009063;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 15px;
+          }
+        }
+        .loginmodal__form-upper {
+          display: flex;
+          flex-direction: row;
+          margin-bottom: 15px;
+          .form-flexstart {
+            display: flex;
+            width: 30%;
+            font-size: 18px;
+            justify-content: flex-start;
+            align-items: flex-end;
+            color: #333333;
+            div {
+              display: flex;
+            }
+          }
+          .form-flexend {
+            display: flex;
+            width: 70%;
+            color: #333333;
+            justify-content: flex-end;
+            align-items: flex-end;
+            div {
+              display: flex;
+            }
+            div:first-child {
+              font-size: 14px;
+            }
+            div:last-child {
+              font-size: 18px;
+              color: #009063;
+              cursor: pointer;
+              margin-left: 5px;
+            }
+          }
+        }
+        .input__text {
+          @include modal.input();
+        }
+      }
+    }
+  }
+}
+
+.input__checkbox {
+  margin-bottom: 15px;
+}
+.oauth-icon {
+  width: 100%;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  img {
+    cursor: pointer;
+  }
+}

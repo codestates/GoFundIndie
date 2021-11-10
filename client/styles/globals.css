@@ -1,16 +1,69 @@
 html,
 body {
+  background-color: #1b1b1b;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  position: relative;
+  min-height: 100%;
+  min-width: 1200px;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
-
+body ::-webkit-scrollbar {
+  display: none;
+}
 a {
-  color: inherit;
+  color: #00c896;
   text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
+}
+#__next {
+  height: 100%;
+}
+.swiper {
+  width: 100%;
+  height: 100%;
+  --swiper-navigation-color: #00c896;
+  --swiper-pagination-color: #00c896;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #1b1b1b;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: hidden;
+}
+
+.posterSwiper {
+  width: 100px;
+  height: 100px;
+}
+.swiper-button-prev {
+  left: 20% !important;
+}
+.swiper-button-next {
+  right: 20% !important;
 }

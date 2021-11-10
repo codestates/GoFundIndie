@@ -1,0 +1,56 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    FindUserId(id: ID!): user
+    FindAllUser: [user]
+
+    FindBoardId(id: ID!): WrappingBoard
+    FindBoardIdAdmin(id: ID!): WrappingAdminBoard
+    FindBoards(Type: SearchTypes, Limit: Int): WrappingBoards
+    FindRandomBoard: WrappingRandomBoards
+
+    FindGenreId(id: ID!): genre
+    FindAllGenre: [genre]
+
+    CommentTest(id: ID!, limit: Int): [comment]
+
+    FindBoardReport(id: ID!): WrappingReport
+    FindBoardReports: WrappingReports
+}
+
+type Mutation {
+    CreateUser(user: userInput!): Int
+
+    CreateGenre(genre: genreInput!): onlyCode
+    DeleteGenreId(id: ID!): onlyCode
+
+    CreateTempBoard: BoardCreate
+    CompleteBoard(board: boardInput!): BoardCreate
+    DeleteBoard(id: ID!): onlyCode
+    ApproveBoard(id: ID!): onlyCode
+    DisapproveBoard(id: ID!): onlyCode
+    SwitchLikeBoard(boardId: ID!): onlyCode
+
+    CreateTempCasting(boardId: ID!): CastingCreate
+    CompleteCasting(casting: completeCasting!): CastingCreate
+    PutCasting(casting: putCasting!): CastingCreate
+    DeleteCasting(id: ID!): onlyCode
+
+    LinkBoardGenre(boardId: ID!, genreId: ID!): WrappingLink
+    DisLinkBoardGenre(boardId: ID!, genreId: ID!): WrappingLink
+
+    ReportBoard(report: CreateBoardReport): onlyCode
+    DeleteReport(reportId: ID!): onlyCode
+}
+
+type onlyCode {
+    code: Int
+}
+
+type codeAndId {
+    code: Int
+    id: ID
+}
