@@ -24,7 +24,9 @@ export default function Stillcuts({ stills, onFocus }: any) {
                     : undefined
                 }
               >
-                {counter === 4 ? <div>+{stills.length - 4}</div> : null}
+                {counter === 4 && stills.length - 4 !== 0 ? (
+                  <div>+{stills.length - 4}</div>
+                ) : null}
                 <img height="200px" src={el.image} />
               </div>
             );
