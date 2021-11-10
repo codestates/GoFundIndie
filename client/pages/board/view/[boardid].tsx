@@ -76,10 +76,13 @@ export default function BoarDetails({ film }: any) {
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
             </div>
-            <button className={styles.donation} onClick={Payment}>
-              후원하기
-            </button>
-            <Rating />
+            <div className={styles.ratings}>
+              <Rating />
+              <button className={styles.donation} onClick={Payment}>
+                <img src="/heart.png" />
+                후원하기
+              </button>
+            </div>
           </div>
           <div className={styles.filmLink}>
             <div>지금 보고싶어요</div>

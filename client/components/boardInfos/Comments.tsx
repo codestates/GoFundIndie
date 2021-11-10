@@ -39,7 +39,6 @@ export default function Comments({ comments }: { comments: Array<string> }) {
               <div className={styles["comment-line"]} />
               <div className={styles["comment"]}>
                 <div className={styles["comment-body"]}>
-                  {/* <div>{comment.body}</div> */}
                   <div>{comment.body}</div>
                 </div>
               </div>

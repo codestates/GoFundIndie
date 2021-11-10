@@ -15,7 +15,9 @@ export default function Stillcuts({ stills, onFocus }: any) {
             return (
               <div
                 key={el.image}
-                className={styles.reviewstill}
+                className={
+                  counter === 4 ? styles.reviewstills : styles.reviewstill
+                }
                 onClick={
                   counter === 4
                     ? () => {

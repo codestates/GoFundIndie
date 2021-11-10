@@ -97,7 +97,7 @@ export default function Header() {
                     />
                   </Link>
                 </li>
-                <li>
+                <li className={styles.home}>
                   <Link href="/">홈</Link>
                 </li>
                 <li>
