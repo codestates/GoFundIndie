@@ -34,9 +34,12 @@ public class BoardMutation {
             int code = gqlUserValidService.envValidCheck(env);
 
             if(code == 0) {
+                User user = gqlUserValidService.findUser(env);
+                if(user == null) return WrappingCreateTempBoardDTO.builder().code(4400).build();
+
                 return WrappingCreateTempBoardDTO.builder().code(2000)
                         .data(CreateTempBoardDTO.builder()
-                                .id(boardRepository.RegisterTempBoard(gqlUserValidService.findUser(env)))
+                                .id(boardRepository.RegisterTempBoard(user))
                                 .build())
                         .build();
             } else
@@ -63,8 +66,10 @@ public class BoardMutation {
                     return WrappingCreateTempBoardDTO.builder().code(4404).build();
 
                 User user = gqlUserValidService.findUser(env);
+                // Can not find User : 4400
+                if(user == null) return WrappingCreateTempBoardDTO.builder().code(4400).build();
                 // Invalid User : 4301
-                if(!user.isAdminRole() && user.getId() != board.getUserId().getId())
+                else if(!user.isAdminRole() && user.getId() != board.getUserId().getId())
                     return WrappingCreateTempBoardDTO.builder().code(4301).build();
 
                 try {
@@ -111,9 +116,10 @@ public class BoardMutation {
                     return WrappingCreateTempBoardDTO.builder().code(4401).build();
 
                 User user = gqlUserValidService.findUser(env);
-
+                // Can not find user : 4400
+                if(user == null) return WrappingCreateTempBoardDTO.builder().code(4400).build();
                 // User != Admin : 4300
-                if (!user.isAdminRole()) {
+                else if (!user.isAdminRole()) {
                     return WrappingCreateTempBoardDTO.builder()
                             .code(4300)
                             .build();
@@ -140,20 +146,21 @@ public class BoardMutation {
             if (code == 0) {
                 Board board = boardRepository.findBoardId(id);
                 if(board == null)
-                    return GqlResponseCodeDTO.builder().code(4401).build();
+                    return GqlResponseCodeDTO.bad(4401);
 
                 User user = gqlUserValidService.findUser(env);
-                if(!user.isAdminRole())
-                    return GqlResponseCodeDTO.builder().code(4300).build();
+                if(user == null) return GqlResponseCodeDTO.bad(4400);
+                else if(!user.isAdminRole())
+                    return GqlResponseCodeDTO.bad(4300);
 
                 boardRepository.DeleteBoard(board);
-                return GqlResponseCodeDTO.builder().code(2000).build();
+                return GqlResponseCodeDTO.ok();
             } else {
                 // Token Invalid
-                return GqlResponseCodeDTO.builder().code(code).build();
+                return GqlResponseCodeDTO.bad(code);
             }
         } catch (NullPointerException e) {
-            return GqlResponseCodeDTO.builder().code(4000).build();
+            return GqlResponseCodeDTO.bad(4000);
         }
     }
 
@@ -164,20 +171,21 @@ public class BoardMutation {
             if (code == 0) {
                 Board board = boardRepository.findBoardId(id);
                 if(board == null)
-                    return GqlResponseCodeDTO.builder().code(4401).build();
+                    return GqlResponseCodeDTO.bad(4401);
 
                 User user = gqlUserValidService.findUser(env);
-                if(!user.isAdminRole())
-                    return GqlResponseCodeDTO.builder().code(4300).build();
+                if(user == null) return GqlResponseCodeDTO.bad(4400);
+                else if(!user.isAdminRole())
+                    return GqlResponseCodeDTO.bad(4300);
 
                 boardRepository.ApproveBoard(board, isApprove);
-                return GqlResponseCodeDTO.builder().code(2000).build();
+                return GqlResponseCodeDTO.ok();
             } else {
                 // Token Invalid
-                return GqlResponseCodeDTO.builder().code(code).build();
+                return GqlResponseCodeDTO.bad(code);
             }
         } catch (NullPointerException e) {
-            return GqlResponseCodeDTO.builder().code(4000).build();
+            return GqlResponseCodeDTO.bad(4000);
         }
     }
 }

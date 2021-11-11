@@ -47,10 +47,6 @@ public enum SearchTypes {
     }
 
     public static String getPhrase(SearchTypes type) {
-//        for(SearchTypes el : SearchTypes.values()) {
-//            if(el.equals(type)) return el.types;
-//        }
-//        throw new RuntimeException();
         return type.types;
     }
 

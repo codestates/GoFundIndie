@@ -27,7 +27,7 @@ public class SearchQuery {
         char targetEndChar = str.charAt(str.length() - 1);
         // System.out.println((int) targetChar);;
 
-        // 입력값의 끝 문자가 ㄱ...ㅎ 인 경우
+        // 마지막 ㄱ~ㅎ 인 경우
         if(targetEndChar <= 12622) {
             for(int i = 0; i < consonant.length; i++) {
                 if(targetEndChar == consonant[i]) {
@@ -35,7 +35,7 @@ public class SearchQuery {
                 }
             }
         } else {
-            // 입력값의 끝 문자가 가...힣 인 경우
+            // 마지막 가~힣 인 경우
             for (int i = 0; i < lastWords.length; i++) {
                 if (targetEndChar >= lastWords[i] && targetEndChar < lastWords[i + 1]) {
                     targetEndChar = lastWords[i + 1];
