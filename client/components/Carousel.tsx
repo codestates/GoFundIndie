@@ -33,16 +33,12 @@ export default function Carousel() {
           </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://user-images.githubusercontent.com/45745049/140465431-f7240c7a-f89c-477e-835a-14b4886cbf4a.png" />
+          <Link href="/board/view/44">
+            <img
+              className={styles.image}
+              src="https://user-images.githubusercontent.com/45745049/141259717-57ac83de-b74d-4751-add3-82cc3b10bf23.png"
+            />
+          </Link>
         </SwiperSlide>
       </Swiper>
     </div>
