@@ -51,7 +51,6 @@ export default function BoarDetails({ film }: any) {
       })
       .catch((err) => alert(err));
   }
-  // 보드테이블에 평점계산해서 내보는게 없네
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
@@ -77,6 +76,9 @@ export default function BoarDetails({ film }: any) {
               <span className={styles.dot}>・</span>
               <span>{filmData.infoCountry}</span>
             </div>
+            <div className={styles.like}>{`평균 ★${
+              filmData.averageRating / 2
+            } (${filmData.likeAmount}명)`}</div>
             <div className={styles.bucket} onClick={SwitchLikeBoard}>
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
@@ -128,6 +130,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         infoSubtitle
         createdAt
         commentAmount
+        averageRating
         likeAmount
         genre {
             id
@@ -168,7 +171,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return err;
   });
 
-  if (!res) return { props: {} };
+  if (res.code === "ECONNREFUSED") return { props: { film: null } };
   const film = await (await res).json();
 
   if (film === null) return { props: {} };

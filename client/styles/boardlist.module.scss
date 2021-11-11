@@ -6,3 +6,13 @@
 .boardlist__wrapper {
   min-height: 80vh;
 }
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 3rem;
+  color: white;
+  opacity: 0.7;
+}

@@ -6,6 +6,9 @@ import { GetServerSideProps } from "next";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function Page({ film }: any) {
+  if (film === null) {
+    return <div className={styles.error}> 서버에 오류가 발생했습니다.</div>;
+  }
   const recommend: any = film.FindRandomBoard.data;
   return (
     <div>
@@ -55,7 +58,8 @@ FindRandomBoard (Limit: 20) {
   }).catch((err) => {
     return err;
   });
-  if (!res) return { props: {} };
+  console.log(res);
+  if (res.code === "ECONNREFUSED") return { props: { film: null } };
   const film = await (await res).json();
   if (!film) return { props: {} };
   return {
