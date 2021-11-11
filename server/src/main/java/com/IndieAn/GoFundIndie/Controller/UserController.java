@@ -7,12 +7,14 @@ import com.IndieAn.GoFundIndie.Domain.Entity.RefreshToken;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,6 +107,13 @@ public class UserController {
                 // 유저가 DB에 존재한다면 refreshToken을 발급하여 쿠키에 저장하여 보내준다.
                 Cookie rt_cookie = new Cookie("refreshToken", userService.CreateToken(user, REFRESH_TIME));
                 response.addCookie(rt_cookie);
+
+                // SameSite None으로 설정
+                Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+                for(String header : headers) {
+                    response.setHeader(HttpHeaders.SET_COOKIE, header + "; " + "SameSite=None; Secure");
+                }
+
                 // key로 유저 email을 갖고 value로 refresh 값을 갖는 정보를 DB에 저장한다.
                 RefreshToken refreshToken = userService.AddRefreshToken(user.getEmail(), rt_cookie.getValue());
                 // refreshToken 값이 null이면 이미 해당 email에 refreshToken이 발급되어있다. 즉, 어디에서 로그인 되어있다는 것이다.
