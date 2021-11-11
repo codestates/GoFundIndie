@@ -103,3 +103,9 @@ $buttoncolor: #bbbbbb;
 .transparent {
   background-color: transparent;
 }
+
+@media screen and (max-width: 1000px) {
+  .home {
+    display: none;
+  }
+}

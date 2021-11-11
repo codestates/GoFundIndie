@@ -1,6 +1,7 @@
 import styles from "../../styles/components/boardInfos/comments.module.scss";
 
 export default function Comments({ comments }: { comments: Array<string> }) {
+  console.log(comments);
   if (comments === null || comments.length === 0) {
     return (
       <div className={styles.head}>
@@ -31,7 +32,7 @@ export default function Comments({ comments }: { comments: Array<string> }) {
                   <div className={styles["fl-ed"]}>
                     <div className={styles["rating-container"]}>
                       <img src="/star.png" />
-                      <div className={styles.rating}>{comment.rating}</div>
+                      <div className={styles.rating}>{comment.rating / 2}</div>
                     </div>
                   </div>
                 </div>
@@ -39,7 +40,6 @@ export default function Comments({ comments }: { comments: Array<string> }) {
               <div className={styles["comment-line"]} />
               <div className={styles["comment"]}>
                 <div className={styles["comment-body"]}>
-                  {/* <div>{comment.body}</div> */}
                   <div>{comment.body}</div>
                 </div>
               </div>

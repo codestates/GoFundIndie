@@ -1,8 +1,11 @@
+@use "../../modal.module.scss" as modal;
+
 .rating {
   all: unset;
   width: 50px;
   height: 50px;
   position: relative;
+
   img {
     width: 50px;
     height: 50px;
@@ -12,5 +15,43 @@
     height: 50px;
     position: absolute;
     top: 0%;
+  }
+}
+
+.stars {
+  margin-right: 2rem;
+}
+@function padding_handler($n) {
+  @return 100%-$n;
+}
+.screen-wrapper {
+  z-index: 500;
+  @include modal.screen_wrapper();
+  .commentmodal-wrapper {
+    @include modal.modal_wrapper();
+    .commentmodal {
+      @include modal.modal_block(600px, 400px);
+      .commentmodal__form {
+        width: 400px;
+        button {
+          @include modal.button();
+          & + div {
+            display: flex;
+            justify-content: center;
+            color: #009063;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 15px;
+          }
+        }
+        .input__textarea {
+          resize: none;
+          font-size: 1rem;
+          width: 400px;
+          height: 200px;
+          margin: 2rem 0;
+        }
+      }
+    }
   }
 }
