@@ -1,6 +1,7 @@
 import styles from "../styles/components/contentcarousel.module.scss";
 import Link from "next/link";
 export default function ContentCarousel({ film }: any) {
+  if (film.data === null) return <></>;
   if (film.data.length <= 4) return <></>;
   let counter = 0;
   let sliderstack: any[] = [];
