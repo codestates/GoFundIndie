@@ -262,14 +262,17 @@ public class BoardQuery {
         List<RandomBoardDTO> list;
         List<SearchTypes> types;
 
-        try {
-            int code = gqlUserValidService.envValidCheck(env);
+        // Bug
+//        try {
+//            int code = gqlUserValidService.envValidCheck(env);
+//
+//            if (code != 0) types = SearchTypes.getRandomType(limit, false);
+//            else types = SearchTypes.getRandomType(limit, true);
+//        } catch (NullPointerException | IllegalArgumentException e) {
+//            types = SearchTypes.getRandomType(limit, false);
+//        }
 
-            if (code != 0) types = SearchTypes.getRandomType(limit, false);
-            else types = SearchTypes.getRandomType(limit, true);
-        } catch (NullPointerException | IllegalArgumentException e) {
-            types = SearchTypes.getRandomType(limit, false);
-        }
+        types = SearchTypes.getRandomType(limit, false);
 
         list = types.stream().map(type -> RandomBoardDTO.builder()
                 .phrase(SearchTypes.getPhrase(type))
