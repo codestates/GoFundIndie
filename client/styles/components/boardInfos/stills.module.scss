@@ -1,6 +1,8 @@
+@use "../../modal.module.scss" as modal;
 .wrapper {
   display: flex;
-  .reviewstill {
+  .reviewstill,
+  .reviewstills {
     cursor: pointer;
     width: 282px;
     height: 200px;
@@ -18,12 +20,6 @@
     img {
       width: 330px;
       height: auto;
-    }
-    &:last-child {
-      margin-right: 0px;
-      img {
-        opacity: 0.5;
-      }
     }
   }
 }
@@ -57,6 +53,29 @@
     }
     &:nth-child(2n) {
       margin-right: 0px;
+    }
+  }
+}
+.reviewstills {
+  margin-right: 0px;
+  img {
+    opacity: 0.5;
+  }
+}
+@function padding_handler($n) {
+  @return 100%-$n;
+}
+.screen-wrapper {
+  z-index: 500;
+  @include modal.screen_wrapper();
+  .picturemodal-wrapper {
+    @include modal.modal_wrapper();
+    .picturemodal {
+      img {
+        max-width: 1000px;
+        max-height: 800px;
+        border: 5px solid white;
+      }
     }
   }
 }

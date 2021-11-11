@@ -78,7 +78,9 @@ $impact-font-color: #ffffff;
     margin: 1rem 0rem;
   }
 }
-
+.like {
+  margin-bottom: 1rem;
+}
 .bucket {
   display: flex;
   cursor: pointer;
@@ -107,10 +109,25 @@ $impact-font-color: #ffffff;
 
 .donation {
   all: unset;
+  margin: 1rem 0;
   background-color: #00c896;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   color: white;
-  height: 2rem;
+  border-radius: 50px;
+  height: 4rem;
   width: 282px;
+  font-size: 1.3rem;
+  img {
+    width: 25px;
+    height: 25px;
+    margin: 0 0.5rem;
+  }
+}
+
+.ratings {
+  display: flex;
+  align-items: center;
 }

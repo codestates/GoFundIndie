@@ -17,29 +17,6 @@ class Setaxios {
       },
       withCredentials: true,
     });
-
-    // if (Object.keys(data).length === 0) {
-    //   return axios.post(
-    //     `${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint,
-    //     null,
-    //     { withCredentials: true }
-    //   );
-    // }
-    // return axios.post(
-    //   `${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint,
-    //   data,
-    //   { withCredentials: true }
-    // );
-
-    // return axios.request({
-    //   method: "post",
-    //   url: `${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint,
-    //   maxRedirects: 0,
-    //   data: data,
-    //   validateStatus: function (status) {
-    //     return status >= 200 && status < 303;
-    //   },
-    // });
   };
 
   getAxios(endpoint: string) {
@@ -55,6 +32,22 @@ class Setaxios {
       withCredentials: true,
     });
   }
+
+  putAxios = (endpoint: string, data: object = {}) => {
+    return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
+      method: "PUT",
+      data: data,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "PUT",
+        "Access-Control-Allow-Credentials": "true",
+      },
+      withCredentials: true,
+    });
+  };
+
   // return axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
   //   withCredentials: true,
   // });

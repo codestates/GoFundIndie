@@ -36,25 +36,20 @@ export default function Header() {
   //쿠키 리프레쉬 토큰확인하여 엑세스토큰 받아오기
   useEffect(() => {
     if (Cookies.get("refreshToken")) {
-      Setaxios.getAxios("reissuance")
-        .then((res) => {
-          const resData: any = res.data;
-          Cookies.set("accesstoken", resData.data.accessToken);
-          axios.defaults.headers.common["accesstoken"] =
-            resData.data.accessToken;
-          setUserLoginStatus(true);
-          Setaxios.getAxios("user")
-            .then((res) => {
-              let userdata: any = res.data;
-              if (userdata.admin_role) {
-                setUserAdminStatus(true);
-              }
-            })
-            .catch((err) => null);
-        })
-        .catch((err) => {
-          alert(err);
-        });
+      Setaxios.getAxios("reissuance").then((res) => {
+        const resData: any = res.data;
+        Cookies.set("accesstoken", resData.data.accessToken);
+        axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
+        setUserLoginStatus(true);
+        Setaxios.getAxios("user")
+          .then((res) => {
+            let userdata: any = res.data;
+            if (userdata.data.admin_role) {
+              setUserAdminStatus(true);
+            }
+          })
+          .catch((err) => null);
+      });
     }
   }, []);
   const handleSignupModal = (): void => {
@@ -73,7 +68,9 @@ export default function Header() {
         alert("로그아웃에 성공하였습니다");
         setUserLoginStatus(false);
         Cookies.set("accesstoken", "");
+        Cookies.remove("accesstoken");
         router.push("/");
+        location.reload();
         delete axios.defaults.headers.common["accesstoken"];
       })
       .catch((err) => {
@@ -97,7 +94,7 @@ export default function Header() {
                     />
                   </Link>
                 </li>
-                <li>
+                <li className={styles.home}>
                   <Link href="/">홈</Link>
                 </li>
                 <li>
