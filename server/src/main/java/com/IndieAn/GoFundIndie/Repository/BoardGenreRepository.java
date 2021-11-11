@@ -14,7 +14,7 @@ import javax.persistence.EntityManager;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class BoardGenreRepository {
+public class BoardGenreRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
 
     private String queryGenerator (long boardId, long genreId) {
@@ -31,9 +31,7 @@ public class BoardGenreRepository {
             bg.setBoardId(board);
             bg.setGenreId(genre);
 
-            entityManager.persist(bg);
-            entityManager.flush();
-            entityManager.close();
+            singlePersist(bg, entityManager);
         }
     }
 
@@ -44,8 +42,8 @@ public class BoardGenreRepository {
                     .forEach(el -> {
                         if(el != null) entityManager.remove(el);
                     });
-            entityManager.flush();
-            entityManager.close();
+
+            end(entityManager);
         } catch (IllegalArgumentException e) {
             log.info("DisLink query is illegality");
         }

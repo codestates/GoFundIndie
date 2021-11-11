@@ -1,7 +1,6 @@
 import styles from "../styles/components/signup.module.scss";
 import { ChangeEvent, useState } from "react";
 import Setaxios from "../fetching/Setaxios";
-import Router from "next/router";
 
 export default function Signup({
   handleSignupModal,

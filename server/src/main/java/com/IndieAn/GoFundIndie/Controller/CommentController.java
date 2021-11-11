@@ -1,6 +1,8 @@
 package com.IndieAn.GoFundIndie.Controller;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportDeleteDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportInputDTO;
 import com.IndieAn.GoFundIndie.Domain.DTO.RatingInputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
@@ -35,36 +37,8 @@ public class CommentController {
     @PostMapping(value = "/comment")
     public ResponseEntity<?> WriteComment(@RequestHeader Map<String, String> requestHeader, @RequestBody CommentInputDTO commentInputDTO) {
         try {
-            body.clear();
-
-            // 헤더에 accesstoken이 없으면 4000 응답을 한다.
-            if(requestHeader.get("accesstoken") == null) {
-                body.put("code", 4000);
-                return ResponseEntity.badRequest().body(body);
-            }
-
-            // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
-            Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
-
-            // 토큰이 유효하다면 작성 기능을 수행한다.
-            if(checkToken.get("email") != null) {
-                User user = userService.FindUserUseEmail((String)checkToken.get("email"));
-                // 입력으로 들어온 userId가 DB에 존재하지 않으면 4400 응답을 한다.
-                if(userService.FindUserById(commentInputDTO.getUserId()) == null) {
-                    body.put("code", 4400);
-                    return ResponseEntity.status(404).body(body);
-                }
-                // Board id로 board를 찾고, 없을 때의 응답을 추가한다.
-                if(boardService.FindBoardId(commentInputDTO.getBoardId()) == null) {
-                    body.put("code", 4401);
-                    return ResponseEntity.status(404).body(body);
-                }
-                body = commentService.AddCommentData(commentInputDTO, user);
-                return ResponseEntity.status(body.get("code").equals(2000) ? 200 : 400).body(body);
-            }
-            else {
-                return ResponseEntity.status(401).body(checkToken);
-            }
+            // 코멘트 서비스의 댓글을 만드는 기능을 실행한다.
+            return commentService.WriteCommentData(requestHeader, commentInputDTO);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }
@@ -152,6 +126,24 @@ public class CommentController {
             else {
                 return ResponseEntity.status(401).body(checkToken);
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @PostMapping(value = "comment/report")
+    public ResponseEntity<?> CreateReport(@RequestBody CommentReportInputDTO commentReportInputDTO, @RequestHeader Map<String, String> requestHeader) {
+        try {
+            return commentService.AddReport(commentReportInputDTO, requestHeader);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+    @DeleteMapping(value = "comment/report")
+    public ResponseEntity<?> DeleteReport(@RequestBody CommentReportDeleteDTO commentReportDeleteDTO, @RequestHeader Map<String, String> requestHeader) {
+        try {
+            return commentService.RemoveReport(commentReportDeleteDTO, requestHeader);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }

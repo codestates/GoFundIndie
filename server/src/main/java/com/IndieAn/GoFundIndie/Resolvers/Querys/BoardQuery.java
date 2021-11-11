@@ -1,10 +1,12 @@
 package com.IndieAn.GoFundIndie.Resolvers.Querys;
 
 import com.IndieAn.GoFundIndie.Common.SearchTypes;
+import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
-import com.IndieAn.GoFundIndie.Repository.BoardRepository;
-import com.IndieAn.GoFundIndie.Repository.UserRepository;
+import com.IndieAn.GoFundIndie.Repository.*;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
+import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
@@ -14,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,16 +27,73 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BoardQuery {
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final CastingRepository castingRepository;
+    private final GenreRepository genreRepository;
+    private final ImageRepository imageRepository;
+    private final BoardLikeRepository boardLikeRepository;
 
-    private final UserService userService;
+    private final GqlUserValidService gqlUserValidService;
 
-    //TODO : Sort comment by like & limit 5
-    public WrappingViewBoardDTO FindBoardId(Long id) {
+    public WrappingViewBoardDTO FindBoardId(Long id, DataFetchingEnvironment env) {
         try {
+            Board board = boardRepository.findBoardId(id);
+            if(board == null) return WrappingViewBoardDTO.builder().code(4401).build();
+
+            boolean envCheck = gqlUserValidService.envValidCheck(env) == 0;
+
+            List<CommentGraphQLDTO> commentList = commentRepository.findCommentByBoard(id, null);
+
+            ViewBoardDTO dto = ViewBoardDTO.from(board);
+            dto.setCasting(castingRepository.findCastingByBoard(id));
+            dto.setGenre(genreRepository.findGenreByBoard(id));
+            dto.setStill(imageRepository.findStillByBoard(id));
+
+            if(commentList.size() > 0) {
+                List<CommentGraphQLDTO> commentTopFive = new ArrayList<>();
+
+                int listRange = 5;
+                if(commentList.size() < listRange) listRange = commentList.size();
+
+                for(int i = 0 ; i < listRange ; i++) {
+                    commentTopFive.add(commentList.get(i));
+                }
+
+                int a = 0;
+
+                // TODO Board 에 Comment rating 값도 저장 탐색 안해도 되게
+                for(CommentGraphQLDTO el : commentList) {
+                    a = a + el.getRating();
+                }
+
+                dto.setAverageRating(Math.round((a / commentList.size()) * 10) / 10);
+
+                if(envCheck) {
+                    long userId = gqlUserValidService.findUser(env).getId();
+
+                    commentTopFive = commentTopFive.stream().map(el -> {
+                        el.setRatingChecked(
+                                commentRepository.commentRatedCheck(userId, el.getId()));
+                        return el;
+                    }).collect(Collectors.toList());
+                }
+
+                dto.setComment(commentTopFive);
+            } else {
+                dto.setComment(commentList);
+                dto.setAverageRating(0);
+            }
+
+            if(envCheck) {
+                dto.setLiked(boardLikeRepository
+                        .isLikedBoard(gqlUserValidService.findUser(env),board));
+            } else {
+                dto.setLiked(false);
+            }
+
             return WrappingViewBoardDTO.builder()
                     .code(2000)
-                    .data(ViewBoardDTO.from(boardRepository.findBoardId(id)))
+                    .data(dto)
                     .build();
         } catch (NullPointerException e) {
             return WrappingViewBoardDTO.builder()
@@ -42,34 +104,24 @@ public class BoardQuery {
 
     public WrappingAdminViewBoardDTO FindBoardIdAdmin(Long id, DataFetchingEnvironment env) {
         try {
-            GraphQLServletContext context = env.getContext();
-            HttpServletRequest request = context.getHttpServletRequest();
-            String accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            //   - No accessToken in the Header :
-            if(accessToken == null)
-                return WrappingAdminViewBoardDTO.builder().code(4000).build();
-
-            Map<String, Object> checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") == null) {
-                return WrappingAdminViewBoardDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
-            } else if(!userService.FindUserUseEmail(checkToken.get("email").toString()).isAdminRole()) {
+            if(code != 0) {
+                return WrappingAdminViewBoardDTO.builder().code(code).build();
+            } else if(!gqlUserValidService.findUser(env).isAdminRole()) {
                 return WrappingAdminViewBoardDTO.builder().code(4300).build();
             } else {
+                AdminViewBoardDTO dto = AdminViewBoardDTO.from(boardRepository.findBoardId(id));
+                dto.setCasting(castingRepository.findCastingByBoard(id));
+                dto.setComment(commentRepository.findCommentByBoard(id,5));
+                dto.setGenre(genreRepository.findGenreByBoard(id));
+                dto.setStill(imageRepository.findStillByBoard(id));
+
                 return WrappingAdminViewBoardDTO.builder()
                         .code(2000)
-                        .data(AdminViewBoardDTO.from(boardRepository.findBoardId(id)))
+                        .data(dto)
                         .build();
             }
-
-            // Test Code
-//            return WrappingAdminViewBoardDTO.builder()
-//                    .code(2000)
-//                    .data(AdminViewBoardDTO.from(boardRepository.findBoardId(id)))
-//                    .build();
-
         } catch (NullPointerException e) {
             return WrappingAdminViewBoardDTO.builder().code(4000).build();
         }
@@ -87,36 +139,34 @@ public class BoardQuery {
                 //   - My = 내가 찜한 영화
                 case SEARCH_TYPES_MY:
                     try {
-                        GraphQLServletContext context = env.getContext();
-                        HttpServletRequest request = context.getHttpServletRequest();
-                        String accessToken = request.getHeader("accesstoken");
+                        int code = gqlUserValidService.envValidCheck(env);
 
-                        //   - No accessToken in the Header :
-                        if(accessToken == null)
-                            return WrappingBoardGraphQLsDTO.builder().code(4000).build();
-
-                        Map<String, Object> checkToken = userService.CheckToken(accessToken);
-
-                        //   - Token invalid case :
-                        if(checkToken.get("email") == null) {
-                            return WrappingBoardGraphQLsDTO.builder()
-                                    .code(Integer.parseInt(checkToken.get("code").toString())).build();
+                        if(code != 0) {
+                            return WrappingBoardGraphQLsDTO.builder().code(code).build();
                         } else {
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
-                                    .data(boardRepository.findBoardsByLike(
-                                            userService.FindUserUseEmail(
-                                                    checkToken.get("email").toString()), limit))
+                                    .data(boardRepository.findBoardsLike(
+                                            gqlUserValidService.findUser(env), limit))
                                     .build();
                         }
+                    } catch (NullPointerException e) {
+                        return WrappingBoardGraphQLsDTO.builder().code(4000).build();
+                    }
+                //   - My_donation = 내가 후원한 영화
+                case SEARCH_TYPES_MY_DONATION:
+                    try {
+                        int code = gqlUserValidService.envValidCheck(env);
 
-                        // Test Code : No Access Token
-//                        return WrappingBoardGraphQLsDTO.builder()
-//                                .code(2000)
-//                                .data(boardRepository.findBoardsByLike(
-//                                                userRepository.FindUserByIdDB(7L), limit))
-//                                .build();
-
+                        if(code != 0) {
+                            return WrappingBoardGraphQLsDTO.builder().code(code).build();
+                        } else {
+                            return WrappingBoardGraphQLsDTO.builder()
+                                    .code(2000)
+                                    .data(boardRepository.findBoardsDonation(
+                                            gqlUserValidService.findUser(env), limit))
+                                    .build();
+                        }
                     } catch (NullPointerException e) {
                         return WrappingBoardGraphQLsDTO.builder().code(4000).build();
                     }
@@ -144,6 +194,18 @@ public class BoardQuery {
                             .code(2000)
                             .data(boardRepository.findBoardsNew(limit))
                             .build();
+                //   - Random = 승인된 보드들 중 랜덤 추천
+                case SEARCH_TYPES_RANDOM:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findBoardsRandom(limit))
+                            .build();
+                //   - SEOUL 2020
+                case SEARCH_TYPES_SEOUL2020:
+                    return WrappingBoardGraphQLsDTO.builder()
+                            .code(2000)
+                            .data(boardRepository.findBoardsSeoul2020(limit))
+                            .build();
                 //   - Genre = 장르별 영화
                 default:
                     return WrappingBoardGraphQLsDTO.builder()
@@ -157,5 +219,64 @@ public class BoardQuery {
                     .code(4009)
                     .build();
         }
+    }
+
+    public WrappingDonationBoardGraphQLDTO FindDonationBoards(int limit, DataFetchingEnvironment env) {
+        try {
+            int code = gqlUserValidService.envValidCheck(env);
+
+            if(code != 0) {
+                return WrappingDonationBoardGraphQLDTO.builder().code(code).build();
+            } else {
+                return WrappingDonationBoardGraphQLDTO.builder()
+                        .code(2000)
+                        .data(boardRepository.findBoardsMyDonation(
+                                gqlUserValidService.findUser(env), limit))
+                        .build();
+            }
+        } catch (NullPointerException e) {
+            return WrappingDonationBoardGraphQLDTO.builder().code(4000).build();
+        }
+    }
+
+    public WrappingLikeBoardGraphQLDTO FindLikeBoards(int limit, DataFetchingEnvironment env) {
+        try {
+            int code = gqlUserValidService.envValidCheck(env);
+
+            if(code != 0) {
+                return WrappingLikeBoardGraphQLDTO.builder().code(code).build();
+            } else {
+                return WrappingLikeBoardGraphQLDTO.builder()
+                        .code(2000)
+                        .data(boardRepository.findBoardsMyLike(
+                                gqlUserValidService.findUser(env), limit))
+                        .build();
+            }
+        } catch (NullPointerException e) {
+            return WrappingLikeBoardGraphQLDTO.builder().code(4000).build();
+        }
+    }
+
+    public WrappingRandomBoardsDTO FindRandomBoard(int limit, DataFetchingEnvironment env) {
+        List<RandomBoardDTO> list;
+        List<SearchTypes> types;
+
+        try {
+            int code = gqlUserValidService.envValidCheck(env);
+
+            if (code != 0) types = SearchTypes.getRandomType(limit, false);
+            else types = SearchTypes.getRandomType(limit, true);
+        } catch (NullPointerException e) {
+            types = SearchTypes.getRandomType(limit, false);
+        }
+
+        list = types.stream().map(type -> RandomBoardDTO.builder()
+                .phrase(SearchTypes.getPhrase(type))
+
+                // TODO DTO 포장지 없애기
+                .data(FindBoards(type, 12, env).getData())
+                .build()).collect(Collectors.toList());
+
+        return WrappingRandomBoardsDTO.builder().code(2000).data(list).build();
     }
 }

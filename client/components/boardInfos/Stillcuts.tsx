@@ -1,7 +1,31 @@
+import { useState } from "react";
 import styles from "../../styles/components/boardInfos/stills.module.scss";
 
 export default function Stillcuts({ stills, onFocus }: any) {
   let counter = 0;
+  const [pirctureModalOpen, setPictureModalOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<any>();
+  console.log(selectedImage);
+  const pictureModal = () => {
+    console.log("called");
+    return (
+      <div key="picmodal">
+        <div
+          className={styles["screen-wrapper"]}
+          onClick={(e) => {
+            const screen = document.getElementById("screen");
+            e.target === screen ? setPictureModalOpen(false) : null;
+          }}
+        >
+          <div id="screen" className={styles["picturemodal-wrapper"]}>
+            <div className={styles.picturemodal}>
+              {selectedImage?.src ? <img src={selectedImage.src} /> : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
   return (
     <div className={styles["still-wrapper"]}>
       <div className={styles.head}>갤러리</div>
@@ -15,16 +39,25 @@ export default function Stillcuts({ stills, onFocus }: any) {
             return (
               <div
                 key={el.image}
-                className={styles.reviewstill}
+                className={
+                  counter === 4 && stills.length - 4 !== 0
+                    ? styles.reviewstills
+                    : styles.reviewstill
+                }
                 onClick={
-                  counter === 4
+                  counter === 4 && stills.length - 4 !== 0
                     ? () => {
                         //TODO 클릭하면 상위컴포넌트 바뀌게하기
                       }
-                    : undefined
+                    : (e) => {
+                        setSelectedImage(e.target);
+                        setPictureModalOpen(true);
+                      }
                 }
               >
-                {counter === 4 ? <div>+{stills.length - 4}</div> : null}
+                {counter === 4 && stills.length - 4 !== 0 ? (
+                  <div>+{stills.length - 4}</div>
+                ) : null}
                 <img height="200px" src={el.image} />
               </div>
             );
@@ -34,13 +67,21 @@ export default function Stillcuts({ stills, onFocus }: any) {
         <div className={styles.fullwrapper}>
           {stills.map((el: { image: string | undefined }) => {
             return (
-              <div key={el.image} className={styles.displaystill}>
+              <div
+                key={el.image}
+                className={styles.displaystill}
+                onClick={(e) => {
+                  setSelectedImage(e.target);
+                  setPictureModalOpen(true);
+                }}
+              >
                 <img src={el.image} />
               </div>
             );
           })}
         </div>
       )}
+      {pirctureModalOpen ? pictureModal() : null}
     </div>
   );
 }

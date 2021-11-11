@@ -1,18 +1,56 @@
 import styles from "../../../styles/view_boardid.module.scss";
-import { GetServerSideProps } from "next";
 import InfoWrapper from "../../../components/boardInfos/InfoWrapper";
+import { GetServerSideProps } from "next";
+import Rating from "../../../components/boardInfos/Rating";
+import Setaxios from "../../../fetching/Setaxios";
+import Cookies from "js-cookie";
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
-  console.log(film);
   let filmData;
-  if (film !== null) {
+  if (film) {
     filmData = film.FindBoardId.data;
-  }
-  if (film === null) {
+  } else {
     return <></>;
   }
-
+  function Payment() {
+    Setaxios.getAxios("pay/ready?amount=3000")
+      .then((res) => {
+        const urlcomp: any = res.data;
+        Cookies.set("tid", urlcomp.data.tid);
+        const payment: Window | null = window.open(
+          urlcomp.data.next_redirect_pc_url,
+          "_blank",
+          "width=600,height=500"
+        );
+        if (payment === null) return;
+        payment.addEventListener("unload", () => {
+          location.reload();
+        });
+      })
+      .catch((err) => {
+        if (err.response.data.code === 4000) {
+          alert("로그인이 필요합니다");
+        }
+      });
+  }
+  async function SwitchLikeBoard() {
+    const query = `mutation SwitchLikeBoard($boardId: ID!){
+      SwitchLikeBoard(boardId: $boardId){
+        code
+      }
+    }`;
+    Setaxios.postgraphql("graphql", query, 33)
+      .then((res) => {
+        const data: any = res.data;
+        console.log(res);
+        if (data.data.SwitchLikeBoard.code === 2000) {
+          alert("성공적으로 담아두었습니다");
+        }
+      })
+      .catch((err) => alert(err));
+  }
   return (
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
@@ -34,13 +72,23 @@ export default function BoarDetails({ film }: any) {
             <div className={styles.filminfo__info}>
               <span>{filmData.infoCreatedYear}</span>
               <span className={styles.dot}>・</span>
-              <span>{filmData.genre}</span>
+              <span>{filmData.genre.map((el: any) => el.name)}</span>
               <span className={styles.dot}>・</span>
               <span>{filmData.infoCountry}</span>
             </div>
-            <div className={styles.bucket}>
+            <div className={styles.like}>{`평균 ★${
+              filmData.averageRating / 2
+            } (${filmData.likeAmount}명)`}</div>
+            <div className={styles.bucket} onClick={SwitchLikeBoard}>
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
+            </div>
+            <div className={styles.ratings}>
+              <Rating boardid={filmData.id} />
+              <button className={styles.donation} onClick={Payment}>
+                <img src="/heart.png" />
+                후원하기
+              </button>
             </div>
           </div>
           <div className={styles.filmLink}>
@@ -49,7 +97,6 @@ export default function BoarDetails({ film }: any) {
               <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
             </div>
           </div>
-          <div></div>
           <InfoWrapper
             cast={filmData.casting}
             stills={filmData.still}
@@ -83,6 +130,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         infoSubtitle
         createdAt
         commentAmount
+        averageRating
         likeAmount
         genre {
             id
@@ -102,6 +150,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             id
             rating
             userNickname
+            profilePicture
+            donation
+            body
+            spoiler
+            like
+            ratingChecked
         }
       }
     }
@@ -117,6 +171,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return err;
   });
 
+  if (res.code === "ECONNREFUSED") return { props: { film: null } };
   const film = await (await res).json();
 
   if (film === null) return { props: {} };
