@@ -30,7 +30,7 @@
   .commentmodal-wrapper {
     @include modal.modal_wrapper();
     .commentmodal {
-      @include modal.modal_block(600px, 400px);
+      @include modal.modal_block(500px, 400px);
       .commentmodal__form {
         width: 400px;
         button {
