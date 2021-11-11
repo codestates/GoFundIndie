@@ -1,9 +1,6 @@
 package com.IndieAn.GoFundIndie.Service;
 
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentOutputDTO;
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportDeleteDTO;
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.*;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
@@ -131,6 +128,50 @@ public class CommentService {
         body.put("data", commentList);
         return body;
     }
+
+    // Comment를 수정하는 기능을 하는 서비스 기능
+    public ResponseEntity<?> ModifyCommentData(CommentModifyDTO commentModifyDTO, Map<String, String> requestHeader) {
+        body = new HashMap<>();
+        // 해당 보드가 존재하지 않으면 4401 응답을 낸다.
+        Board board = boardService.FindBoardId(commentModifyDTO.getBoardId());
+        if(board == null) {
+            body.put("code", 4401);
+            return ResponseEntity.status(404).body(body);
+        }
+        // 헤더에 accesstoken이 없으면 4000 응답을 한다.
+        if(requestHeader.get("accesstoken") == null) {
+            body.put("code", 4000);
+            return ResponseEntity.badRequest().body(body);
+        }
+
+        // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
+        Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
+
+        // 토큰이 유효하다면 작성 기능을 수행한다.
+        if(checkToken.get("email") != null) {
+            User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            long commentId = -1;
+            for(Comment c : board.getComments()) {
+                if(c.getUserId().getId() == user.getId()) {
+                    commentId = c.getId();
+                    break;
+                }
+            }
+            // commentId가 바뀌지 않았다면 해당 보드에 작성한 코멘트가 없는 것이다. 그러므로 4106 응답.
+            if(commentId == -1) {
+                body.put("code", 4016);
+                return ResponseEntity.badRequest().body(body);
+            }
+            // comment 수정을 한다.
+            commentRepository.ModifyComment(commentModifyDTO, commentId);
+            body.put("code", 2000);
+            return ResponseEntity.status(201).body(body);
+        }
+        else {
+            return ResponseEntity.status(401).body(checkToken);
+        }
+    }
+
 
     // Comment를 삭제하는 기능을 하는 서비스 기능
     public HashMap<String, Object> DeleteComments(long commentId, User user) {
