@@ -1,9 +1,6 @@
 package com.IndieAn.GoFundIndie.Controller;
 
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportDeleteDTO;
-import com.IndieAn.GoFundIndie.Domain.DTO.CommentReportInputDTO;
-import com.IndieAn.GoFundIndie.Domain.DTO.RatingInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.*;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Service.BoardService;
@@ -77,6 +74,17 @@ public class CommentController {
         }
     }
 
+    @PutMapping(value = "/comment")
+    public ResponseEntity<?> ModifyComment(@RequestBody CommentModifyDTO commentModifyDTO, @RequestHeader Map<String, String> requestHeader){
+        // 작성된 댓글을 수정하는 기능
+        try {
+            return commentService.ModifyCommentData(commentModifyDTO, requestHeader);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("err");
+        }
+    }
+
+
     @DeleteMapping(value = "/comment")
     public ResponseEntity<?> DeleteComment(@RequestParam("comment_id") long commentId, @RequestHeader Map<String, String> requestHeader)  {
         // 작성된 댓글을 삭제하는 기능
@@ -107,6 +115,7 @@ public class CommentController {
 
     @PostMapping(value = "/rating")
     public ResponseEntity<?> RatingComment(@RequestBody RatingInputDTO commentId, @RequestHeader Map<String, String> requestHeader) {
+        // 댓글 좋아요 기능
         try {
             body.clear();
             // 헤더에 accesstoken이 없으면 4000 응답을 한다.
@@ -133,6 +142,7 @@ public class CommentController {
 
     @PostMapping(value = "comment/report")
     public ResponseEntity<?> CreateReport(@RequestBody CommentReportInputDTO commentReportInputDTO, @RequestHeader Map<String, String> requestHeader) {
+        // 댓글을 신고하는 기능
         try {
             return commentService.AddReport(commentReportInputDTO, requestHeader);
         } catch (Exception e) {
@@ -142,6 +152,7 @@ public class CommentController {
 
     @DeleteMapping(value = "comment/report")
     public ResponseEntity<?> DeleteReport(@RequestBody CommentReportDeleteDTO commentReportDeleteDTO, @RequestHeader Map<String, String> requestHeader) {
+        // 댓글 신고 목록을 삭제하는 기능
         try {
             return commentService.RemoveReport(commentReportDeleteDTO, requestHeader);
         } catch (Exception e) {
