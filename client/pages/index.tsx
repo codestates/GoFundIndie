@@ -50,7 +50,8 @@ FindRandomBoard (Limit: 20) {
   }
 }
 }`;
-
+  console.log(cookies);
+  console.log(cookies?.slice(cookies?.search("accesstoken") + 12));
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),
