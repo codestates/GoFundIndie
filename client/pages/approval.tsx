@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Setaxios from "../fetching/Setaxios";
 import styles from "../styles/approval.module.scss";
+import Cookies from "js-cookie";
 
 export default function Approval() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function Approval() {
 
     Setaxios.postAxios("pay/approve", {
       pg_token: router.query.pg_token,
+      boardId: Cookies.get("boardId"),
     })
       .then((res) => {
         alert("정상적으로 결제됐습니다");

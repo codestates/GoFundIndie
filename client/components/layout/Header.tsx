@@ -68,6 +68,7 @@ export default function Header() {
         alert("로그아웃에 성공하였습니다");
         setUserLoginStatus(false);
         Cookies.set("accesstoken", "");
+        Cookies.remove("accesstoken");
         router.push("/");
         location.reload();
         delete axios.defaults.headers.common["accesstoken"];

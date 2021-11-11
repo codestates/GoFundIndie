@@ -6,7 +6,7 @@ import { GetServerSideProps } from "next";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function Page({ film }: any) {
-  if (film === null) {
+  if (film === null || film.FindRandomBoard === null) {
     return <div className={styles.error}> 서버에 오류가 발생했습니다.</div>;
   }
   const recommend: any = film.FindRandomBoard.data;
@@ -17,7 +17,7 @@ export default function Page({ film }: any) {
         <Carousel />
         {recommend.map((theme: any) => {
           return (
-            <div className={styles.home__div__wrapper}>
+            <div key={theme.phrase} className={styles.home__div__wrapper}>
               <ContentCarousel film={theme} />
             </div>
           );
@@ -29,6 +29,8 @@ export default function Page({ film }: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies: any = context.req.headers.cookie;
+
   const query = `{
 FindRandomBoard (Limit: 20) {
   code
@@ -48,20 +50,22 @@ FindRandomBoard (Limit: 20) {
   }
 }
 }`;
-
+  console.log(cookies);
+  console.log(cookies?.slice(cookies?.search("accesstoken") + 12));
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),
     headers: {
       "Content-Type": "application/json",
+      accesstoken: cookies?.slice(cookies?.search("accesstoken") + 12),
     },
   }).catch((err) => {
     return err;
   });
-  console.log(res);
   if (res.code === "ECONNREFUSED") return { props: { film: null } };
   const film = await (await res).json();
   if (!film) return { props: {} };
+  console.log(film);
   return {
     props: {
       film: film.data,
