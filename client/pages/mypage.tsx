@@ -5,7 +5,6 @@ export default function Mypage({ userInfo, film }: any) {
   if (userInfo === null) {
     return <div className={styles.error}>로그인이 필요합니다</div>;
   }
-  console.log(film);
   const mybuckets = () => {
     // return film.map((movie: any) => {
     //   return (

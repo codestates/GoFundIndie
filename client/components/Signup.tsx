@@ -40,7 +40,6 @@ export default function Signup({
     }
     await Setaxios.postAxios("signup", userData)
       .then((res) => {
-        console.log(res);
         alert("성공적으로 가입됐습니다");
         handleSignupModal();
       })
@@ -53,7 +52,6 @@ export default function Signup({
       if (e.target.value === "") return;
       await Setaxios.getAxios("check?type=" + key + "&query=" + e.target.value)
         .then((res) => {
-          console.log(res);
           setValidation({ ...validation, [key]: true });
         })
         .catch((err) => {

@@ -14,6 +14,7 @@ export default function BoarDetails({ film }: any) {
   } else {
     return <></>;
   }
+  console.log(filmData);
   function Payment() {
     Setaxios.getAxios(`pay/ready?amount=3000&board_id=${filmData.id}`)
       .then((res) => {
@@ -30,7 +31,6 @@ export default function BoarDetails({ film }: any) {
         });
       })
       .catch((err) => {
-        console.log(err.response);
         if (err.response.data.code === 4016) {
           alert("먼저 영화에 대한 평을 작성해주세요!");
         }
@@ -48,7 +48,6 @@ export default function BoarDetails({ film }: any) {
     Setaxios.postgraphql("graphql", query, filmData.id)
       .then((res) => {
         const data: any = res.data;
-        console.log(res);
         if (data.data.SwitchLikeBoard.code === 2000) {
           alert("성공적으로 담아두었습니다");
         }
@@ -82,7 +81,7 @@ export default function BoarDetails({ film }: any) {
             </div>
             <div className={styles.like}>{`평균 ★${
               filmData.averageRating / 2
-            } (${filmData.likeAmount}명)`}</div>
+            } (${filmData.commentAmount}명)`}</div>
             <div className={styles.bucket} onClick={SwitchLikeBoard}>
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>

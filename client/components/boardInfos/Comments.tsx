@@ -1,7 +1,6 @@
 import styles from "../../styles/components/boardInfos/comments.module.scss";
 
 export default function Comments({ comments }: { comments: Array<string> }) {
-  console.log(comments);
   if (comments === null || comments.length === 0) {
     return (
       <div className={styles.head}>
