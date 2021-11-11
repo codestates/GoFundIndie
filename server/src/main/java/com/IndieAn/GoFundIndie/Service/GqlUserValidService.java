@@ -56,6 +56,7 @@ public class GqlUserValidService {
         GraphQLServletContext context = env.getContext();
         HttpServletRequest request = context.getHttpServletRequest();
 
+        // TODO 썩은 토큰일 경우 토큰 만료시킬수 있는지 연구
         return userService.FindUserUseEmail(
                 userService.CheckToken(request.getHeader("accesstoken"))
                         .get("email").toString());

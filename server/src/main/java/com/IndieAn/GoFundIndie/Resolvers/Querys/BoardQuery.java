@@ -41,7 +41,15 @@ public class BoardQuery {
             Board board = boardRepository.findBoardId(id);
             if(board == null) return WrappingViewBoardDTO.builder().code(4401).build();
 
-            boolean envCheck = gqlUserValidService.envValidCheck(env) == 0;
+            boolean envCheck = false;
+            User user = null;
+
+            if(gqlUserValidService.envValidCheck(env) == 0){
+                user = gqlUserValidService.findUser(env);
+                if(user != null){
+                    envCheck = true;
+                }
+            }
 
             List<CommentGraphQLDTO> commentList = commentRepository.findCommentByBoard(id, null);
 
@@ -70,8 +78,7 @@ public class BoardQuery {
                 dto.setAverageRating(Math.round((a / commentList.size()) * 10) / 10);
 
                 if(envCheck) {
-                    long userId = gqlUserValidService.findUser(env).getId();
-
+                    long userId = user.getId();
                     commentTopFive = commentTopFive.stream().map(el -> {
                         el.setRatingChecked(
                                 commentRatingRepository.commentRatedCheck(userId, el.getId()));
@@ -87,7 +94,7 @@ public class BoardQuery {
 
             if(envCheck) {
                 dto.setLiked(boardLikeRepository
-                        .isLikedBoard(gqlUserValidService.findUser(env),board));
+                        .isLikedBoard(user,board));
             } else {
                 dto.setLiked(false);
             }
@@ -109,9 +116,14 @@ public class BoardQuery {
 
             if(code != 0) {
                 return WrappingAdminViewBoardDTO.builder().code(code).build();
-            } else if(!gqlUserValidService.findUser(env).isAdminRole()) {
-                return WrappingAdminViewBoardDTO.builder().code(4300).build();
             } else {
+                User user = gqlUserValidService.findUser(env);
+
+                if(user == null) return WrappingAdminViewBoardDTO.builder().code(4400).build();
+                else if(!user.isAdminRole()) {
+                    return WrappingAdminViewBoardDTO.builder().code(4300).build();
+                }
+
                 AdminViewBoardDTO dto = AdminViewBoardDTO.from(boardRepository.findBoardId(id));
                 dto.setCasting(castingRepository.findCastingByBoard(id));
                 dto.setComment(commentRepository.findCommentByBoard(id,5));
@@ -145,10 +157,12 @@ public class BoardQuery {
                         if(code != 0) {
                             return WrappingBoardGraphQLsDTO.builder().code(code).build();
                         } else {
+                            User user = gqlUserValidService.findUser(env);
+                            if(user == null) return WrappingBoardGraphQLsDTO.builder().code(4400).build();
+
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
-                                    .data(boardRepository.findBoardsLike(
-                                            gqlUserValidService.findUser(env), limit))
+                                    .data(boardRepository.findBoardsLike(user, limit))
                                     .build();
                         }
                     } catch (NullPointerException e) {
@@ -162,10 +176,12 @@ public class BoardQuery {
                         if(code != 0) {
                             return WrappingBoardGraphQLsDTO.builder().code(code).build();
                         } else {
+                            User user = gqlUserValidService.findUser(env);
+                            if(user == null) return WrappingBoardGraphQLsDTO.builder().code(4400).build();
+
                             return WrappingBoardGraphQLsDTO.builder()
                                     .code(2000)
-                                    .data(boardRepository.findBoardsDonation(
-                                            gqlUserValidService.findUser(env), limit))
+                                    .data(boardRepository.findBoardsDonation(user, limit))
                                     .build();
                         }
                     } catch (NullPointerException e) {
@@ -229,10 +245,12 @@ public class BoardQuery {
             if(code != 0) {
                 return WrappingDonationBoardGraphQLDTO.builder().code(code).build();
             } else {
+                User user = gqlUserValidService.findUser(env);
+                if(user == null) return WrappingDonationBoardGraphQLDTO.builder().code(4400).build();
+
                 return WrappingDonationBoardGraphQLDTO.builder()
                         .code(2000)
-                        .data(boardRepository.findBoardsMyDonation(
-                                gqlUserValidService.findUser(env), limit))
+                        .data(boardRepository.findBoardsMyDonation(user, limit))
                         .build();
             }
         } catch (NullPointerException e) {
@@ -247,10 +265,12 @@ public class BoardQuery {
             if(code != 0) {
                 return WrappingLikeBoardGraphQLDTO.builder().code(code).build();
             } else {
+                User user = gqlUserValidService.findUser(env);
+                if(user == null) return WrappingLikeBoardGraphQLDTO.builder().code(4400).build();
+
                 return WrappingLikeBoardGraphQLDTO.builder()
                         .code(2000)
-                        .data(boardRepository.findBoardsMyLike(
-                                gqlUserValidService.findUser(env), limit))
+                        .data(boardRepository.findBoardsMyLike(user, limit))
                         .build();
             }
         } catch (NullPointerException e) {
@@ -271,9 +291,6 @@ public class BoardQuery {
         } catch (NullPointerException | IllegalArgumentException e) {
             types = SearchTypes.getRandomType(limit, false);
         }
-
-        // Test
-//        types = SearchTypes.getRandomType(limit, false);
 
         list = types.stream().map(type -> RandomBoardDTO.builder()
                 .phrase(SearchTypes.getPhrase(type))
