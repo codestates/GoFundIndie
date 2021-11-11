@@ -32,6 +32,7 @@ public class BoardQuery {
     private final GenreRepository genreRepository;
     private final ImageRepository imageRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final CommentRatingRepository commentRatingRepository;
 
     private final GqlUserValidService gqlUserValidService;
 
@@ -73,7 +74,7 @@ public class BoardQuery {
 
                     commentTopFive = commentTopFive.stream().map(el -> {
                         el.setRatingChecked(
-                                commentRepository.commentRatedCheck(userId, el.getId()));
+                                commentRatingRepository.commentRatedCheck(userId, el.getId()));
                         return el;
                     }).collect(Collectors.toList());
                 }

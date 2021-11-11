@@ -70,7 +70,6 @@ public class CommentRepository extends EntityManagerExtend{
     }
 
     // ViewBoard gql comments
-    // TODO Rating Check
     public List<CommentGraphQLDTO> findCommentByBoard(long boardId, Integer limit) {
         String query = "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO" +
                        "(c.id, c.rating, u.id, u.nickname, u.profilePicture, c.donation, c.body, c.spoiler, c.like, false) " +
@@ -88,14 +87,5 @@ public class CommentRepository extends EntityManagerExtend{
                     .setMaxResults(limit)
                     .getResultList();
         }
-    }
-
-    public boolean commentRatedCheck(long userId, long commentId) {
-        return entityManager.createQuery(
-                "SELECT cr " +
-                        "FROM CommentRating cr " +
-                        "WHERE cr.userId = " + userId + " " +
-                        "AND cr.commentId = " + commentId + "", CommentRating.class
-        ).getResultList().size() != 0;
     }
 }
