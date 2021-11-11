@@ -14,6 +14,7 @@ export default function Page({ film }: any) {
       <div className={styles.home__div}>
         <div className={styles.header__blank__div} />
         {recommend.map((theme: any) => {
+          console.log(theme);
           return (
             <div className={styles.home__div__wrapper}>
               <ContentCarousel film={theme} />

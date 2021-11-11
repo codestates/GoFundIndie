@@ -13,7 +13,7 @@ export default function ContentCarousel({ film }: any) {
   ) => {
     sliderstack = [];
     return (
-      <div className={styles.slide__wrapper}>
+      <div key={movie1.id} className={styles.slide__wrapper}>
         {poster(movie1)}
         {poster(movie2)}
         {poster(movie3)}
