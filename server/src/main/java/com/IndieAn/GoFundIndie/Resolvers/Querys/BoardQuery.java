@@ -38,6 +38,10 @@ public class BoardQuery {
     public WrappingViewBoardDTO FindBoardId(Long id, DataFetchingEnvironment env) {
         try {
             Board board = boardRepository.findBoardId(id);
+            if(board == null) return WrappingViewBoardDTO.builder().code(4401).build();
+
+            boolean envCheck = gqlUserValidService.envValidCheck(env) == 0;
+
             List<CommentGraphQLDTO> commentList = commentRepository.findCommentByBoard(id, null);
 
             ViewBoardDTO dto = ViewBoardDTO.from(board);
@@ -62,15 +66,25 @@ public class BoardQuery {
                     a = a + el.getRating();
                 }
 
+                dto.setAverageRating(Math.round((a / commentList.size()) * 10) / 10);
+
+                if(envCheck) {
+                    long userId = gqlUserValidService.findUser(env).getId();
+
+                    commentTopFive = commentTopFive.stream().map(el -> {
+                        el.setRatingChecked(
+                                commentRepository.commentRatedCheck(userId, el.getId()));
+                        return el;
+                    }).collect(Collectors.toList());
+                }
+
                 dto.setComment(commentTopFive);
-                dto.setAverageRating(Math.round(a / commentList.size()));
             } else {
                 dto.setComment(commentList);
                 dto.setAverageRating(0);
             }
 
-            // env not null : find boardLike
-            if(gqlUserValidService.envValidCheck(env) == 0) {
+            if(envCheck) {
                 dto.setLiked(boardLikeRepository
                         .isLikedBoard(gqlUserValidService.findUser(env),board));
             } else {

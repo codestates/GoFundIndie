@@ -17,12 +17,14 @@ enum SearchTypes {
     SEARCH_TYPES_ACTION
     SEARCH_TYPES_SF
     SEARCH_TYPES_MUSICAL
+    SEARCH_TYPES_RANDOM
+    SEARCH_TYPES_SEOUL2020
+    SEARCH_TYPES_NEW
     SEARCH_TYPES_MY
     SEARCH_TYPES_MY_DONATION
     SEARCH_TYPES_APPROVE_FALSE
     SEARCH_TYPES_APPROVE_TRUE
     SEARCH_TYPES_ALL
-    SEARCH_TYPES_NEW
 }
 
 type BoardId {
@@ -135,7 +137,7 @@ type viewBoard {
     createdAt: String
     commentAmount: Int
     likeAmount: Int
-    averageRating: Int
+    averageRating: Float
     isLiked: Boolean
     genre: [genre]
     casting: [casting]
