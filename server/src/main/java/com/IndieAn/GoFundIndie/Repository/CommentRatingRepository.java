@@ -29,6 +29,15 @@ public class CommentRatingRepository extends EntityManagerExtend{
         return commentRatingList.get(0);
     }
 
+    public boolean commentRatedCheck(long userId, long commentId) {
+        return entityManager.createQuery(
+                "SELECT cr " +
+                        "FROM CommentRating cr " +
+                        "WHERE cr.userId = " + userId + " " +
+                        "AND cr.commentId = " + commentId + "", CommentRating.class
+        ).getResultList().size() != 0;
+    }
+
     // DB CommentRating 테이블에 userId와 commentId를 사용해 CommentRating 정보를 저장한다.
     public CommentRating CreateRating(long userId, long commentId) {
         CommentRating commentRating = new CommentRating();
