@@ -20,9 +20,9 @@ public class KakaoPayController {
     }
 
     @GetMapping(value = "/pay/ready")
-    public ResponseEntity<?> Payment(@RequestParam("amount") int amount, @RequestHeader Map<String, String> requestHeader) {
+    public ResponseEntity<?> Payment(@RequestParam("amount") int amount, @RequestParam("board_id") long boardId, @RequestHeader Map<String, String> requestHeader) {
         try {
-            return kakaoPayService.KakaoPayReadyRequest(amount, requestHeader);
+            return kakaoPayService.KakaoPayReadyRequest(amount, boardId, requestHeader);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("err");
         }

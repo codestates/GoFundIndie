@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
 import com.IndieAn.GoFundIndie.Domain.Entity.CommentRating;
@@ -56,6 +57,17 @@ public class CommentRepository extends EntityManagerExtend{
         end(entityManager);
     }
 
+    // DB Comment 테이블에 매개변수 commentId를 사용하여 Comment 정보를 수정한다.
+    public void ModifyComment(CommentModifyDTO commentModifyDTO, long commentId) {
+        Comment modifyComment = entityManager.find(Comment.class, commentId);
+
+        if(commentModifyDTO.getRating() != null) modifyComment.setRating(commentModifyDTO.getRating());
+        if(commentModifyDTO.getCommentBody() != null) modifyComment.setBody(commentModifyDTO.getCommentBody());
+        modifyComment.setSpoiler(commentModifyDTO.isSpoiler());
+
+        end(entityManager);
+    }
+
     // DB Comment 테이블에 매개변수 commentId를 사용하여 Comment 정보를 삭제한다.
     public void DeleteComment(long commentId) {
         Comment deleteComment = entityManager.find(Comment.class, commentId);
@@ -70,7 +82,6 @@ public class CommentRepository extends EntityManagerExtend{
     }
 
     // ViewBoard gql comments
-    // TODO Rating Check
     public List<CommentGraphQLDTO> findCommentByBoard(long boardId, Integer limit) {
         String query = "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO" +
                        "(c.id, c.rating, u.id, u.nickname, u.profilePicture, c.donation, c.body, c.spoiler, c.like, false) " +
@@ -90,12 +101,11 @@ public class CommentRepository extends EntityManagerExtend{
         }
     }
 
-    public boolean commentRatedCheck(long userId, long commentId) {
-        return entityManager.createQuery(
-                "SELECT cr " +
-                        "FROM CommentRating cr " +
-                        "WHERE cr.userId = " + userId + " " +
-                        "AND cr.commentId = " + commentId + "", CommentRating.class
-        ).getResultList().size() != 0;
+    // 후원을 했을 경우 DB에서 댓글을 찾아 후원 금액을 수정한다.
+    public void ModifyDonation(long commentId, Integer total) {
+        Comment comment = entityManager.find(Comment.class, commentId);
+        comment.setDonation(comment.getDonation() + total);
+
+        end(entityManager);
     }
 }

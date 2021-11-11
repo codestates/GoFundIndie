@@ -41,14 +41,6 @@ public class BoardMutation {
                         .build();
             } else
                 return WrappingCreateTempBoardDTO.builder().code(code).build();
-
-            // Test Code : No Access Token
-//            return WrappingCreateTempBoardDTO.builder()
-//                    .code(2000)
-//                    .data(CreateTempBoardDTO.builder().id(boardRepository
-//                            .RegisterTempBoard(userRepository.FindUserByIdDB(1L))).build())
-//                    .build();
-
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
@@ -82,11 +74,16 @@ public class BoardMutation {
                                 .code(4300)
                                 .build();
                     } else {
-                        return WrappingCreateTempBoardDTO.builder()
-                                .code(2000)
-                                .data(CreateTempBoardDTO.builder()
-                                        .id(boardRepository.CompleteBoard(board, dto)).build())
-                                .build();
+                        try {
+                            return WrappingCreateTempBoardDTO.builder()
+                                    .code(2000)
+                                    .data(CreateTempBoardDTO.builder()
+                                            .id(boardRepository.CompleteBoard(board, dto)).build())
+                                    .build();
+                        } catch (IllegalArgumentException e) {
+                            return WrappingCreateTempBoardDTO.builder()
+                                    .code(4006).build();
+                        }
                     }
                 } catch (NullPointerException e) {
                     // Essential value is null : 4006
@@ -97,14 +94,6 @@ public class BoardMutation {
                 // Token Invalid
                 return WrappingCreateTempBoardDTO.builder().code(code).build();
             }
-
-            // Test Code : No Access Token
-//            return WrappingCreateTempBoardDTO.builder()
-//                    .code(2000)
-//                    .data(CreateTempBoardDTO.builder().id(boardRepository
-//                            .CompleteBoard(dto).getId()).build())
-//                    .build();
-
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
@@ -139,16 +128,6 @@ public class BoardMutation {
                 // Token Invalid
                 return WrappingCreateTempBoardDTO.builder().code(code).build();
             }
-
-            // Test Code : No Access Token
-//            return WrappingCreateTempBoardDTO.builder()
-//                    .code(2000)
-//                    .data(CreateTempBoardDTO.builder()
-//                            .id(boardRepository.PutBoard(
-//                                    boardRepository.findBoardId(dto.getBoardId()), dto
-//                            )).build())
-//                    .build();
-
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
@@ -173,11 +152,6 @@ public class BoardMutation {
                 // Token Invalid
                 return GqlResponseCodeDTO.builder().code(code).build();
             }
-
-            // Test Code : No Access Token
-//            boardRepository.DeleteBoard(boardRepository.findBoardId(id));
-//            return OnlyCodeDTO.builder().code(2000).build();
-
         } catch (NullPointerException e) {
             return GqlResponseCodeDTO.builder().code(4000).build();
         }
@@ -202,11 +176,6 @@ public class BoardMutation {
                 // Token Invalid
                 return GqlResponseCodeDTO.builder().code(code).build();
             }
-
-            // Test Code : No Access Token
-//            boardRepository.ApproveBoard(boardRepository.findBoardId(id), isApprove);
-//            return OnlyCodeDTO.builder().code(2000).build();
-
         } catch (NullPointerException e) {
             return GqlResponseCodeDTO.builder().code(4000).build();
         }
