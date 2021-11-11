@@ -3,6 +3,7 @@ package com.IndieAn.GoFundIndie.Repository;
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
+import com.IndieAn.GoFundIndie.Domain.Entity.CommentRating;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +88,14 @@ public class CommentRepository extends EntityManagerExtend{
                     .setMaxResults(limit)
                     .getResultList();
         }
+    }
+
+    public boolean commentRatedCheck(long userId, long commentId) {
+        return entityManager.createQuery(
+                "SELECT cr " +
+                        "FROM CommentRating cr " +
+                        "WHERE cr.userId = " + userId + " " +
+                        "AND cr.commentId = " + commentId + "", CommentRating.class
+        ).getResultList().size() != 0;
     }
 }

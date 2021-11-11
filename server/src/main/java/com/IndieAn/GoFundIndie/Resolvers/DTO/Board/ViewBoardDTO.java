@@ -30,7 +30,7 @@ public class ViewBoardDTO {
     private String createdAt;
     private int commentAmount;
     private int likeAmount;
-    private int averageRating;
+    private float averageRating;
     private boolean isLiked;
     private List<GenreGraphQLDTO> genre;
     private List<CastingGraphQLDTO> casting;
@@ -40,7 +40,12 @@ public class ViewBoardDTO {
     public ViewBoardDTO() {}
 
     @Builder
-    public ViewBoardDTO(long id, boolean isApprove, String title, String producer, String distributor, String posterImg, String viewLink, String infoCountry, String infoCreatedYear, String infoCreatedDate, int infoTime, int infoLimit, String infoStory, boolean infoSubtitle, String createdAt, int commentAmount, int likeAmount, int averageRating, boolean isLiked) {
+    public ViewBoardDTO(long id, boolean isApprove, String title, String producer,
+                        String distributor, String posterImg, String viewLink,
+                        String infoCountry, String infoCreatedYear, String infoCreatedDate,
+                        int infoTime, int infoLimit, String infoStory, boolean infoSubtitle,
+                        String createdAt, int commentAmount, int likeAmount, float averageRating,
+                        boolean isLiked) {
         this.id = id;
         this.isApprove = isApprove;
         this.title = title;
@@ -198,11 +203,11 @@ public class ViewBoardDTO {
         this.likeAmount = likeAmount;
     }
 
-    public int getAverageRating() {
+    public float getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(int averageRating) {
+    public void setAverageRating(float averageRating) {
         this.averageRating = averageRating;
     }
 
