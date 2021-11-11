@@ -42,7 +42,7 @@ export default function Rating({ boardid }: { boardid: Number }) {
               for (let i = 0; i < img.parentNode.id; i++) {
                 let div: any = document.getElementById(`${i + 1}`);
                 if (div === null) return;
-                div.childNodes[0].src = "/emptystar.png";
+                div.childNodes[0].src = "/emptyStar.png";
               }
             }
           }}

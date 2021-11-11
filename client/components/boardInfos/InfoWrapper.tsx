@@ -17,8 +17,10 @@ export default function InfoWrapper({ comments, stills, cast }: any) {
 
   const defaultState = (
     <div>
-      <Cast cast={cast} onFocus={false} />
-      <Stillcuts stills={stills} onFocus={false} />
+      {cast.length !== 0 ? <Cast cast={cast} onFocus={false} /> : null}
+      {stills.length !== 0 ? (
+        <Stillcuts stills={stills} onFocus={false} />
+      ) : null}
       <Comments comments={comments} />
     </div>
   );
