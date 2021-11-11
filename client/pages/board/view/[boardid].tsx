@@ -8,17 +8,17 @@ import Cookies from "js-cookie";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
-  let filmData;
+  let filmData: any;
   if (film) {
     filmData = film.FindBoardId.data;
   } else {
     return <></>;
   }
   function Payment() {
-    Setaxios.getAxios("pay/ready?amount=3000")
+    Setaxios.getAxios(`pay/ready?amount=3000&board_id=${filmData.id}`)
       .then((res) => {
+        Cookies.set("boardId", filmData.id);
         const urlcomp: any = res.data;
-        Cookies.set("tid", urlcomp.data.tid);
         const payment: Window | null = window.open(
           urlcomp.data.next_redirect_pc_url,
           "_blank",
@@ -30,6 +30,10 @@ export default function BoarDetails({ film }: any) {
         });
       })
       .catch((err) => {
+        console.log(err.response);
+        if (err.response.data.code === 4016) {
+          alert("먼저 영화에 대한 평을 작성해주세요!");
+        }
         if (err.response.data.code === 4000) {
           alert("로그인이 필요합니다");
         }
@@ -41,7 +45,7 @@ export default function BoarDetails({ film }: any) {
         code
       }
     }`;
-    Setaxios.postgraphql("graphql", query, 33)
+    Setaxios.postgraphql("graphql", query, filmData.id)
       .then((res) => {
         const data: any = res.data;
         console.log(res);

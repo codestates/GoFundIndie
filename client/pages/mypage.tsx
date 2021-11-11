@@ -5,7 +5,7 @@ export default function Mypage({ userInfo, film }: any) {
   if (userInfo === null) {
     return <div className={styles.error}>로그인이 필요합니다</div>;
   }
-  console.log(userInfo);
+  console.log(film);
   const mybuckets = () => {
     // return film.map((movie: any) => {
     //   return (
@@ -121,7 +121,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return err;
   });
   const film = await (await res2).json();
-  console.log(film);
   const userData = await (await res).json();
   return {
     props: { userInfo: userData.data, film: film },
