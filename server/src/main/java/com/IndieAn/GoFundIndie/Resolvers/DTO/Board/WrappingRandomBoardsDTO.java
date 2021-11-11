@@ -6,15 +6,15 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 public class WrappingRandomBoardsDTO {
-    private int code;
+    private Integer code;
     private List<RandomBoardDTO> data;
 
     public WrappingRandomBoardsDTO() {
     }
 
     @Builder
-    public WrappingRandomBoardsDTO(int code, List<RandomBoardDTO> data) {
-        Assert.notNull(data, "data not null");
+    public WrappingRandomBoardsDTO(Integer code, List<RandomBoardDTO> data) {
+        Assert.notNull(code, "code is not null");
 
         this.code = code;
         this.data = data;

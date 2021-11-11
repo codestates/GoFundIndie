@@ -1,5 +1,6 @@
 package com.IndieAn.GoFundIndie.Resolvers.Querys;
 
+import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardReportRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportsGraphqlDTO;
@@ -27,7 +28,9 @@ public class BoardReportQuery {
 
             if(code == 0) {
                 try {
-                    if(!gqlUserValidService.findUser(env).isAdminRole())
+                    User user = gqlUserValidService.findUser(env);
+                    if(user == null) return WrappingBoardReportGraphQLDTO.bad(4400);
+                    else if(!user.isAdminRole())
                         return WrappingBoardReportGraphQLDTO.bad(4300);
                 } catch (NullPointerException e) {
                     return WrappingBoardReportGraphQLDTO.bad(4400);
@@ -51,7 +54,9 @@ public class BoardReportQuery {
 
             if(code == 0) {
                 try {
-                    if(!gqlUserValidService.findUser(env).isAdminRole())
+                    User user = gqlUserValidService.findUser(env);
+                    if(user == null) WrappingBoardReportGraphQLDTO.bad(4400);
+                    else if(!user.isAdminRole())
                         return WrappingBoardReportsGraphqlDTO.bad(4300);
                 } catch (NullPointerException e) {
                     return WrappingBoardReportsGraphqlDTO.bad(4400);
