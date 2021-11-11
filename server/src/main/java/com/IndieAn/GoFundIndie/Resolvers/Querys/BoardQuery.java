@@ -267,7 +267,7 @@ public class BoardQuery {
 
             if (code != 0) types = SearchTypes.getRandomType(limit, false);
             else types = SearchTypes.getRandomType(limit, true);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | IllegalArgumentException e) {
             types = SearchTypes.getRandomType(limit, false);
         }
 

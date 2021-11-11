@@ -46,6 +46,9 @@ public class GqlUserValidService {
         } catch (NullPointerException e) {
             log.warn("---- ! NullPointerException ! ----");
             return 4000;
+        } catch (IllegalArgumentException e) {
+            log.warn("---- ! IllegalArgumentException ! ----");
+            return 4000;
         }
     }
 
