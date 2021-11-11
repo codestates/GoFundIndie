@@ -17,6 +17,7 @@ export default function Approval() {
     })
       .then((res) => {
         alert("정상적으로 결제됐습니다");
+        Cookies.remove("boardId");
         window.close();
       })
       .catch((err) => {

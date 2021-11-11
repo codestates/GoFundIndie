@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Resolvers.Mutations;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
+import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Repository.BoardLikeRepository;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.GqlResponseCodeDTO;
@@ -27,16 +28,20 @@ public class BoardLikeMutation {
             if (code == 0) {
                 Board board = boardRepository.findBoardId(id);
                 if(board == null)
-                    return GqlResponseCodeDTO.builder().code(4401).build();
+                    return GqlResponseCodeDTO.bad(4401);
 
-                boardLikeRepository.LikeBoardSwitch(gqlUserValidService.findUser(env), board);
-                return GqlResponseCodeDTO.builder().code(2000).build();
+                User user = gqlUserValidService.findUser(env);
+                if(user == null)
+                    return GqlResponseCodeDTO.bad(4400);
+
+                boardLikeRepository.LikeBoardSwitch(user, board);
+                return GqlResponseCodeDTO.ok();
             } else {
                 // Token Invalid
-                return GqlResponseCodeDTO.builder().code(code).build();
+                return GqlResponseCodeDTO.bad(code);
             }
         } catch (NullPointerException e) {
-            return GqlResponseCodeDTO.builder().code(4000).build();
+            return GqlResponseCodeDTO.bad(4000);
         }
 
         // Test Code

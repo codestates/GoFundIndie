@@ -47,8 +47,9 @@ public class CastingMutation {
                     return WrappingCreateTempCastingDTO.builder().code(4401).build();
 
                 User user = gqlUserValidService.findUser(env);
+                if(user == null) return WrappingCreateTempCastingDTO.builder().code(4400).build();
                 // No authorization : 4301
-                if(!user.isAdminRole() && board.getUserId().getId() != user.getId())
+                else if(!user.isAdminRole() && board.getUserId().getId() != user.getId())
                     return WrappingCreateTempCastingDTO.builder().code(4301).build();
 
                 return WrappingCreateTempCastingDTO.builder().code(2000)

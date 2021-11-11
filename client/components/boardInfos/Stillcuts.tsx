@@ -5,9 +5,7 @@ export default function Stillcuts({ stills, onFocus }: any) {
   let counter = 0;
   const [pirctureModalOpen, setPictureModalOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<any>();
-  console.log(selectedImage);
   const pictureModal = () => {
-    console.log("called");
     return (
       <div key="picmodal">
         <div

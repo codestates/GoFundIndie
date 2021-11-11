@@ -63,7 +63,7 @@ FindRandomBoard (Limit: 20) {
   if (res.code === "ECONNREFUSED") return { props: { film: null } };
   const film = await (await res).json();
   if (!film) return { props: {} };
-  console.log(film);
+
   return {
     props: {
       film: film.data,
