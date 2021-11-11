@@ -15,7 +15,6 @@ public class RandomBoardDTO {
     @Builder
     public RandomBoardDTO(String phrase, List<BoardGraphQLDTO> data) {
         Assert.notNull(phrase, "phrase not null");
-        Assert.notNull(data, "data not null");
 
         this.phrase = phrase;
         this.data = data;
