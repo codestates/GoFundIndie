@@ -21,6 +21,8 @@ type Query {
 
     FindBoardReport(id: ID!): WrappingReport
     FindBoardReports: WrappingReports
+
+    SearchBoardName(what: String!): String
 }
 
 type Mutation {

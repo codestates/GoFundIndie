@@ -8,10 +8,7 @@ import com.IndieAn.GoFundIndie.Resolvers.DTO.BoardReport.WrappingBoardReportsGra
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import com.IndieAn.GoFundIndie.Resolvers.DTO.User.UserGraphQLDTO;
-import com.IndieAn.GoFundIndie.Resolvers.Querys.BoardQuery;
-import com.IndieAn.GoFundIndie.Resolvers.Querys.BoardReportQuery;
-import com.IndieAn.GoFundIndie.Resolvers.Querys.GenreQuery;
-import com.IndieAn.GoFundIndie.Resolvers.Querys.UserQuery;
+import com.IndieAn.GoFundIndie.Resolvers.Querys.*;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,7 @@ public class Query implements GraphQLQueryResolver {
     private final GenreQuery genreQuery;
     private final UserQuery userQuery;
     private final BoardReportQuery boardReportQuery;
+    private final SearchQuery searchQuery;
 
     private final CommentRepository cr;
 
@@ -95,5 +93,11 @@ public class Query implements GraphQLQueryResolver {
 
     public WrappingBoardReportsGraphqlDTO FindBoardReports(DataFetchingEnvironment env) {
         return boardReportQuery.FindBoardReports(env);
+    }
+
+    // ---- SEARCH ----
+    //
+    public String SearchBoardName(String str) {
+        return searchQuery.SearchBoardName(str);
     }
 }
