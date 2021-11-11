@@ -55,9 +55,9 @@ FindRandomBoard (Limit: 20) {
   }).catch((err) => {
     return err;
   });
-  if (res === null) return { props: {} };
+  if (!res) return { props: {} };
   const film = await (await res).json();
-  if (film === null) return { props: {} };
+  if (!film) return { props: {} };
   return {
     props: {
       film: film.data,

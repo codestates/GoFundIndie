@@ -8,9 +8,8 @@ import Cookies from "js-cookie";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function BoarDetails({ film }: any) {
-  console.log(film);
   let filmData;
-  if (film !== null) {
+  if (film) {
     filmData = film.FindBoardId.data;
   } else {
     return <></>;
@@ -31,7 +30,9 @@ export default function BoarDetails({ film }: any) {
         });
       })
       .catch((err) => {
-        console.log(err.response);
+        if (err.response.data.code === 4000) {
+          alert("로그인이 필요합니다");
+        }
       });
   }
   async function SwitchLikeBoard() {
@@ -81,7 +82,7 @@ export default function BoarDetails({ film }: any) {
               <div>담아둘래요</div>
             </div>
             <div className={styles.ratings}>
-              <Rating />
+              <Rating boardid={filmData.id} />
               <button className={styles.donation} onClick={Payment}>
                 <img src="/heart.png" />
                 후원하기
@@ -167,6 +168,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return err;
   });
 
+  if (!res) return { props: {} };
   const film = await (await res).json();
 
   if (film === null) return { props: {} };

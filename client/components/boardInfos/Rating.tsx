@@ -2,10 +2,11 @@ import styles from "../../styles/components/boardInfos/rating.module.scss";
 import { useState } from "react";
 import Setaxios from "../../fetching/Setaxios";
 
-export default function Rating() {
+export default function Rating({ boardid }: { boardid: Number }) {
+  console.log(boardid);
   const [commentModalOpen, setCommentModalOpen] = useState<boolean>(false);
   const [bodyMessage, setBodymessage] = useState("");
-  const [rate, setRate] = useState<Number>(0);
+  const [rate, setRate] = useState<number>(0);
   const star = (num: string) => {
     return (
       <button
@@ -74,10 +75,30 @@ export default function Rating() {
       </button>
     );
   };
+
   function SubmitComment() {
     console.log(rate, bodyMessage);
-    // Setaxios.postAxios("comment", {rating:rate, });
+    //TODO://spoiler체크박스
+    Setaxios.postAxios("comment", {
+      rating: rate * 2,
+      boardId: Number(boardid),
+      donation: 0,
+      commentBody: bodyMessage,
+    })
+      .then((res) => {
+        const response: any = res.data;
+        if (response.code === 2000) {
+          setCommentModalOpen(false);
+          location.reload();
+        }
+      })
+      .catch((err) => {
+        if (err.response.data.code === 4004) {
+          alert("이미 코멘트를 작성하셨습니다");
+        }
+      });
   }
+
   const commentModal = () => {
     return (
       <div key="modal">

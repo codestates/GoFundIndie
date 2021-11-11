@@ -1,3 +1,4 @@
+@use "../../modal.module.scss" as modal;
 .wrapper {
   display: flex;
   .reviewstill,
@@ -59,5 +60,21 @@
   margin-right: 0px;
   img {
     opacity: 0.5;
+  }
+}
+@function padding_handler($n) {
+  @return 100%-$n;
+}
+.screen-wrapper {
+  z-index: 500;
+  @include modal.screen_wrapper();
+  .picturemodal-wrapper {
+    @include modal.modal_wrapper();
+    .picturemodal {
+      img {
+        max-width: 1000px;
+        max-height: 800px;
+      }
+    }
   }
 }

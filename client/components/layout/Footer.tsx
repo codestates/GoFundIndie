@@ -15,19 +15,19 @@ export default function Footer() {
         <div className={styles.members}>
           <Link href="https://github.com/skalook">
             <div className={styles.member}>
-              <img src="git.png" />
+              <img src="/git.png" />
               <span>이준희</span>
             </div>
           </Link>
           <Link href="https://github.com/JogiYo">
             <div className={styles.member}>
-              <img src="git.png" />
+              <img src="/git.png" />
               <span>조현기</span>
             </div>
           </Link>
           <Link href="https://github.com/EAJA">
             <div className={styles.member}>
-              <img src="git.png" />
+              <img src="/git.png" />
               <span>김찬욱</span>
             </div>
           </Link>

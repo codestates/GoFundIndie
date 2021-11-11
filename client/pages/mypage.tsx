@@ -1,6 +1,5 @@
 import styles from "../styles/mypage.module.scss";
 import { GetServerSideProps } from "next";
-import Link from "next/link";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 export default function Mypage({ userInfo, film }: any) {
   if (userInfo === null) {

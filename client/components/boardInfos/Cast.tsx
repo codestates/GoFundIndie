@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styles from "../../styles/components/boardInfos/cast.module.scss";
 export default function Cast({ cast, onFocus }: any) {
-  console.log(cast);
   const [component, setComponent] = useState<boolean>(false);
   let count = 0;
   function Positioner(num: Number) {
