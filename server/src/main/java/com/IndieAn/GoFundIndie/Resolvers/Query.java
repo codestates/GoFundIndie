@@ -28,7 +28,7 @@ public class Query implements GraphQLQueryResolver {
     private final GenreQuery genreQuery;
     private final UserQuery userQuery;
     private final BoardReportQuery boardReportQuery;
-    private final SearchQuery searchQuery;
+    private final BoardSearchQuery boardSearchQuery;
 
     private final CommentRepository cr;
 
@@ -98,6 +98,6 @@ public class Query implements GraphQLQueryResolver {
     // ---- SEARCH ----
     //
     public WrappingSearchBoardDTO SearchBoardName(String str) {
-        return searchQuery.SearchBoardName(str);
+        return boardSearchQuery.SearchBoardName(str);
     }
 }
