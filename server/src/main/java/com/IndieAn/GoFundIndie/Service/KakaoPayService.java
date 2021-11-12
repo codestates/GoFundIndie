@@ -70,6 +70,12 @@ public class KakaoPayService {
         if(checkToken.get("email") != null) {
             // 해당 보드에 자신이 작성한 댓글이 있는지 확인한다. 없다면 4016 응답
             User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
+
             boolean isFind = false;
             for(Comment c : board.getComments()) {
                 if(c.getUserId().getId() == user.getId()) {
@@ -113,6 +119,12 @@ public class KakaoPayService {
         if(checkToken.get("email") != null) {
             // 요청에서 검증을 했으므로 도네이션 완료 후 수정할 코멘트 아이디를 찾는다.
             User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
+
             long commentId = -1;
             for(Comment c : board.getComments()) {
                 if(c.getUserId().getId() == user.getId()) {

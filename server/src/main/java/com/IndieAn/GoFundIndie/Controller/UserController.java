@@ -22,9 +22,9 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     // accessToken 유효 시간
-    private final static Long ACCESS_TIME = 1000 * 60 * 30L;
+    private final static Integer ACCESS_TIME = 30;
     // refreshToken 유효 시간
-    private final static Long REFRESH_TIME = 1000 * 60 * 60 * 24L;
+    private final static Integer REFRESH_TIME = 30 * 24;
     private HashMap<String, Object> body = new HashMap<>();
     private HashMap<String, Object> data = new HashMap<>();
 
@@ -157,6 +157,11 @@ public class UserController {
                 cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
@@ -197,6 +202,11 @@ public class UserController {
             // token에 email정보가 있다면 정보를 가져오는 과정을 수행한다.
             if(checkToken.get("email") != null) {
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 userService.MakeUserInfoRes(user, data);
                 body.put("code", 2000);
                 body.put("data", data);
@@ -237,6 +247,11 @@ public class UserController {
                 }
 
                 User user = userService.ModifyUserData(userModifyDTO, (String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 userService.MakeUserInfoRes(user, data);
                 body.put("code", 2000);
                 body.put("data", data);
@@ -275,6 +290,11 @@ public class UserController {
                 cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
@@ -319,6 +339,12 @@ public class UserController {
             if(checkToken.get("email") != null) {
                 // 해당 refresh token이 가지고 있는 email로 다시 access token을 발급한다.
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
+
                 RefreshToken rt = userService.FindRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token를 찾을 수 없을 때 응답을 해준다.
