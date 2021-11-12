@@ -97,7 +97,7 @@ public class Query implements GraphQLQueryResolver {
 
     // ---- SEARCH ----
     //
-    public String SearchBoardName(String str) {
+    public WrappingSearchBoardDTO SearchBoardName(String str) {
         return searchQuery.SearchBoardName(str);
     }
 }
