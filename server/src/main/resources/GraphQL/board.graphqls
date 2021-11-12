@@ -61,6 +61,17 @@ type WrappingRandomBoards {
     data: [RandomBoard]
 }
 
+type WrappingSearchBoards {
+    code: Int
+    data: [SearchBoard]
+}
+
+type SearchBoard {
+    id: ID
+    title: String
+    posterImg: String
+}
+
 type RandomBoard {
     phrase: String
     data: [Board]

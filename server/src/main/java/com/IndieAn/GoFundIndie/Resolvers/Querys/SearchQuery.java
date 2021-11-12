@@ -1,52 +1,90 @@
 package com.IndieAn.GoFundIndie.Resolvers.Querys;
 
-import com.IndieAn.GoFundIndie.Repository.BoardRepository;
+import com.IndieAn.GoFundIndie.Repository.BoardSearchRepository;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.SearchBoardDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingSearchBoardDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class SearchQuery {
-    private final BoardRepository boardRepository;
+    private final BoardSearchRepository boardSearchRepository;
 
-    // 초성검색
-    // 제목에 스트링 포함 여부
+    private final char[] consonant = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ".toCharArray();
+    private final char[] middWords = "가까나다따라마바빠사싸아자짜차카타파하".toCharArray();
+    private final char[] lastWords = "깋낗닣딯띻맇밓빟삫싷앃잏짛찧칳킿팋핗힣".toCharArray();
 
-    public String SearchBoardName(String str) {
+    private List<String> consonantMatch(char ch) {
+        char targetStaChar = ch;
+        char targetEndChar = targetStaChar;
 
-        char[] charArray = str.toCharArray();
-
-        // 총 19 EA
-        char[] consonant = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ".toCharArray();
-        char[] lastWords = "깋낗닣딯띻맇밓빟삫싷앃잏짛찧칳킿팋핗힣".toCharArray();
-
-        char targetEndChar = str.charAt(str.length() - 1);
-        // System.out.println((int) targetChar);;
-
-        // 마지막 ㄱ~ㅎ 인 경우
         if(targetEndChar <= 12622) {
-            for(int i = 0; i < consonant.length; i++) {
+            for(int i = 0; i < 19; i++) {
                 if(targetEndChar == consonant[i]) {
-                    targetEndChar = lastWords[i + 1];
+                    targetStaChar = middWords[i];
+                    targetEndChar = lastWords[i];
+                    break;
                 }
             }
         } else {
-            // 마지막 가~힣 인 경우
-            for (int i = 0; i < lastWords.length; i++) {
-                if (targetEndChar >= lastWords[i] && targetEndChar < lastWords[i + 1]) {
-                    targetEndChar = lastWords[i + 1];
+            for (int i = 0; i < 19; i++) {
+                if (targetEndChar >= middWords[i] && targetEndChar <= lastWords[i]) {
+                    targetStaChar = middWords[i];
+                    targetEndChar = lastWords[i];
+                    break;
                 }
             }
         }
 
-        log.info("---- End Word ----");
-        log.info(String.valueOf(charArray[0]));
-        log.info(String.valueOf(targetEndChar));
+        List<String> result = new ArrayList<>();
+        result.add(String.valueOf(targetStaChar));
+        result.add(String.valueOf(targetEndChar));
+        return result;
+    }
 
-        return str;
+    public WrappingSearchBoardDTO SearchBoardName(String str) {
+        if(str == null || str.equals("")) {
+            return WrappingSearchBoardDTO.builder().code(2000)
+                    .data(boardSearchRepository.SearchBoardsFromNull(10))
+                    .build();
+        } else {
+            char lastWord = str.toCharArray()[str.length() - 1];
+
+            List<String> params = consonantMatch(lastWord);
+
+            if(str.length() == 1) {
+                // Case : consonant
+                if (lastWord < 12623) {
+                    return WrappingSearchBoardDTO.builder().code(2000)
+                            .data(boardSearchRepository.SearchBoardsConsonant(params.get(0), params.get(1), 10))
+                            .build();
+                } else {
+                    return WrappingSearchBoardDTO.builder().code(2000)
+                            .data(boardSearchRepository.SearchBoards(str, 10))
+                            .build();
+                }
+            } else {
+                // Case : End Character = consonant
+                if (lastWord < 12623) {
+                    String lastWordDeleted = str.substring(0, str.length() - 1);
+                    return WrappingSearchBoardDTO.builder().code(2000)
+                            .data(boardSearchRepository.SearchBoardsConsonant(
+                                    lastWordDeleted + params.get(0),
+                                    lastWordDeleted + params.get(1),
+                                    10))
+                            .build();
+                } else {
+                    return WrappingSearchBoardDTO.builder().code(2000)
+                            .data(boardSearchRepository.SearchBoards(str, 10))
+                            .build();
+                }
+            }
+        }
     }
 }
