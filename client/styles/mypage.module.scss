@@ -82,3 +82,43 @@
     }
   }
 }
+
+.blankedinfos {
+  .title {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  .link {
+    margin-left: 2rem;
+  }
+  .dot {
+    margin: 0 0.5rem;
+  }
+}
+
+.pay {
+  display: flex;
+  align-items: center;
+  .logo {
+    margin: 1rem 0;
+    width: 50%;
+    .border {
+      width: 20%;
+      display: flex;
+      justify-content: center;
+      background-color: #fee500;
+      padding: 10px 5px 10px 5px;
+      border-radius: 50px;
+    }
+  }
+  img {
+    width: 60px;
+  }
+  .donation {
+    width: 50%;
+    .amount {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

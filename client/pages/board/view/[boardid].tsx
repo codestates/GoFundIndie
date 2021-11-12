@@ -20,6 +20,7 @@ export default function BoarDetails({ film }: any) {
       .then((res) => {
         Cookies.set("boardId", filmData.id);
         const urlcomp: any = res.data;
+        Cookies.set("nexturl", urlcomp.data.next_redirect_pc_url);
         const payment: Window | null = window.open(
           urlcomp.data.next_redirect_pc_url,
           "_blank",

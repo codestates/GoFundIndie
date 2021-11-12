@@ -8,14 +8,25 @@ public class PayRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String tid;
 
-    @Column
+    @Column(nullable = false)
     private Integer amount;
+
+    @Column(nullable = false)
+    private String nextRedirectPcUrl;
+
+    public String getNextRedirectPcUrl() {
+        return nextRedirectPcUrl;
+    }
+
+    public void setNextRedirectPcUrl(String nextRedirectPcUrl) {
+        this.nextRedirectPcUrl = nextRedirectPcUrl;
+    }
 
     public PayRequest() {}
 

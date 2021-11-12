@@ -92,6 +92,10 @@ export default function Rating({ boardid }: { boardid: Number }) {
         }
       })
       .catch((err) => {
+        console.log(err.response.data.code);
+        if (err.response.data.code === 4000) {
+          alert("로그인이 필요합니다");
+        }
         if (err.response.data.code === 4004) {
           alert("이미 코멘트를 작성하셨습니다");
         }
