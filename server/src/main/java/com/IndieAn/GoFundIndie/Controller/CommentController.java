@@ -99,9 +99,16 @@ public class CommentController {
 
             // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
             Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
-            User user = userService.FindUserUseEmail((String) checkToken.get("email"));
+
             // token에 email정보가 있다면 댓글 삭제 과정을 수행한다
             if(checkToken.get("email") != null) {
+                User user = userService.FindUserUseEmail((String) checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
+
                 body = commentService.DeleteComments(commentId, user);
                 return ResponseEntity.status(body.get("code").equals(2000) ? 200 : 404).body(body);
             }
@@ -126,9 +133,14 @@ public class CommentController {
 
             // 헤더에 존재하는 토큰을 가지고 유효성 검증을 한다.
             Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
-            User user = userService.FindUserUseEmail((String) checkToken.get("email"));
             // token에 email정보가 있다면 좋아요 기능을 수행한다.
             if(checkToken.get("email") != null) {
+                User user = userService.FindUserUseEmail((String) checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 body = commentRatingService.addRating(user, commentId.getComment_id());
                 return ResponseEntity.status(body.get("code").equals(2000) ? 201 : 404).body(body);
             }

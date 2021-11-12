@@ -62,6 +62,11 @@ public class CommentService {
         // 토큰이 유효하다면 작성 기능을 수행한다.
         if(checkToken.get("email") != null) {
             User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
             // Board id로 board를 찾고, 없을 때의 응답을 추가한다.
             if(boardService.FindBoardId(commentInputDTO.getBoardId()) == null) {
                 body.put("code", 4401);
@@ -93,6 +98,11 @@ public class CommentService {
         User user = null;
         if(email != null) {
             user = userRepository.FindUserByEmail(email);
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return body;
+            }
         }
         // 페이징을 통해 응답과 합께 데이터를 보내준다.
         if(page == null) page = 1;
@@ -150,6 +160,11 @@ public class CommentService {
         // 토큰이 유효하다면 작성 기능을 수행한다.
         if(checkToken.get("email") != null) {
             User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
             long commentId = -1;
             for(Comment c : board.getComments()) {
                 if(c.getUserId().getId() == user.getId()) {
@@ -223,9 +238,16 @@ public class CommentService {
         Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("accesstoken"));
         // token에 email정보가 있다면 댓글 삭제 과정을 수행한다
         if(checkToken.get("email") != null) {
+            User user = userService.FindUserUseEmail((String) checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
+
             commentReportRepository.CreateCommentReport(commentReportInputDTO.getBody()
                     ,commentRepository.FindCommentById(commentReportInputDTO.getCommentId())
-                    ,userService.FindUserUseEmail((String) checkToken.get("email")));
+                    ,user);
             body.put("code", 2000);
             return ResponseEntity.status(201).body(body);
         }
@@ -248,8 +270,14 @@ public class CommentService {
 
         // token에 email정보가 있다면 댓글 삭제 과정을 수행한다
         if(checkToken.get("email") != null) {
+            User user = userService.FindUserUseEmail((String) checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
             // 해당 유저가 관리자가 아니라면 지울 수 없기 때문에 4300 응답을 한다.
-            if(!userService.FindUserUseEmail((String) checkToken.get("email")).isAdminRole()) {
+            if(!user.isAdminRole()) {
                 body.put("code", 4300);
                 return ResponseEntity.status(403).body(body);
             }

@@ -40,7 +40,9 @@ public class UserService {
 
     // 유저 정보를 확인하고 해당 유저의 정보를 수정하는 서비스 기능
     public User ModifyUserData(UserModifyDTO userModifyDTO, String email) {
-        return userRepository.ModifyUser(userModifyDTO, userRepository.FindUserByEmail(email).getId());
+        User user = userRepository.FindUserByEmail(email);
+        if(user == null) return null;
+        return userRepository.ModifyUser(userModifyDTO, user.getId());
     }
 
     // 유저 email을 통해 DB에 해당 email을 가진 엔티티를 삭제하는 서비스 기능
@@ -82,13 +84,12 @@ public class UserService {
     }
 
     // AccessToken과 RefreshToken을 만드는 작업을 수행한다
-    public String CreateToken(User user, Long time) {
-        Date now = new Date();
+    public String CreateToken(User user, Integer expMin) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setHeader(createHeader())
                 .setClaims(createClaims(user))
-                .setExpiration(new Date(now.getTime() + Duration.ofSeconds(time).toMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * expMin))
                 .signWith(SignatureAlgorithm.HS256, SIGN_KEY)
                 .compact();
     }
