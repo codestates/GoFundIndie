@@ -16,10 +16,8 @@ import java.util.Map;
 public class GqlUserValidService {
     private final UserService userService;
 
-    //  테스트용 로그코드 박았습니다
     public int envValidCheck(DataFetchingEnvironment env) {
         if(env == null) {
-            log.warn("---- ! ENV is null ! ----");
             return 4000;
         }
 
@@ -30,24 +28,19 @@ public class GqlUserValidService {
 
             // No token in the Header : 4000
             if(accessToken == null) {
-                log.warn("---- ! accessToken is null ! ----");
                 return 4000;
             }
 
             Map<String, Object> checkToken = userService.CheckToken(accessToken);
 
             if(checkToken.get("email") == null) {
-                log.warn("---- ! Token's email is null ! ----");
                 return Integer.parseInt(checkToken.get("code").toString());
             } else {
-                log.info("---- Valid success ----");
                 return 0;
             }
         } catch (NullPointerException e) {
-            log.warn("---- ! NullPointerException ! ----");
-            return 4000;
+            return 4400;
         } catch (IllegalArgumentException e) {
-            log.warn("---- ! IllegalArgumentException ! ----");
             return 4000;
         }
     }

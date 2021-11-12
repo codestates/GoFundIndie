@@ -131,7 +131,7 @@ public class ImageService {
 
             Map<String, Object> checkToken = userService.CheckToken(header.get("accesstoken"));
 
-            if(checkToken.get("email") != null)
+            if(checkToken.get("email").toString() == null)
                 return Integer.parseInt(checkToken.get("code").toString());
             else
                 return 0;
