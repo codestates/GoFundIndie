@@ -30,6 +30,7 @@ public class BoardSearchRepository {
         ).setMaxResults(limit).getResultList();
     }
 
+    // TODO 검색 결과 정렬
     public List<SearchBoardDTO> SearchBoards(String str, int limit) {
         return entityManager.createQuery(
                 SELECT_SearchBoardDTO +
