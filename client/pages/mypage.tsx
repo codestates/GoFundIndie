@@ -1,13 +1,17 @@
 import styles from "../styles/mypage.module.scss";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
+import { useState } from "react";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export default function Mypage({ userInfo, film }: any) {
+  const [passwordChange, setPasswordChange] = useState<Boolean>(false);
+  const [changeValue, setChangeValue] = useState<string>("");
   if (userInfo === null) {
     return <div className={styles.error}>로그인이 필요합니다</div>;
   }
+  userInfo = userInfo.data;
   function strip_tags(str: any) {
     return str.replace(/(<([^>]+)>)/gi, "");
   }
@@ -90,6 +94,8 @@ export default function Mypage({ userInfo, film }: any) {
       );
     });
   };
+  function changeUserInfo() {}
+
   return (
     <div className={styles.mypage}>
       <div className={styles.mapageblock}>
@@ -108,9 +114,37 @@ export default function Mypage({ userInfo, film }: any) {
                       <div>비밀번호 : **********</div>
                     </div>
                     <div className={styles.button}>
-                      <button>비밀번호 변경</button>
+                      <button
+                        onClick={() => setPasswordChange(!passwordChange)}
+                      >
+                        비밀번호 변경
+                      </button>
                     </div>
                   </div>
+                  {passwordChange ? (
+                    <div>
+                      <div>
+                        <div>현재 비밀번호</div>
+                        <input />
+                      </div>
+                      <div>
+                        <div
+                          onChange={(e) => {
+                            let any: any = e.target;
+                            setChangeValue(any.value);
+                          }}
+                        >
+                          변경할 비밀번호
+                        </div>
+                        <input />
+                      </div>
+                      <div>
+                        <div>변경할 비밀번호 재확인</div>
+                        <input />
+                      </div>
+                      <button>변경하기</button>
+                    </div>
+                  ) : null}
                   <div className={styles.nickname}>
                     <div className={styles.text}>
                       <div>닉네임 : {userInfo.nickname}</div>
@@ -185,9 +219,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }).catch((err) => {
     return err;
   });
-  const film = await (await res2).json();
-  const userData = await (await res).json();
+  let film = null;
+  let userData = null;
+  if (res2) film = await (await res2).json();
+  if (res) userData = await (await res).json();
   return {
-    props: { userInfo: userData.data, film: film },
+    props: { userInfo: userData, film: film },
   };
 };

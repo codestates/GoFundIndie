@@ -14,10 +14,12 @@ export default function Approval() {
     Setaxios.postAxios("pay/approve", {
       pg_token: router.query.pg_token,
       boardId: Cookies.get("boardId"),
+      next_redirect_pc_url: Cookies.get("nexturl"),
     })
       .then((res) => {
         alert("정상적으로 결제됐습니다");
         Cookies.remove("boardId");
+        Cookies.remove("nexturl");
         window.close();
       })
       .catch((err) => {
