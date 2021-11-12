@@ -9,7 +9,7 @@ export default function Approval() {
   const [timer, setTimer] = useState(0);
   useEffect(() => {
     const timeout = setTimeout(() => setTimer(timer + 1), 1000);
-    if (!router.isReady) return;
+    if (!router.isReady) return () => clearTimeout(timeout);
 
     Setaxios.postAxios("pay/approve", {
       pg_token: router.query.pg_token,
