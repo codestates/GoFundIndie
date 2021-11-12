@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -70,6 +71,12 @@ public class KakaoPayService {
         if(checkToken.get("email") != null) {
             // 해당 보드에 자신이 작성한 댓글이 있는지 확인한다. 없다면 4016 응답
             User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
+
             boolean isFind = false;
             for(Comment c : board.getComments()) {
                 if(c.getUserId().getId() == user.getId()) {
@@ -113,6 +120,12 @@ public class KakaoPayService {
         if(checkToken.get("email") != null) {
             // 요청에서 검증을 했으므로 도네이션 완료 후 수정할 코멘트 아이디를 찾는다.
             User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+            // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+            if(user == null) {
+                body.put("code", 4000);
+                return ResponseEntity.badRequest().body(body);
+            }
+
             long commentId = -1;
             for(Comment c : board.getComments()) {
                 if(c.getUserId().getId() == user.getId()) {
@@ -132,12 +145,12 @@ public class KakaoPayService {
     // 카카오 페이 결제 요청 서비스
     public HashMap<String, Object> KakaoPayReady(Integer amount, String email) {
         body = new HashMap<>();
-        // 해당 이메일을 가진 결제 요청이 존재한다면 오류 응답을 낸다.
-        if(payRepository.FindPayRequestByEmail(email) != null) {
-            body.put("code", 4002);
-            body.put("data", null);
-            return body;
-        }
+        // 해당 이메일을 가진 결제 요청이 존재한다면 오류 응답을 낸다.  <-- 이걸 없애야한다.
+//        if(payRepository.FindPayRequestByEmail(email) != null) {
+//            body.put("code", 4002);
+//            body.put("data", null);
+//            return body;
+//        }
 
         KakaoPayReadyVO kakaoPayReadyVO;
         RestTemplate restTemplate = new RestTemplate();
@@ -169,7 +182,7 @@ public class KakaoPayService {
 
             if(kakaoPayReadyVO != null) {
                 // 성공적으로 요청이 완료되면 결제 요청 정보를 저장한다.
-                payRepository.CreatePayRequest(email, kakaoPayReadyVO.getTid(), amount);
+                payRepository.CreatePayRequest(email, kakaoPayReadyVO.getTid(), amount, kakaoPayReadyVO.getNext_redirect_pc_url());
                 body.put("code", 2000);
                 body.put("data", kakaoPayReadyVO);
             }
@@ -191,12 +204,13 @@ public class KakaoPayService {
     public HashMap<String, Object> kakaoPayInfo(KakaoPayApproveInputDTO kakaoPayApproveInputDTO, String email, long commentId) {
         body = new HashMap<>();
         // 해당 이메일을 가진 결제 요청이 존재하지 않는다면 오류 응답을 낸다.
-        PayRequest payRequest = payRepository.FindPayRequestByEmail(email);
+        PayRequest payRequest = payRepository.FindPayRequestByEmailandUrl(email, kakaoPayApproveInputDTO.getNext_redirect_pc_url());
         if(payRequest == null) {
-            body.put("code", 4003);
+            body.put("code", 4017);
             body.put("data", null);
             return body;
         }
+        List<PayRequest> payRequestList = payRepository.FindPayRequestByEmail(email);
 
         KakaoPayApproveVO kakaoPayApproveVO;
         log.info("KakaoPayInfoVO............................................");
@@ -221,7 +235,9 @@ public class KakaoPayService {
 
         try {
             // 승인 요청을 보내기 전에 결제 요청 정보를 삭제한다.
-            payRepository.DeletePayRequest(payRequest.getId());
+            for(PayRequest pr : payRequestList) {
+                payRepository.DeletePayRequest(pr.getId());
+            }
             kakaoPayApproveVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), postBody, KakaoPayApproveVO.class);
             log.info("" + kakaoPayApproveVO);
 
