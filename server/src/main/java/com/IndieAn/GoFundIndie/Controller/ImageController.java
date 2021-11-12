@@ -31,7 +31,9 @@ public class ImageController {
                                          @RequestPart(value = "upload") MultipartFile image) {
         //image dir result
         try {
-            switch (ImagePathTypes.findImagePathType(path)) {
+            ImagePathTypes type = ImagePathTypes.findImagePathType(path);
+            log.info(type.toString());
+            switch (type) {
                 case IMAGE_PATH_TYPES_USER:
                     return imageService.uploadUserImage(image, header);
                 case IMAGE_PATH_TYPES_STILL:
