@@ -46,7 +46,7 @@ export default function BoarDetails({ film }: any) {
         code
       }
     }`;
-    Setaxios.postgraphql("graphql", query, filmData.id)
+    Setaxios.postFindboardGraphql(query, filmData.id)
       .then((res) => {
         const data: any = res.data;
         if (data.data.SwitchLikeBoard.code === 2000) {

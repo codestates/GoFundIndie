@@ -139,3 +139,11 @@
 .tdstyle {
   border: 1px solid #dcdcdc;
 }
+.enroll {
+  display: flex;
+  justify-content: flex-end;
+  color: #009063;
+  &:hover {
+    filter: invert(100%);
+  }
+}

@@ -75,9 +75,9 @@ class Setaxios {
   // return axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
   //   withCredentials: true,
   // });
-  postgraphql = (endpoint: string, data: any = {}, id: Number) => {
+  postFindboardGraphql = (data: any = {}, id: Number) => {
     return axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`,
       {
         query: data,
         variables: {
@@ -95,20 +95,28 @@ class Setaxios {
         withCredentials: true,
       }
     );
+  };
 
-    return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
-      method: "POST",
-      data: `{
-         ${data}}`,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST",
-        "Access-Control-Allow-Credentials": "true",
+  postSearchBoardGraphql = (data: any = {}, search: string) => {
+    return axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`,
+      {
+        query: data,
+        variables: {
+          what: search,
+        },
       },
-      withCredentials: true,
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Credentials": "true",
+        },
+        withCredentials: true,
+      }
+    );
   };
 }
 
