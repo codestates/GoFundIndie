@@ -78,6 +78,10 @@ export default function Rating({ boardid }: { boardid: Number }) {
 
   function SubmitComment() {
     //TODO://spoiler체크박스
+    if (!bodyMessage) {
+      alert("내용을 입력해주세요");
+      return null;
+    }
     Setaxios.postAxios("comment", {
       rating: rate * 2,
       boardId: Number(boardid),

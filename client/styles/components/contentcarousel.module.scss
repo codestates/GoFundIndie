@@ -19,6 +19,7 @@
   .slide__wrapper {
     display: flex;
     img {
+      animation: fadeIn ease-out 0.5s;
       width: auto;
       height: 25rem;
     }
@@ -79,4 +80,13 @@
   font-size: 1rem;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
