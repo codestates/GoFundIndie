@@ -60,7 +60,8 @@ FindRandomBoard (Limit: 20) {
   }).catch((err) => {
     return err;
   });
-  if (res.code === "ECONNREFUSD") return { props: { film: null } };
+  console.log(res);
+  if (res.code === "ECONNREFUSED") return { props: { film: null } };
   const film = await (await res).json();
   if (!film) return { props: {} };
 
@@ -70,32 +71,3 @@ FindRandomBoard (Limit: 20) {
     },
   };
 };
-
-// drama: FindBoards (Type: SEARCH_TYPES_DRAMA, Limit: 8) {
-//   code
-//   data {
-//       id
-//       isApprove
-//       title
-//       posterImg
-//       infoCountry
-//       infoCreatedYear
-//       infoCreatedDate
-//       infoTime
-//       infoLimit
-//   }
-// }
-// documentary: FindBoards (Type: SEARCH_TYPES_DOCU, Limit: 8) {
-// code
-// data {
-//     id
-//     isApprove
-//     title
-//     posterImg
-//     infoCountry
-//     infoCreatedYear
-//     infoCreatedDate
-//     infoTime
-//     infoLimit
-// }
-// }

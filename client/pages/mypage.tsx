@@ -132,8 +132,12 @@ export default function Mypage({ userInfo, film }: any) {
       <div className={styles.mapageblock}>
         <div className={styles.header__blank__div} />
         <div className={styles["myinfo-wrapper"]}>
-          <Link href="/newboard">영화 등록하기</Link>
           <div className={styles.myinfo}>
+            <div className={styles.enroll}>
+              <div>
+                <Link href="/newboard">영화 등록하기</Link>
+              </div>
+            </div>
             <div className={styles["info-header"]}>유저 정보</div>
             <div className={styles.dividingline} />
             <div className={styles["information"]}>

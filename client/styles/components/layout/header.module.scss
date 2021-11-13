@@ -2,7 +2,6 @@ $backcolor: #1b1b1b;
 $buttoncolor: #bbbbbb;
 .header__div__wrapper {
   min-width: 800px !important;
-  overflow: scroll !important;
   width: 100%;
   position: fixed;
   left: 0;
@@ -103,9 +102,24 @@ $buttoncolor: #bbbbbb;
 .transparent {
   background-color: transparent;
 }
-
+.searchlist {
+  position: absolute;
+  width: 30%;
+  text-align: start;
+  padding: 1rem;
+  background-color: #1b1b1b;
+  color: white;
+  div {
+    margin: 0.1rem 0 0 0;
+  }
+}
 @media screen and (max-width: 1000px) {
   .home {
     display: none;
+  }
+}
+@media screen and (max-width: 1250px) {
+  .header-searchbar {
+    display: none !important;
   }
 }
