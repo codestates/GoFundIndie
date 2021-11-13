@@ -122,3 +122,20 @@
     }
   }
 }
+
+.inputtable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.thstyle {
+  padding-left: 20 px;
+  font-size: 1rem;
+  color: black;
+  width: 20%;
+  height: 60px;
+  background-color: rgb(0, 144, 99, 0.5);
+  border: 1px solid #dcdcdc;
+}
+.tdstyle {
+  border: 1px solid #dcdcdc;
+}

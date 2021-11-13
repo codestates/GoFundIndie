@@ -19,6 +19,7 @@ export default function Cast({ cast, onFocus }: any) {
         <div>출연진</div>
         {onFocus ? null : (
           <button
+            className={styles.open}
             onClick={() => {
               setComponent(!component);
             }}

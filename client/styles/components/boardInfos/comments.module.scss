@@ -4,7 +4,7 @@ $buttoncolor: #00c896;
   margin-top: 1rem;
   border-radius: 15px;
   .comment {
-    padding: 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
   }
 }
 .comment-line {
@@ -88,4 +88,23 @@ $buttoncolor: #00c896;
     padding: 1rem;
     font-size: 1.3rem;
   }
+}
+.like {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  img {
+    width: 25px;
+    height: 25px;
+  }
+  div {
+    margin-left: 0.2rem;
+  }
+}
+
+.likebutton {
+  all: unset;
+  color: $buttoncolor;
+  cursor: pointer;
+  margin: 0.5rem 0 0 0;
 }

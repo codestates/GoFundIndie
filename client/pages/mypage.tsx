@@ -3,17 +3,16 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import Setaxios from "../fetching/Setaxios";
-import Cookies from "js-cookie";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 export default function Mypage({ userInfo, film }: any) {
   const [passwordChange, setPasswordChange] = useState<Boolean>(false);
   const [nickChange, setNickChange] = useState<Boolean>(false);
   const [changeValue, setChangeValue] = useState<string>("");
   const [fileInfo, setFileInfo] = useState("");
   const [nickChangeValue, setnickChangeValue] = useState<string>("");
-  if (userInfo === null || userInfo === undefined) {
+  console.log(userInfo);
+  if (userInfo === null || !userInfo.data) {
     return <div className={styles.error}>로그인이 필요합니다</div>;
   }
   userInfo = userInfo.data;
@@ -63,7 +62,7 @@ export default function Mypage({ userInfo, film }: any) {
     // xhr.setRequestHeader("accesstoken", Cookies.get("accesstoken"));
     // xhr.responseType = "json";
     // xhr.send(fd);
-
+    const notification = document.getElementById("notification-container");
     let fd = new FormData();
     fd.append("upload", fileInfo);
     // Setaxios.postfileAxios("image/user", fd)
@@ -133,6 +132,7 @@ export default function Mypage({ userInfo, film }: any) {
       <div className={styles.mapageblock}>
         <div className={styles.header__blank__div} />
         <div className={styles["myinfo-wrapper"]}>
+          <Link href="/newboard">영화 등록하기</Link>
           <div className={styles.myinfo}>
             <div className={styles["info-header"]}>유저 정보</div>
             <div className={styles.dividingline} />

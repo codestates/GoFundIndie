@@ -22,7 +22,7 @@ export default function Header() {
       return;
     }
     const header = document.querySelector("#header__div");
-
+    header?.classList.add(styles.transparent);
     function CheckScroll() {
       if (window.scrollY === 0) {
         header?.classList.add(styles.transparent);

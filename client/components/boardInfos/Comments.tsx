@@ -1,3 +1,4 @@
+import Setaxios from "../../fetching/Setaxios";
 import styles from "../../styles/components/boardInfos/comments.module.scss";
 
 export default function Comments({ comments }: { comments: Array<string> }) {
@@ -10,6 +11,15 @@ export default function Comments({ comments }: { comments: Array<string> }) {
         </div>
       </div>
     );
+  }
+  function sendLike(commentid: number) {
+    Setaxios.postAxios("rating", { commentId: Number(commentid) })
+      .then((res) => console.log(res))
+      .catch((err) => {
+        if (err.response.data.code === 4000) {
+          alert("로그인이 필요합니다");
+        }
+      });
   }
   return (
     <div className={styles["comments-wrapper"]}>
@@ -37,10 +47,23 @@ export default function Comments({ comments }: { comments: Array<string> }) {
                 </div>
               </div>
               <div className={styles["comment-line"]} />
+
               <div className={styles["comment"]}>
+                <div className={styles.like}>
+                  <img src="/like_icon.png" />
+                  <div>{comment.like}</div>
+                </div>
                 <div className={styles["comment-body"]}>
                   <div>{comment.body}</div>
                 </div>
+                <button
+                  className={styles.likebutton}
+                  onClick={() => {
+                    sendLike(comment.id);
+                  }}
+                >
+                  좋아요
+                </button>
               </div>
             </div>
           </div>
