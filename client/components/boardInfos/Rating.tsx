@@ -3,7 +3,6 @@ import { useState } from "react";
 import Setaxios from "../../fetching/Setaxios";
 
 export default function Rating({ boardid }: { boardid: Number }) {
-  console.log(boardid);
   const [commentModalOpen, setCommentModalOpen] = useState<boolean>(false);
   const [bodyMessage, setBodymessage] = useState("");
   const [rate, setRate] = useState<number>(0);
@@ -13,7 +12,6 @@ export default function Rating({ boardid }: { boardid: Number }) {
         id={num}
         onClick={(e) => {
           const star: any = e.target;
-          console.log(star.tagName === "DIV");
           if (star.tagName === "DIV" && star.parentNode.id !== 1) {
             setRate(Number(star.parentNode.id) - 0.5);
           } else if (star.tagName === "IMG" && star.parentNode.id !== 1) {
@@ -78,6 +76,10 @@ export default function Rating({ boardid }: { boardid: Number }) {
 
   function SubmitComment() {
     //TODO://spoiler체크박스
+    if (!bodyMessage) {
+      alert("내용을 입력해주세요");
+      return null;
+    }
     Setaxios.postAxios("comment", {
       rating: rate * 2,
       boardId: Number(boardid),
@@ -92,6 +94,9 @@ export default function Rating({ boardid }: { boardid: Number }) {
         }
       })
       .catch((err) => {
+        if (err.response.data.code === 4000) {
+          alert("로그인이 필요합니다");
+        }
         if (err.response.data.code === 4004) {
           alert("이미 코멘트를 작성하셨습니다");
         }

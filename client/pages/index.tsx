@@ -71,32 +71,3 @@ FindRandomBoard (Limit: 20) {
     },
   };
 };
-
-// drama: FindBoards (Type: SEARCH_TYPES_DRAMA, Limit: 8) {
-//   code
-//   data {
-//       id
-//       isApprove
-//       title
-//       posterImg
-//       infoCountry
-//       infoCreatedYear
-//       infoCreatedDate
-//       infoTime
-//       infoLimit
-//   }
-// }
-// documentary: FindBoards (Type: SEARCH_TYPES_DOCU, Limit: 8) {
-// code
-// data {
-//     id
-//     isApprove
-//     title
-//     posterImg
-//     infoCountry
-//     infoCreatedYear
-//     infoCreatedDate
-//     infoTime
-//     infoLimit
-// }
-// }
