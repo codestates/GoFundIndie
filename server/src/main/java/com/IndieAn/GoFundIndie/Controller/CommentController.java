@@ -141,7 +141,7 @@ public class CommentController {
                     body.put("code", 4000);
                     return ResponseEntity.badRequest().body(body);
                 }
-                body = commentRatingService.addRating(user, commentId.getComment_id());
+                body = commentRatingService.addRating(user, commentId.getCommentId());
                 return ResponseEntity.status(body.get("code").equals(2000) ? 201 : 404).body(body);
             }
             else {
