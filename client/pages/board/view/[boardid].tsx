@@ -14,7 +14,6 @@ export default function BoarDetails({ film }: any) {
   } else {
     return <></>;
   }
-  console.log(filmData);
   function Payment() {
     Setaxios.getAxios(`pay/ready?amount=3000&board_id=${filmData.id}`)
       .then((res) => {
@@ -59,13 +58,19 @@ export default function BoarDetails({ film }: any) {
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
         <div className={styles.header__img}>
-          {filmData.still[0] ? <img src={filmData.still[0].image} /> : null}
+          {filmData.still[0] ? (
+            <img draggable="false" src={filmData.still[0].image} />
+          ) : null}
         </div>
       </div>
       <div className={styles.poster__img__div}>
         <div className={styles["poster__img-positional"]}>
           <div className={styles["poster__img-wrapper"]}>
-            <img className={styles.poster__img} src={filmData.posterImg} />
+            {filmData.posterImg ? (
+              <img className={styles.poster__img} src={filmData.posterImg} />
+            ) : (
+              <img src="/noposter.png" loading="lazy" />
+            )}
           </div>
         </div>
       </div>
@@ -95,12 +100,15 @@ export default function BoarDetails({ film }: any) {
               </button>
             </div>
           </div>
-          <div className={styles.filmLink}>
-            <div>지금 보고싶어요</div>
-            <div>
-              <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
+          {filmData.viewLink ? (
+            <div className={styles.filmLink}>
+              <div>지금 보고싶어요</div>
+              <div>
+                <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
+              </div>
             </div>
-          </div>
+          ) : null}
+
           <InfoWrapper
             cast={filmData.casting}
             stills={filmData.still}

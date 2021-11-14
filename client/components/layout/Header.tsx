@@ -171,7 +171,6 @@ export default function Header() {
                     <li>
                       <button
                         onClick={() => {
-                          window.scrollTo(0, 0);
                           setSignupModalOpen(!loginModalOpen);
                         }}
                       >
@@ -181,7 +180,6 @@ export default function Header() {
                     <li>
                       <button
                         onClick={() => {
-                          window.scrollTo(0, 0);
                           setLoginModalOpen(!loginModalOpen);
                         }}
                       >

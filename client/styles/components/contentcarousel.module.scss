@@ -22,6 +22,10 @@
       animation: fadeIn ease-out 0.5s;
       width: auto;
       height: 25rem;
+      transition: all 0.6s ease-in-out;
+      &:hover {
+        transform: scale(1.1);
+      }
     }
     div {
       cursor: pointer;

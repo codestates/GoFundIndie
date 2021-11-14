@@ -17,7 +17,13 @@ export default function Stillcuts({ stills, onFocus }: any) {
         >
           <div id="screen" className={styles["picturemodal-wrapper"]}>
             <div className={styles.picturemodal}>
-              {selectedImage?.src ? <img src={selectedImage.src} /> : null}
+              {selectedImage?.src ? (
+                <img
+                  draggable="false"
+                  onClick={() => setPictureModalOpen(false)}
+                  src={selectedImage.src}
+                />
+              ) : null}
             </div>
           </div>
         </div>
@@ -45,7 +51,7 @@ export default function Stillcuts({ stills, onFocus }: any) {
                 onClick={
                   counter === 4 && stills.length - 4 !== 0
                     ? () => {
-                        //TODO 클릭하면 상위컴포넌트 바뀌게하기
+                        document.getElementById("stills")?.click();
                       }
                     : (e) => {
                         setSelectedImage(e.target);
@@ -56,7 +62,7 @@ export default function Stillcuts({ stills, onFocus }: any) {
                 {counter === 4 && stills.length - 4 !== 0 ? (
                   <div>+{stills.length - 4}</div>
                 ) : null}
-                <img height="200px" src={el.image} />
+                <img height="200px" draggable="false" src={el.image} />
               </div>
             );
           })}
@@ -73,7 +79,7 @@ export default function Stillcuts({ stills, onFocus }: any) {
                   setPictureModalOpen(true);
                 }}
               >
-                <img src={el.image} />
+                <img draggable="false" src={el.image} />
               </div>
             );
           })}
