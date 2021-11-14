@@ -7,12 +7,14 @@ import com.IndieAn.GoFundIndie.Domain.Entity.RefreshToken;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
 import com.IndieAn.GoFundIndie.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +22,9 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     // accessToken 유효 시간
-    private final static Long ACCESS_TIME = 1000 * 60 * 30L;
+    private final static Integer ACCESS_TIME = 30;
     // refreshToken 유효 시간
-    private final static Long REFRESH_TIME = 1000 * 60 * 60 * 24L;
+    private final static Integer REFRESH_TIME = 30 * 24;
     private HashMap<String, Object> body = new HashMap<>();
     private HashMap<String, Object> data = new HashMap<>();
 
@@ -105,6 +107,13 @@ public class UserController {
                 // 유저가 DB에 존재한다면 refreshToken을 발급하여 쿠키에 저장하여 보내준다.
                 Cookie rt_cookie = new Cookie("refreshToken", userService.CreateToken(user, REFRESH_TIME));
                 response.addCookie(rt_cookie);
+
+                // SameSite None으로 설정
+                Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+                for(String header : headers) {
+                    response.setHeader(HttpHeaders.SET_COOKIE, header + "; " + "SameSite=None; Secure");
+                }
+
                 // key로 유저 email을 갖고 value로 refresh 값을 갖는 정보를 DB에 저장한다.
                 RefreshToken refreshToken = userService.AddRefreshToken(user.getEmail(), rt_cookie.getValue());
                 // refreshToken 값이 null이면 이미 해당 email에 refreshToken이 발급되어있다. 즉, 어디에서 로그인 되어있다는 것이다.
@@ -148,6 +157,11 @@ public class UserController {
                 cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
@@ -188,6 +202,11 @@ public class UserController {
             // token에 email정보가 있다면 정보를 가져오는 과정을 수행한다.
             if(checkToken.get("email") != null) {
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 userService.MakeUserInfoRes(user, data);
                 body.put("code", 2000);
                 body.put("data", data);
@@ -228,6 +247,11 @@ public class UserController {
                 }
 
                 User user = userService.ModifyUserData(userModifyDTO, (String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 userService.MakeUserInfoRes(user, data);
                 body.put("code", 2000);
                 body.put("data", data);
@@ -266,6 +290,11 @@ public class UserController {
                 cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
                 RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
@@ -310,6 +339,12 @@ public class UserController {
             if(checkToken.get("email") != null) {
                 // 해당 refresh token이 가지고 있는 email로 다시 access token을 발급한다.
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
+                // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
+                if(user == null) {
+                    body.put("code", 4000);
+                    return ResponseEntity.badRequest().body(body);
+                }
+
                 RefreshToken rt = userService.FindRefreshToken(user.getEmail(), cookiesResult);
 
                 // refresh token를 찾을 수 없을 때 응답을 해준다.

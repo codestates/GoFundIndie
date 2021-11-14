@@ -4,7 +4,7 @@ import Stillcuts from "./Stillcuts";
 import styles from "../../styles/components/boardInfos/infowrapper.module.scss";
 import { useState } from "react";
 
-export default function InfoWrapper({ comments, stills, casting }: any) {
+export default function InfoWrapper({ comments, stills, cast }: any) {
   const [componentChanger, setComponentChanger] = useState<boolean>(false);
   const InfoStyler = (e: any) => {
     const highlight = document.getElementsByClassName(styles.highlight)[0];
@@ -17,8 +17,10 @@ export default function InfoWrapper({ comments, stills, casting }: any) {
 
   const defaultState = (
     <div>
-      <Cast casting={casting} />
-      <Stillcuts stills={stills} onFocus={false} />
+      {cast.length !== 0 ? <Cast cast={cast} onFocus={false} /> : null}
+      {stills.length !== 0 ? (
+        <Stillcuts stills={stills} onFocus={false} />
+      ) : null}
       <Comments comments={comments} />
     </div>
   );
@@ -28,7 +30,7 @@ export default function InfoWrapper({ comments, stills, casting }: any) {
       case "default":
         return defaultState;
       case "cast":
-        return <Cast casting={casting} />;
+        return <Cast cast={cast} onFocus={true} />;
       case "stillcut":
         return <Stillcuts stills={stills} onFocus={true} />;
       case "rating":
@@ -36,7 +38,7 @@ export default function InfoWrapper({ comments, stills, casting }: any) {
     }
   }
   return (
-    <>
+    <div className={styles.infowrapper}>
       <div className={styles["menu-wrapper"]}>
         <button
           value="default"
@@ -48,7 +50,7 @@ export default function InfoWrapper({ comments, stills, casting }: any) {
         <button value="cast" onClick={InfoStyler}>
           출연/제작
         </button>
-        <button value="stillcut" onClick={InfoStyler}>
+        <button id="stills" value="stillcut" onClick={InfoStyler}>
           포토
         </button>
         <button value="rating" onClick={InfoStyler}>
@@ -60,6 +62,6 @@ export default function InfoWrapper({ comments, stills, casting }: any) {
           ? defaultState
           : InfoHandler()
         : null}
-    </>
+    </div>
   );
 }

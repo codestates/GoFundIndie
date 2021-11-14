@@ -53,6 +53,7 @@ $impact-font-color: #ffffff;
     justify-content: center;
   }
   .poster__img {
+    animation: fadeIn ease-out 0.5s;
     width: 100%;
     height: 100%;
   }
@@ -64,14 +65,86 @@ $impact-font-color: #ffffff;
   z-index: -1;
 
   .filminfo__title {
+    margin-bottom: 1rem;
     padding-top: 50px;
     font-size: 35px;
     color: white;
   }
-  .filminfo__info__text {
+}
+
+.filmLink {
+  color: white;
+  font-size: 1.3rem;
+  div {
+    margin: 1rem 0rem;
+  }
+}
+.like {
+  margin-bottom: 1rem;
+}
+.bucket {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  margin: 1rem 0;
+  width: 12%;
+  img {
+    width: 20px;
+    height: 20px;
+  }
+  div {
+    color: #00c896;
+    margin-left: 0.2rem;
+  }
+  &:hover {
+    filter: invert(100%);
+  }
+}
+
+.filminfo__info {
+  margin-bottom: 1rem;
+  span {
     font-size: 18px;
     & + .dot {
+      margin: 0 0.2rem;
       font-size: 20px;
     }
+  }
+}
+
+.donation {
+  all: unset;
+  margin: 1rem 0;
+  background-color: #00c896;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  border-radius: 50px;
+  height: 4rem;
+  width: 282px;
+  font-size: 1.3rem;
+  img {
+    width: 25px;
+    height: 25px;
+    margin: 0 0.5rem;
+  }
+  &:hover {
+    box-shadow: 0 80px 0 0 rgba(0, 0, 0, 0.25) inset,
+      0 -80px 0 0 rgba(0, 0, 0, 0.25) inset;
+  }
+}
+
+.ratings {
+  display: flex;
+  align-items: center;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

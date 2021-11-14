@@ -2,25 +2,19 @@ package com.IndieAn.GoFundIndie.Resolvers.Mutations;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Repository.BoardLikeRepository;
 import com.IndieAn.GoFundIndie.Repository.BoardRepository;
 import com.IndieAn.GoFundIndie.Repository.UserRepository;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateBoardCompleteDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.CreateTempBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateBoardCompleteDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.WrappingCreateTempBoardDTO;
-import com.IndieAn.GoFundIndie.Resolvers.DTO.OnlyCodeDTO;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Board.*;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.GqlResponseCodeDTO;
 import com.IndieAn.GoFundIndie.Service.BoardService;
+import com.IndieAn.GoFundIndie.Service.GqlUserValidService;
 import com.IndieAn.GoFundIndie.Service.UserService;
-import graphql.kickstart.servlet.context.GraphQLServletContext;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -29,47 +23,27 @@ import java.util.Map;
 public class BoardMutation {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final BoardLikeRepository boardLikeRepository;
 
     private final BoardService boardService;
     private final UserService userService;
-
-    private String accessToken = null;
-    private Map<String, Object> checkToken = null;
-
-    private GraphQLServletContext context = null;
-    private HttpServletRequest request = null;
+    private final GqlUserValidService gqlUserValidService;
 
     public WrappingCreateTempBoardDTO CreateTempBoard(DataFetchingEnvironment env) {
         try {
-            context = env.getContext();
-            request = context.getHttpServletRequest();
-            accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            // No token in the Header : 4000
-            if(context == null || request == null || accessToken == null)
-                return WrappingCreateTempBoardDTO.builder().code(4000).build();
+            if(code == 0) {
+                User user = gqlUserValidService.findUser(env);
+                if(user == null) return WrappingCreateTempBoardDTO.builder().code(4400).build();
 
-            checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") != null) {
-                long boardId = boardRepository.RegisterTempBoard(
-                        userService.FindUserUseEmail(checkToken.get("email").toString()));
                 return WrappingCreateTempBoardDTO.builder().code(2000)
-                        .data(CreateTempBoardDTO.builder().id(boardId).build())
+                        .data(CreateTempBoardDTO.builder()
+                                .id(boardRepository.RegisterTempBoard(user))
+                                .build())
                         .build();
-            } else {
-                // Token Invalid
-                return WrappingCreateTempBoardDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString())).build();
-            }
-
-            // Test Code : No Access Token
-//            return WrappingCreateTempBoardDTO.builder()
-//                    .code(2000)
-//                    .data(CreateTempBoardDTO.builder().id(boardRepository
-//                            .RegisterTempBoard(userRepository.FindUserByIdDB(1L))).build())
-//                    .build();
-
+            } else
+                return WrappingCreateTempBoardDTO.builder().code(code).build();
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
@@ -77,25 +51,25 @@ public class BoardMutation {
 
     public WrappingCreateTempBoardDTO CompleteBoard(CreateBoardCompleteDTO dto, DataFetchingEnvironment env) {
         try {
-            context = env.getContext();
-            request = context.getHttpServletRequest();
-            accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            // No token in the Header : 4000
-            if(context == null || request == null || accessToken == null)
-                return WrappingCreateTempBoardDTO.builder().code(4000).build();
-
-            checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") != null) {
+            if(code == 0) {
                 Board board = boardRepository.findBoardId(dto.getBoardId());
                 // Can not find board : 4401
                 if(board == null)
                     return WrappingCreateTempBoardDTO.builder().code(4401).build();
+                else if(board.getCastings().stream().noneMatch(el -> el.getPosition() == 1))
+                    // Can not find Director : 4403
+                    return WrappingCreateTempBoardDTO.builder().code(4403).build();
+                else if(board.getBoardGenres().size() == 0)
+                    // Can not find Genre : 4404
+                    return WrappingCreateTempBoardDTO.builder().code(4404).build();
 
-                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
+                User user = gqlUserValidService.findUser(env);
+                // Can not find User : 4400
+                if(user == null) return WrappingCreateTempBoardDTO.builder().code(4400).build();
                 // Invalid User : 4301
-                if(!user.isAdminRole() && user.getId() != board.getUserId().getId())
+                else if(!user.isAdminRole() && user.getId() != board.getUserId().getId())
                     return WrappingCreateTempBoardDTO.builder().code(4301).build();
 
                 try {
@@ -105,11 +79,16 @@ public class BoardMutation {
                                 .code(4300)
                                 .build();
                     } else {
-                        return WrappingCreateTempBoardDTO.builder()
-                                .code(2000)
-                                .data(CreateTempBoardDTO.builder()
-                                        .id(boardRepository.CompleteBoard(board, dto)).build())
-                                .build();
+                        try {
+                            return WrappingCreateTempBoardDTO.builder()
+                                    .code(2000)
+                                    .data(CreateTempBoardDTO.builder()
+                                            .id(boardRepository.CompleteBoard(board, dto)).build())
+                                    .build();
+                        } catch (IllegalArgumentException e) {
+                            return WrappingCreateTempBoardDTO.builder()
+                                    .code(4006).build();
+                        }
                     }
                 } catch (NullPointerException e) {
                     // Essential value is null : 4006
@@ -118,58 +97,95 @@ public class BoardMutation {
                 }
             } else {
                 // Token Invalid
-                return WrappingCreateTempBoardDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString()))
-                        .build();
+                return WrappingCreateTempBoardDTO.builder().code(code).build();
             }
-
-            // Test Code : No Access Token
-//            return WrappingCreateTempBoardDTO.builder()
-//                    .code(2000)
-//                    .data(CreateTempBoardDTO.builder().id(boardRepository
-//                            .CompleteBoard(dto).getId()).build())
-//                    .build();
-
         } catch (NullPointerException e) {
             return WrappingCreateTempBoardDTO.builder().code(4000).build();
         }
     }
 
-    public OnlyCodeDTO ApproveBoard(long id, DataFetchingEnvironment env) {
+    // ! Only -- Admin --
+    public WrappingCreateTempBoardDTO PutBoard(PutBoardDTO dto, DataFetchingEnvironment env) {
         try {
-            context = env.getContext();
-            request = context.getHttpServletRequest();
-            accessToken = request.getHeader("accesstoken");
+            int code = gqlUserValidService.envValidCheck(env);
 
-            if(context == null || request == null || accessToken == null)
-                return OnlyCodeDTO.builder().code(4000).build();
+            if (code == 0) {
+                Board board = boardRepository.findBoardId(dto.getBoardId());
+                // Can not find board : 4401
+                if (board == null)
+                    return WrappingCreateTempBoardDTO.builder().code(4401).build();
 
-            checkToken = userService.CheckToken(accessToken);
-
-            if(checkToken.get("email") != null) {
-                Board board = boardRepository.findBoardId(id);
-                if(board == null)
-                    return OnlyCodeDTO.builder().code(4401).build();
-
-                User user = userService.FindUserUseEmail(checkToken.get("email").toString());
-                if(!user.isAdminRole())
-                    return OnlyCodeDTO.builder().code(4300).build();
-
-                boardRepository.ApproveBoard(board);
-                return OnlyCodeDTO.builder().code(2000).build();
+                User user = gqlUserValidService.findUser(env);
+                // Can not find user : 4400
+                if(user == null) return WrappingCreateTempBoardDTO.builder().code(4400).build();
+                // User != Admin : 4300
+                else if (!user.isAdminRole()) {
+                    return WrappingCreateTempBoardDTO.builder()
+                            .code(4300)
+                            .build();
+                } else {
+                    return WrappingCreateTempBoardDTO.builder()
+                            .code(2000)
+                            .data(CreateTempBoardDTO.builder()
+                                    .id(boardRepository.PutBoard(board, dto)).build())
+                            .build();
+                }
             } else {
                 // Token Invalid
-                return OnlyCodeDTO.builder()
-                        .code(Integer.parseInt(checkToken.get("code").toString()))
-                        .build();
+                return WrappingCreateTempBoardDTO.builder().code(code).build();
             }
-
-            // Test Code : No Access Token
-//            boardRepository.ApproveBoard(boardRepository.findBoardId(id));
-//            return OnlyCodeDTO.builder().code(2000).build();
-
         } catch (NullPointerException e) {
-            return OnlyCodeDTO.builder().code(4000).build();
+            return WrappingCreateTempBoardDTO.builder().code(4000).build();
+        }
+    }
+
+    public GqlResponseCodeDTO DeleteBoard(long id, DataFetchingEnvironment env) {
+        try {
+            int code = gqlUserValidService.envValidCheck(env);
+
+            if (code == 0) {
+                Board board = boardRepository.findBoardId(id);
+                if(board == null)
+                    return GqlResponseCodeDTO.bad(4401);
+
+                User user = gqlUserValidService.findUser(env);
+                if(user == null) return GqlResponseCodeDTO.bad(4400);
+                else if(!user.isAdminRole())
+                    return GqlResponseCodeDTO.bad(4300);
+
+                boardRepository.DeleteBoard(board);
+                return GqlResponseCodeDTO.ok();
+            } else {
+                // Token Invalid
+                return GqlResponseCodeDTO.bad(code);
+            }
+        } catch (NullPointerException e) {
+            return GqlResponseCodeDTO.bad(4000);
+        }
+    }
+
+    public GqlResponseCodeDTO ApproveBoard(long id, boolean isApprove, DataFetchingEnvironment env) {
+        try {
+            int code = gqlUserValidService.envValidCheck(env);
+
+            if (code == 0) {
+                Board board = boardRepository.findBoardId(id);
+                if(board == null)
+                    return GqlResponseCodeDTO.bad(4401);
+
+                User user = gqlUserValidService.findUser(env);
+                if(user == null) return GqlResponseCodeDTO.bad(4400);
+                else if(!user.isAdminRole())
+                    return GqlResponseCodeDTO.bad(4300);
+
+                boardRepository.ApproveBoard(board, isApprove);
+                return GqlResponseCodeDTO.ok();
+            } else {
+                // Token Invalid
+                return GqlResponseCodeDTO.bad(code);
+            }
+        } catch (NullPointerException e) {
+            return GqlResponseCodeDTO.bad(4000);
         }
     }
 }

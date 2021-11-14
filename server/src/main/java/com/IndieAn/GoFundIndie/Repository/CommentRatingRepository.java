@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class CommentRatingRepository {
+public class CommentRatingRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
 
     @Autowired
@@ -29,6 +29,15 @@ public class CommentRatingRepository {
         return commentRatingList.get(0);
     }
 
+    public boolean commentRatedCheck(long userId, long commentId) {
+        return entityManager.createQuery(
+                "SELECT cr " +
+                        "FROM CommentRating cr " +
+                        "WHERE cr.userId = " + userId + " " +
+                        "AND cr.commentId = " + commentId + "", CommentRating.class
+        ).getResultList().size() != 0;
+    }
+
     // DB CommentRating 테이블에 userId와 commentId를 사용해 CommentRating 정보를 저장한다.
     public CommentRating CreateRating(long userId, long commentId) {
         CommentRating commentRating = new CommentRating();
@@ -41,8 +50,7 @@ public class CommentRatingRepository {
 
         entityManager.persist(commentRating);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return commentRating;
     }
@@ -54,8 +62,7 @@ public class CommentRatingRepository {
         comment.setLike(comment.getLike()-1);
         entityManager.remove(deleteRating);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
 
         return deleteRating;
     }

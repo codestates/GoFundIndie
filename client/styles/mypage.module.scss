@@ -8,14 +8,179 @@
     height: 74px;
   }
 }
-
+.info-header {
+  color: #333333;
+  margin-top: 2rem;
+  font-size: 1.3rem;
+}
 .myinfo-wrapper {
-  width: 100%;
   display: flex;
+  width: 100%;
   justify-content: center;
   .myinfo {
     width: 1200px;
-    height: 100px;
-    background-color: aqua;
   }
+}
+.dividingline {
+  width: 100%;
+  margin: 1rem 0;
+  border-bottom: solid 1px #999999;
+}
+.information {
+  display: flex;
+  .blankarea {
+    width: 282px;
+  }
+}
+
+.password,
+.nickname {
+  display: flex;
+  margin: 1rem 0;
+  align-items: center;
+  button {
+    all: unset;
+    cursor: pointer;
+    color: #009063;
+  }
+  .text {
+    width: 50%;
+  }
+  .button {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.blankedinfos {
+  width: 100%;
+}
+.cardinfoline {
+  width: 100%;
+  border-bottom: 1px solid #999999;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 3rem;
+  color: white;
+  opacity: 0.7;
+}
+
+.information {
+  display: flex;
+  margin: 2rem 0;
+  .posterimg {
+    width: 282px;
+    img {
+      width: 200px;
+    }
+  }
+}
+
+.blankedinfos {
+  .title {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  .link {
+    margin-left: 2rem;
+  }
+  .dot {
+    margin: 0 0.5rem;
+  }
+}
+
+.pay {
+  display: flex;
+  align-items: center;
+  .logo {
+    margin: 1rem 0;
+    width: 50%;
+    .border {
+      width: 20%;
+      display: flex;
+      justify-content: center;
+      background-color: #fee500;
+      padding: 10px 5px 10px 5px;
+      border-radius: 50px;
+    }
+  }
+  img {
+    width: 60px;
+  }
+  .donation {
+    width: 50%;
+    .amount {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
+
+.inputtable {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid rgb(0, 144, 99);
+}
+.thstyle {
+  padding-left: 20 px;
+  font-size: 1rem;
+  color: black;
+  width: 20%;
+  height: 60px;
+  background-color: rgb(0, 144, 99, 0.5);
+  border: 1px solid #dcdcdc;
+}
+.tdstyle {
+  border: 1px solid #dcdcdc;
+}
+.enroll {
+  display: flex;
+  justify-content: flex-end;
+  color: #009063;
+  &:hover {
+    filter: invert(100%);
+  }
+}
+
+.input {
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  box-sizing: border-box;
+  border: 1px solid #c2c2c2;
+  width: 200px;
+  margin-left: 1rem;
+  height: 30px;
+}
+
+.moviebutton {
+  position: relative;
+  display: inline-block;
+  width: 30%;
+  height: 60px;
+  padding: 0 35px;
+  background-color: #009063;
+  opacity: 0.8;
+  color: #fff;
+  line-height: 60px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+}
+
+.button_wrapper {
+  display: flex;
+  justify-content: center;
 }

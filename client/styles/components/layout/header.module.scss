@@ -1,8 +1,7 @@
 $backcolor: #1b1b1b;
 $buttoncolor: #bbbbbb;
 .header__div__wrapper {
-  min-width: 1200px !important;
-  overflow: scroll !important;
+  min-width: 800px !important;
   width: 100%;
   position: fixed;
   left: 0;
@@ -30,6 +29,9 @@ $buttoncolor: #bbbbbb;
     min-width: 4rem;
     color: $buttoncolor;
     cursor: pointer;
+    &:hover {
+      color: white;
+    }
   }
   .header__div {
     display: flex;
@@ -67,11 +69,11 @@ $buttoncolor: #bbbbbb;
     a {
       color: white;
       opacity: 0.7;
+      &:hover {
+        opacity: 1;
+      }
     }
-    div {
-      color: white;
-      opacity: 0.7;
-    }
+
     .header-searchbar {
       width: 274px;
       height: 40px;
@@ -99,4 +101,27 @@ $buttoncolor: #bbbbbb;
 }
 .transparent {
   background-color: transparent;
+}
+.searchlist {
+  position: absolute;
+  width: 274px;
+  text-align: start;
+  padding: 1rem;
+  background-color: #1b1b1b;
+  color: white;
+  border-radius: 10px;
+  transition: all 0.3s;
+  div {
+    margin: 0.1rem 0 0 0;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .home {
+    display: none;
+  }
+}
+@media screen and (max-width: 1250px) {
+  .header-searchbar {
+    display: none !important;
+  }
 }

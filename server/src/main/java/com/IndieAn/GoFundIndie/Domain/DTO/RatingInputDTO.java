@@ -1,9 +1,9 @@
 package com.IndieAn.GoFundIndie.Domain.DTO;
 
 public class RatingInputDTO {
-    private long comment_id;
+    private long commentId;
 
-    public long getComment_id() {
-        return comment_id;
+    public long getCommentId() {
+        return commentId;
     }
 }

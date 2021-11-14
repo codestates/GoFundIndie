@@ -2,6 +2,7 @@ package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotBlank;
 
@@ -36,7 +37,18 @@ public class CreateBoardCompleteDTO {
 
     public CreateBoardCompleteDTO() {}
 
-    public CreateBoardCompleteDTO(long boardId, String title, String infoCountry, String infoCreatedYear, int infoTime, String infoStory, String producer, String distributor, String posterImg, String viewLink, int infoLimit, boolean infoSubtitle, String infoCreatedDate) {
+    public CreateBoardCompleteDTO(Long boardId, String title, String infoCountry,
+                                  String infoCreatedYear, Integer infoTime, String infoStory,
+                                  String producer, String distributor, String posterImg,
+                                  String viewLink, int infoLimit, boolean infoSubtitle,
+                                  String infoCreatedDate) {
+        Assert.notNull(boardId, "boardId is not null");
+        Assert.notNull(title, "title is not null");
+        Assert.notNull(infoCountry, "infoCountry is not null");
+        Assert.notNull(infoCreatedYear, "infoCreatedYear is not null");
+        Assert.notNull(infoTime, "infoTime is not null");
+        Assert.notNull(infoStory, "infoStory is not null");
+
         this.boardId = boardId;
         this.title = title;
         this.infoCountry = infoCountry;

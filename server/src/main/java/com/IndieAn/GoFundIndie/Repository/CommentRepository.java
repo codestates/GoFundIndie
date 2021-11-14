@@ -1,9 +1,11 @@
 package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.DTO.CommentInputDTO;
+import com.IndieAn.GoFundIndie.Domain.DTO.CommentModifyDTO;
 import com.IndieAn.GoFundIndie.Domain.Entity.Board;
 import com.IndieAn.GoFundIndie.Domain.Entity.Comment;
 import com.IndieAn.GoFundIndie.Domain.Entity.User;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +16,8 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class CommentRepository {
-    private  final EntityManager entityManager;
+public class CommentRepository extends EntityManagerExtend{
+    private final EntityManager entityManager;
 
     @Autowired
     public CommentRepository(EntityManager entityManager) {
@@ -27,16 +29,6 @@ public class CommentRepository {
         return entityManager.createQuery("SELECT c FROM Comment as c", Comment.class).getResultList();
     }
 
-    // DB Comment 테이블에서 해당 board id를 가진 코멘트들을 리턴한다.
-    public List<Comment> FindCommentListByBoardId(long boardId) {
-        return entityManager.createQuery("SELECT c FROM Comment as c where c.board_id = '"+ boardId +"'", Comment.class).getResultList();
-    }
-
-    // (임시) boardId를 통해 board를 찾는 기능
-    public Board FindBoardDB(long boardId) {
-        return entityManager.find(Board.class, boardId);
-    }
-
     // Id를 통해서 Comment를 찾는 기능
     public Comment FindCommentById(long commentId) {
         return entityManager.find(Comment.class, commentId);
@@ -44,9 +36,8 @@ public class CommentRepository {
     }
 
     // DB Comment 테이블에 매개변수 commentInputDTO의 데이터를 사용하여 Comment 정보를 저장한다.
-    public Comment AddComment(CommentInputDTO commentInputDTO) {
+    public void AddComment(CommentInputDTO commentInputDTO, User user) {
         Comment comment = new Comment();
-        User user = entityManager.find(User.class, commentInputDTO.getUserId());
         Board board = entityManager.find(Board.class, commentInputDTO.getBoardId());
 
         comment.setRating(commentInputDTO.getRating());
@@ -62,14 +53,22 @@ public class CommentRepository {
         entityManager.persist(comment);
         entityManager.persist(board);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
+    }
 
-        return comment;
+    // DB Comment 테이블에 매개변수 commentId를 사용하여 Comment 정보를 수정한다.
+    public void ModifyComment(CommentModifyDTO commentModifyDTO, long commentId) {
+        Comment modifyComment = entityManager.find(Comment.class, commentId);
+
+        if(commentModifyDTO.getRating() != null) modifyComment.setRating(commentModifyDTO.getRating());
+        if(commentModifyDTO.getCommentBody() != null) modifyComment.setBody(commentModifyDTO.getCommentBody());
+        modifyComment.setSpoiler(commentModifyDTO.isSpoiler());
+
+        end(entityManager);
     }
 
     // DB Comment 테이블에 매개변수 commentId를 사용하여 Comment 정보를 삭제한다.
-    public Comment DeleteComment(long commentId) {
+    public void DeleteComment(long commentId) {
         Comment deleteComment = entityManager.find(Comment.class, commentId);
         Board board = deleteComment.getBoardId();
 
@@ -78,9 +77,34 @@ public class CommentRepository {
         entityManager.persist(board);
         entityManager.remove(deleteComment);
 
-        entityManager.flush();
-        entityManager.close();
+        end(entityManager);
+    }
 
-        return deleteComment;
+    // ViewBoard gql comments
+    public List<CommentGraphQLDTO> findCommentByBoard(long boardId, Integer limit) {
+        String query = "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Comment.CommentGraphQLDTO" +
+                       "(c.id, c.rating, u.id, u.nickname, u.profilePicture, c.donation, c.body, c.spoiler, c.like, false) " +
+                       "FROM Comment c " +
+                       "JOIN c.boardId b " +
+                       "ON c.boardId = " + boardId + " " +
+                       "JOIN c.userId u " +
+                       "ORDER BY c.like DESC";
+
+        if(limit == null) {
+            return entityManager.createQuery(query, CommentGraphQLDTO.class)
+                    .getResultList();
+        } else {
+            return entityManager.createQuery(query, CommentGraphQLDTO.class)
+                    .setMaxResults(limit)
+                    .getResultList();
+        }
+    }
+
+    // 후원을 했을 경우 DB에서 댓글을 찾아 후원 금액을 수정한다.
+    public void ModifyDonation(long commentId, Integer total) {
+        Comment comment = entityManager.find(Comment.class, commentId);
+        comment.setDonation(comment.getDonation() + total);
+
+        end(entityManager);
     }
 }

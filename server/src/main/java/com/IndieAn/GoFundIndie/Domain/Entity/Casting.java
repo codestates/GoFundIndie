@@ -14,7 +14,7 @@ public class Casting {
     @Column(columnDefinition = "TINYINT")
     private int position;
 
-    @Column
+    @Column(length = 500)
     private String image;
 
     @ManyToOne(targetEntity = Board.class)

@@ -1,0 +1,25 @@
+input CreateBoardReport {
+    boardId: ID!
+    body: String!
+}
+
+type WrappingReport {
+    code: Int
+    data: ReportInfo
+}
+
+type WrappingReports {
+    code: Int
+    data: [ReportInfo]
+}
+
+type ReportInfo {
+    id: ID
+    boardId: ID
+    boardTitle: String
+    reporterId: ID
+    reporterNickname: String
+    defendantId: ID
+    defendantNickname: String
+    body: String
+}

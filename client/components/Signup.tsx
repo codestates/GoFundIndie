@@ -1,7 +1,6 @@
 import styles from "../styles/components/signup.module.scss";
 import { ChangeEvent, useState } from "react";
 import Setaxios from "../fetching/Setaxios";
-import Router from "next/router";
 
 export default function Signup({
   handleSignupModal,
@@ -41,9 +40,8 @@ export default function Signup({
     }
     await Setaxios.postAxios("signup", userData)
       .then((res) => {
-        console.log(res);
         alert("성공적으로 가입됐습니다");
-        Router.push("/");
+        handleSignupModal();
       })
       .catch((err) => {
         setErrormessage("가입에 실패했습니다");
@@ -54,7 +52,6 @@ export default function Signup({
       if (e.target.value === "") return;
       await Setaxios.getAxios("check?type=" + key + "&query=" + e.target.value)
         .then((res) => {
-          console.log(res);
           setValidation({ ...validation, [key]: true });
         })
         .catch((err) => {

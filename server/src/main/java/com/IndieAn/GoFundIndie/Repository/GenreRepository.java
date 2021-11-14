@@ -1,6 +1,7 @@
 package com.IndieAn.GoFundIndie.Repository;
 
 import com.IndieAn.GoFundIndie.Domain.Entity.Genre;
+import com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +12,16 @@ import java.util.List;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class GenreRepository {
+public class GenreRepository extends EntityManagerExtend{
     private final EntityManager entityManager;
 
     public Genre FindById(Long id) {
-        return entityManager.find(Genre.class, id);
+        if(id == null) return null;
+        try {
+            return entityManager.find(Genre.class, id);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public List<Genre> FindAll() {
@@ -25,9 +31,7 @@ public class GenreRepository {
     }
 
     public void RegisterDatabase(Genre genre) {
-        entityManager.persist(genre);
-        entityManager.flush();
-        entityManager.close();
+        singlePersist(genre, entityManager);
     }
 
     public boolean Delete(Long id) {
@@ -35,9 +39,17 @@ public class GenreRepository {
                 "SELECT el FROM Genre el WHERE id=" + id + "", Genre.class)
                 .getResultList();
         if(list.size() == 0) return false;
-        entityManager.remove(list.get(0));
-        entityManager.flush();
-        entityManager.close();
+        singleRemove(list.get(0), entityManager);
         return true;
+    }
+
+    public List<GenreGraphQLDTO> findGenreByBoard(long boardId) {
+        return entityManager.createQuery(
+                "SELECT DISTINCT new com.IndieAn.GoFundIndie.Resolvers.DTO.Genre.GenreGraphQLDTO" +
+                        "(g.id, g.name) " +
+                        "FROM BoardGenre bg " +
+                        "JOIN bg.genreId g " +
+                        "ON bg.boardId = " + boardId + " ", GenreGraphQLDTO.class
+        ).getResultList();
     }
 }
