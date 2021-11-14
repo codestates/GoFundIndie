@@ -53,6 +53,7 @@ $impact-font-color: #ffffff;
     justify-content: center;
   }
   .poster__img {
+    animation: fadeIn ease-out 0.5s;
     width: 100%;
     height: 100%;
   }
@@ -86,6 +87,7 @@ $impact-font-color: #ffffff;
   cursor: pointer;
   align-items: center;
   margin: 1rem 0;
+  width: 12%;
   img {
     width: 20px;
     height: 20px;
@@ -93,6 +95,9 @@ $impact-font-color: #ffffff;
   div {
     color: #00c896;
     margin-left: 0.2rem;
+  }
+  &:hover {
+    filter: invert(100%);
   }
 }
 
@@ -125,9 +130,21 @@ $impact-font-color: #ffffff;
     height: 25px;
     margin: 0 0.5rem;
   }
+  &:hover {
+    box-shadow: 0 80px 0 0 rgba(0, 0, 0, 0.25) inset,
+      0 -80px 0 0 rgba(0, 0, 0, 0.25) inset;
+  }
 }
 
 .ratings {
   display: flex;
   align-items: center;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

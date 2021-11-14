@@ -4,12 +4,31 @@ axios.defaults.withCredentials = true;
 
 class Setaxios {
   constructor() {}
-  postAxios = (endpoint: string, data: object = {}) => {
+  postAxios = (
+    endpoint: string,
+    data: object = {},
+    contentType: string = "application/json"
+  ) => {
     return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
       method: "POST",
       data: data,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": contentType,
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Credentials": "true",
+      },
+      withCredentials: true,
+    });
+  };
+
+  postfileAxios = (endpoint: string, data: object = {}) => {
+    return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
+      method: "POST",
+      data: data,
+      headers: {
+        "Content-Type": "multipart/form-data",
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST",
@@ -34,14 +53,19 @@ class Setaxios {
   }
 
   putAxios = (endpoint: string, data: object = {}) => {
+    // return axios.put(
+    //   `${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint,
+    //   data,
+    //   { withCredentials: true }
+    // );
     return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
-      method: "PUT",
+      method: "put",
       data: data,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "PUT",
+        "Access-Control-Allow-Methods": "put",
         "Access-Control-Allow-Credentials": "true",
       },
       withCredentials: true,
@@ -51,9 +75,29 @@ class Setaxios {
   // return axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
   //   withCredentials: true,
   // });
-  postgraphql = (endpoint: string, data: any = {}, id: Number) => {
+  postGraphql = (data: any = {}, variable: any = {}) => {
     return axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`,
+      {
+        query: data,
+        variables: variable,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Credentials": "true",
+        },
+        withCredentials: true,
+      }
+    );
+  };
+
+  postFindboardGraphql = (data: any = {}, id: Number) => {
+    return axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`,
       {
         query: data,
         variables: {
@@ -71,20 +115,28 @@ class Setaxios {
         withCredentials: true,
       }
     );
+  };
 
-    return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
-      method: "POST",
-      data: `{
-         ${data}}`,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST",
-        "Access-Control-Allow-Credentials": "true",
+  postSearchBoardGraphql = (data: any = {}, search: string) => {
+    return axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`,
+      {
+        query: data,
+        variables: {
+          what: search,
+        },
       },
-      withCredentials: true,
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Credentials": "true",
+        },
+        withCredentials: true,
+      }
+    );
   };
 }
 

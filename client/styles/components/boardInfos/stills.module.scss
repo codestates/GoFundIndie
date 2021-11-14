@@ -12,6 +12,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.3s ease-in-out;
     div {
       color: white;
       font-size: 3rem;
@@ -20,6 +21,9 @@
     img {
       width: 330px;
       height: auto;
+    }
+    &:hover {
+      transform: scale(1.2);
     }
   }
 }

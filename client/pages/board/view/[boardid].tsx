@@ -19,6 +19,7 @@ export default function BoarDetails({ film }: any) {
       .then((res) => {
         Cookies.set("boardId", filmData.id);
         const urlcomp: any = res.data;
+        Cookies.set("nexturl", urlcomp.data.next_redirect_pc_url);
         const payment: Window | null = window.open(
           urlcomp.data.next_redirect_pc_url,
           "_blank",
@@ -30,7 +31,6 @@ export default function BoarDetails({ film }: any) {
         });
       })
       .catch((err) => {
-        console.log(err.response);
         if (err.response.data.code === 4016) {
           alert("먼저 영화에 대한 평을 작성해주세요!");
         }
@@ -45,10 +45,9 @@ export default function BoarDetails({ film }: any) {
         code
       }
     }`;
-    Setaxios.postgraphql("graphql", query, filmData.id)
+    Setaxios.postFindboardGraphql(query, filmData.id)
       .then((res) => {
         const data: any = res.data;
-        console.log(res);
         if (data.data.SwitchLikeBoard.code === 2000) {
           alert("성공적으로 담아두었습니다");
         }
@@ -59,13 +58,19 @@ export default function BoarDetails({ film }: any) {
     <div className={styles["board-detail__wrapper"]}>
       <div className={styles.header__img__wrapper}>
         <div className={styles.header__img}>
-          {filmData.still[0] ? <img src={filmData.still[0].image} /> : null}
+          {filmData.still[0] ? (
+            <img draggable="false" src={filmData.still[0].image} />
+          ) : null}
         </div>
       </div>
       <div className={styles.poster__img__div}>
         <div className={styles["poster__img-positional"]}>
           <div className={styles["poster__img-wrapper"]}>
-            <img className={styles.poster__img} src={filmData.posterImg} />
+            {filmData.posterImg ? (
+              <img className={styles.poster__img} src={filmData.posterImg} />
+            ) : (
+              <img src="/noposter.png" loading="lazy" />
+            )}
           </div>
         </div>
       </div>
@@ -82,7 +87,7 @@ export default function BoarDetails({ film }: any) {
             </div>
             <div className={styles.like}>{`평균 ★${
               filmData.averageRating / 2
-            } (${filmData.likeAmount}명)`}</div>
+            } (${filmData.commentAmount}명)`}</div>
             <div className={styles.bucket} onClick={SwitchLikeBoard}>
               <img src="/plusButton.png" alt="plus" />
               <div>담아둘래요</div>
@@ -95,12 +100,15 @@ export default function BoarDetails({ film }: any) {
               </button>
             </div>
           </div>
-          <div className={styles.filmLink}>
-            <div>지금 보고싶어요</div>
-            <div>
-              <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
+          {filmData.viewLink ? (
+            <div className={styles.filmLink}>
+              <div>지금 보고싶어요</div>
+              <div>
+                <a href={filmData.viewLink}>외부 링크로 연결하기...</a>
+              </div>
             </div>
-          </div>
+          ) : null}
+
           <InfoWrapper
             cast={filmData.casting}
             stills={filmData.still}

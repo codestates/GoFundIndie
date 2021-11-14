@@ -1,6 +1,7 @@
 import styles from "../styles/components/contentcarousel.module.scss";
 import Link from "next/link";
 export default function ContentCarousel({ film }: any) {
+  if (film.data === null) return <></>;
   if (film.data.length <= 4) return <></>;
   let counter = 0;
   let sliderstack: any[] = [];
@@ -26,10 +27,9 @@ export default function ContentCarousel({ film }: any) {
       <div>
         <Link href="/board/view/[boardid]" as={`/board/view/${movie.id}`}>
           {movie.posterImg ? (
-            // <img style={{ backgroundImage: `url("${film.posterImg}")` }} />
-            <img src={movie.posterImg} />
+            <img src={movie.posterImg} draggable="false" loading="lazy" />
           ) : (
-            <img src="/noposter.png" />
+            <img src="/noposter.png" draggable="false" loading="lazy" />
           )}
         </Link>
         <div className={styles.title}>{movie.title}</div>

@@ -50,8 +50,7 @@ FindRandomBoard (Limit: 20) {
   }
 }
 }`;
-  console.log(cookies);
-  console.log(cookies?.slice(cookies?.search("accesstoken") + 12));
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),
@@ -65,39 +64,10 @@ FindRandomBoard (Limit: 20) {
   if (res.code === "ECONNREFUSED") return { props: { film: null } };
   const film = await (await res).json();
   if (!film) return { props: {} };
-  console.log(film);
+
   return {
     props: {
       film: film.data,
     },
   };
 };
-
-// drama: FindBoards (Type: SEARCH_TYPES_DRAMA, Limit: 8) {
-//   code
-//   data {
-//       id
-//       isApprove
-//       title
-//       posterImg
-//       infoCountry
-//       infoCreatedYear
-//       infoCreatedDate
-//       infoTime
-//       infoLimit
-//   }
-// }
-// documentary: FindBoards (Type: SEARCH_TYPES_DOCU, Limit: 8) {
-// code
-// data {
-//     id
-//     isApprove
-//     title
-//     posterImg
-//     infoCountry
-//     infoCreatedYear
-//     infoCreatedDate
-//     infoTime
-//     infoLimit
-// }
-// }
