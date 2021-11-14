@@ -3,7 +3,7 @@ package com.IndieAn.GoFundIndie.Domain.DTO;
 public class RatingInputDTO {
     private long commentId;
 
-    public long getComment_id() {
+    public long getCommentId() {
         return commentId;
     }
 }
