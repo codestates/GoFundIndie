@@ -57,6 +57,10 @@ $impact-font-color: #ffffff;
     width: 100%;
     height: 100%;
   }
+  img {
+    max-width: 100%;
+    max-height: auto;
+  }
 }
 
 .filminfo__wrapper {
