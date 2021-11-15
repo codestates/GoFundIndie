@@ -29,7 +29,7 @@ export default function ContentCarousel({ film }: any) {
           {movie.posterImg ? (
             <img src={movie.posterImg} draggable="false" loading="lazy" />
           ) : (
-            <img src="/noposter.png" draggable="false" loading="lazy" />
+            <img src="/Poster.jpg" draggable="false" loading="lazy" />
           )}
         </Link>
         <div className={styles.title}>{movie.title}</div>
