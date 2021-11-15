@@ -116,11 +116,7 @@ export default function BoarDetails({ film }: any) {
             </div>
           ) : null}
 
-          <InfoWrapper
-            cast={filmData.casting}
-            stills={filmData.still}
-            comments={filmData.comment}
-          />
+          <InfoWrapper filmData={filmData} />
         </div>
       </div>
     </div>
