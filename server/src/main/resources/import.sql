@@ -527,4 +527,3 @@ INSERT INTO `still` (image, board_id) VALUES ("https://search3.kakaocdn.net/argo
 INSERT INTO `still` (image, board_id) VALUES ("https://post-phinf.pstatic.net/MjAxNzAyMjdfMjY5/MDAxNDg4MTM0MTEzOTcw.OoZW9yuAZJTwE23NwkLAxSX3WT7PWBidm-KPo9uXHHAg.RlAroTBNgWS7lzgLG_u5VnrPQQhX29r6giL77xOq6pog.JPEG/%EC%96%BC%EC%9D%8C%EA%BD%83%282016%29_%EC%A0%80%EC%9A%A9%EB%9F%89__0000031313ms.jpg?type=w1200", 62);
 INSERT INTO `still` (image, board_id) VALUES ("http://ojsfile.ohmynews.com/CRI_T_IMG/2020/0613/A0002649804_T.jpg", 75);
 INSERT INTO `still` (image, board_id) VALUES ("http://t1.daumcdn.net/movie/ab26d1340337da6b13fff7bd624e8349538e51e8", 72);
-

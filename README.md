@@ -10,7 +10,7 @@
 
 ## 📎 배포링크
 
-https://go-fund-indie.vercel.app/
+https://go-fund-indie-six.vercel.app/
 
 ## 🛠 Tech Stack
 ![Group 2](https://user-images.githubusercontent.com/45745049/138052835-c7612bf2-530b-4bb0-98ea-69583f4660e6.png)
