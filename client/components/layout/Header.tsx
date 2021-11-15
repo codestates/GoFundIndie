@@ -87,6 +87,8 @@ export default function Header() {
       SearchBoardName(what: $what){
         code
         data{
+          id
+          posterImg
           title
         }
       }
@@ -98,6 +100,7 @@ export default function Header() {
     Setaxios.postSearchBoardGraphql(query, e.target.value)
       .then((res) => {
         const data: any = res.data;
+        console.log(res);
         setSearchedData(data.data.SearchBoardName.data);
       })
       .catch((err) => alert(err));
@@ -105,7 +108,32 @@ export default function Header() {
 
   const displaySearchedData = () => {
     return searchedData.map((movie: any) => {
-      return <div key={movie.title}>{movie.title}</div>;
+      return (
+        <div
+          onClick={(e) => {
+            setSearchedData([]);
+            setSearchedOnfocus(false);
+            let text: any = document.getElementById("inputText");
+            text.value = "";
+          }}
+          className={styles.link}
+          key={movie.title}
+        >
+          {movie.posterImg ? (
+            <img
+              width="25px"
+              onError={(e) => {
+                const img: any = e.target;
+                img.src = "/Poster.jpg";
+              }}
+              src={movie.posterImg}
+            />
+          ) : null}
+          <Link href="/board/view/[boardid]" as={`/board/view/${movie.id}`}>
+            {movie.title}
+          </Link>
+        </div>
+      );
     });
   };
   return (
@@ -136,12 +164,14 @@ export default function Header() {
                 <div className={styles["header-searchbar"]}>
                   <input
                     type="text"
+                    id="inputText"
                     placeholder="컨텐츠를 검색해보세요"
-                    onFocus={() => setSearchedOnfocus(true)}
-                    onBlur={() => {
-                      setSearchedData([]);
-                      setSearchedOnfocus(false);
+                    onBlur={(e) => {
+                      if (e.target.value === "") {
+                        setSearchedOnfocus(false);
+                      }
                     }}
+                    onFocus={() => setSearchedOnfocus(true)}
                     onChange={searchData}
                   />
                 </div>
