@@ -27,7 +27,7 @@ public class Board {
     @Column
     private String distributor;
 
-    @Column(name = "poster_img")
+    @Column(name = "poster_img", length = 500)
     private String posterImg;
 
     @Column(name = "view_link")
