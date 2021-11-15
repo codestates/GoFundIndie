@@ -13,12 +13,23 @@ export default function Cast({ cast, onFocus }: any) {
         return <div>조연</div>;
     }
   }
+  function Emptyimg(num: Number) {
+    switch (num) {
+      case 1:
+        return <img src="/Director.jpg" />;
+      case 2:
+        return <img src="/Lead.jpg" />;
+      case 3:
+        return <img src="/supporting.jpg" />;
+    }
+  }
   return (
     <div className={styles["cast"]}>
       <div className={styles.head}>
         <div>출연진</div>
         {onFocus ? null : (
           <button
+            className={styles.open}
             onClick={() => {
               setComponent(!component);
             }}
@@ -37,7 +48,14 @@ export default function Cast({ cast, onFocus }: any) {
             return (
               <div className={styles.infos} key={el.id}>
                 <div className={styles.imagebox}>
-                  <img src={el.image} />
+                  {el.image ? (
+                    <img
+                      src={el.image}
+                      onError={(e) => Emptyimg(el.position)}
+                    />
+                  ) : (
+                    Emptyimg(el.position)
+                  )}
                 </div>
                 <div className={styles.name}>{el.name}</div>
                 <div className={styles.role}>{Positioner(el.position)}</div>

@@ -27,10 +27,9 @@ export default function ContentCarousel({ film }: any) {
       <div>
         <Link href="/board/view/[boardid]" as={`/board/view/${movie.id}`}>
           {movie.posterImg ? (
-            // <img style={{ backgroundImage: `url("${film.posterImg}")` }} />
-            <img src={movie.posterImg} />
+            <img src={movie.posterImg} draggable="false" loading="lazy" />
           ) : (
-            <img src="/noposter.png" />
+            <img src="/noposter.png" draggable="false" loading="lazy" />
           )}
         </Link>
         <div className={styles.title}>{movie.title}</div>

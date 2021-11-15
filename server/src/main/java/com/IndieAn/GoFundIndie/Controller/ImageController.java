@@ -28,10 +28,12 @@ public class ImageController {
     public ResponseEntity<?> UploadImage(@RequestHeader Map<String, String> header,
                                          @PathVariable(value = "path") String path,
                                          @PathVariable(value = "path_id", required = false) Long pathId,
-                                         @RequestPart(value = "upload") MultipartFile image) {
+                                         @RequestPart(value = "upload",required = false) MultipartFile image ) {
         //image dir result
         try {
-            switch (ImagePathTypes.findImagePathType(path)) {
+            ImagePathTypes type = ImagePathTypes.findImagePathType(path);
+            log.info(type.toString());
+            switch (type) {
                 case IMAGE_PATH_TYPES_USER:
                     return imageService.uploadUserImage(image, header);
                 case IMAGE_PATH_TYPES_STILL:

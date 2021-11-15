@@ -10,6 +10,7 @@
     @include modal.modal_wrapper();
     .loginmodal {
       @include modal.modal_block(modal.$modal-width, modal.$modal-height);
+      animation: fadeIn ease-out 0.5s;
       .loginmodal__form {
         width: 400px;
         height: 400px;
@@ -77,5 +78,13 @@
   justify-content: space-between;
   img {
     cursor: pointer;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

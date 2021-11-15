@@ -282,7 +282,6 @@ public class BoardQuery {
         List<RandomBoardDTO> list;
         List<SearchTypes> types;
 
-        // Bug
         try {
             int code = gqlUserValidService.envValidCheck(env);
 
