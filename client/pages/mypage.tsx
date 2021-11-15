@@ -55,7 +55,7 @@ export default function Mypage({ userInfo, film }: any) {
       );
     });
   };
-
+  console.log(userInfo);
   const mydonations = () => {
     if (film.data.FindDonationBoards.data.length === 0) return <></>;
     return film.data.FindDonationBoards.data.map((movie: any) => {
@@ -125,41 +125,50 @@ export default function Mypage({ userInfo, film }: any) {
               </div>
             </div>
             <div className={styles["info-header"]}>유저 정보</div>
+            {/* <button
+              onClick={() => {
+                Setaxios.deleteAxios("user")
+                  .then((res) => {
+                    alert("탈퇴처리가 이루어졌습니다");
+                  })
+                  .catch((err) => console.log(err));
+              }}
+            >
+              회원탈퇴
+            </button> */}
             <div className={styles.dividingline} />
             <div className={styles["information"]}>
               <div className={styles.blankarea} />
               <div className={styles.blankedinfos}>
-                <div>
-                  {userInfo.profilePicture ? (
-                    <img src={userInfo.profilePicture} />
+                <div className={styles.profilepic}>
+                  {userInfo.profile_picture ? (
+                    <img
+                      className={styles.profilePicture}
+                      src={userInfo.profile_picture}
+                    />
                   ) : (
                     <img src="/defaultprofile.png" />
                   )}
+                  <label htmlFor="image-file-select">
+                    <img className={styles.inputfilebutton} src="/modify.png" />
+                  </label>
                 </div>
-                <input
-                  id="image-file-select"
-                  type="file"
-                  onChange={(e) => {
-                    let fd = new FormData();
-                    fd.append("upload", e.target.value);
-                    Setaxios.postfileAxios(`image/user`, fd)
-                      .then((res) => console.log(res))
-                      .catch((err) => console.log(err.response));
-                    // const xhr = new XMLHttpRequest();
-                    // xhr.open("POST", "https://localhost:8080/image/user", true);
-                    // xhr.setRequestHeader(
-                    //   "accesstoken",
-                    //   Cookies.get("accesstoken")
-                    // );
-                    // xhr.responseType = "json";
-                    // let fd = new FormData();
-                    // fd.append("upload", e.target.value);
-
-                    // xhr.send(fd);
-                  }}
-                />
+                <div className={styles.fileselector}>
+                  <input
+                    id="image-file-select"
+                    type="file"
+                    onChange={(e) => {
+                      let fd = new FormData();
+                      let file: any = e.target;
+                      fd.append("upload", file.files[0]);
+                      Setaxios.postfileAxios(`image/user`, fd)
+                        .then((res) => location.reload())
+                        .catch((err) => console.log(err.response));
+                    }}
+                  />
+                </div>
                 <div>
-                  <div>{userInfo.email}</div>
+                  <div className={styles.email}>{userInfo.email}</div>
                   <div className={styles.password}>
                     <div className={styles.text}>
                       <div>비밀번호 : **********</div>

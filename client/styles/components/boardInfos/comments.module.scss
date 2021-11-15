@@ -54,11 +54,15 @@ $buttoncolor: #00c896;
   .image-mask {
     border-radius: 90px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 50px;
     height: 50px;
     display: flex;
     justify-content: center;
     img {
+      width: 50px;
       height: auto;
     }
   }

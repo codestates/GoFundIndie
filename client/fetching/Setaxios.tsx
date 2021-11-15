@@ -71,6 +71,24 @@ class Setaxios {
       withCredentials: true,
     });
   };
+  deleteAxios = (endpoint: string) => {
+    // return axios.put(
+    //   `${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint,
+    //   data,
+    //   { withCredentials: true }
+    // );
+    return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "delete",
+        "Access-Control-Allow-Credentials": "true",
+      },
+      withCredentials: true,
+    });
+  };
 
   // return axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
   //   withCredentials: true,

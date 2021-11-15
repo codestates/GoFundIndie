@@ -23,6 +23,19 @@ export default function Newboard({ board }: any) {
       setMovieData({ ...movieData, [key]: e.target.value });
     };
   const entitleMovie = () => {
+    // const castquery = `mutation CreateTempCasting ($boardId: ID!) {
+    //     CreateTempCasting (boardId: $boardId) {
+    //         code
+    //         data {
+    //             id
+    //         }
+    //     }
+    // }`;
+    // Setaxios.postGraphql(castquery, { boardId: movieData.boardId })
+    //   .then((res) => {
+    //     const data: any = res.data;
+    //   })
+    //   .catch((err) => alert(err));
     const query = `mutation CompleteBoard ($board: boardInput!) {
         CompleteBoard (board: $board) {
             code

@@ -70,7 +70,6 @@ export default function Comments({ comments }: { comments: Array<string> }) {
                   className={styles.likebutton}
                   onClick={() => {
                     sendLike(comment.id);
-                    location.reload();
                   }}
                 >
                   좋아요

@@ -135,7 +135,9 @@ export default function Signup({
                   }}
                   className={styles.input__checkbox}
                 />
-                <label htmlFor="companyrule">개인정보수집 및 이용동의</label>
+                <label htmlFor="companyrule">
+                  <a>개인정보수집</a> 및 이용동의
+                </label>
                 <span>(필수)</span>
               </div>
               <div>
