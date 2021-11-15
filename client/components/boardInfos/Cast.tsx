@@ -23,6 +23,7 @@ export default function Cast({ cast, onFocus }: any) {
         return <img src="/supporting.jpg" />;
     }
   }
+
   return (
     <div className={styles["cast"]}>
       <div className={styles.head}>
@@ -51,7 +52,11 @@ export default function Cast({ cast, onFocus }: any) {
                   {el.image ? (
                     <img
                       src={el.image}
-                      onError={(e) => Emptyimg(el.position)}
+                      onError={(e) => {
+                        const img: any = e.target;
+                        const noimg: any = Emptyimg(el.position);
+                        img.src = noimg.props.src;
+                      }}
                     />
                   ) : (
                     Emptyimg(el.position)
