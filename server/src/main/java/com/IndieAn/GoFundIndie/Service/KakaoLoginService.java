@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class KakaoLoginService {
     private final UserRepository userRepository;
     private HashMap<String, Object> body;
     private HashMap<String, Object> data;
+
+    @Value("#{info['gofund.kko.redirecturl']}")
+    private String KKO_REDIRECT_URL;
 
     @Autowired
     public KakaoLoginService(UserRepository userRepository) {
@@ -49,7 +53,7 @@ public class KakaoLoginService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=1738f9aae84207c21785a55a0cf78180");
-            sb.append("&redirect_uri=https://localhost:3000");
+            sb.append("&redirect_uri=" + KKO_REDIRECT_URL);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
