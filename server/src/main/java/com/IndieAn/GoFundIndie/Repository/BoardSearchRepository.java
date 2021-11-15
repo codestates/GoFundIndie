@@ -30,14 +30,18 @@ public class BoardSearchRepository {
         ).setMaxResults(limit).getResultList();
     }
 
-    // TODO 검색 결과 정렬
     public List<SearchBoardDTO> SearchBoards(String str, int limit) {
         return entityManager.createQuery(
                 SELECT_SearchBoardDTO +
                         "FROM Board b " +
                         "WHERE b.isApprove = true " +
                         "AND b.title like '%" + str + "%' " +
-                        "ORDER BY b.title", SearchBoardDTO.class
+                        "ORDER BY case " +
+                        "when b.title = '" + str + "' then 0 " +
+                        "when b.title like '" + str + "%' then 1 " +
+                        "when b.title like '%" + str + "%' then 2 " +
+                        "when b.title like '%" + str + "' then 3 " +
+                        "else 4 end", SearchBoardDTO.class
         ).setMaxResults(limit).getResultList();
     }
 
