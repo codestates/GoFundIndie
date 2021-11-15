@@ -75,6 +75,26 @@ class Setaxios {
   // return axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
   //   withCredentials: true,
   // });
+  postGraphql = (data: any = {}, variable: any = {}) => {
+    return axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`,
+      {
+        query: data,
+        variables: variable,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Credentials": "true",
+        },
+        withCredentials: true,
+      }
+    );
+  };
+
   postFindboardGraphql = (data: any = {}, id: Number) => {
     return axios.post(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`,

@@ -126,6 +126,7 @@
 .inputtable {
   width: 100%;
   border-collapse: collapse;
+  border-top: 2px solid rgb(0, 144, 99);
 }
 .thstyle {
   padding-left: 20 px;
@@ -146,4 +147,40 @@
   &:hover {
     filter: invert(100%);
   }
+}
+
+.input {
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  box-sizing: border-box;
+  border: 1px solid #c2c2c2;
+  width: 200px;
+  margin-left: 1rem;
+  height: 30px;
+}
+
+.moviebutton {
+  position: relative;
+  display: inline-block;
+  width: 30%;
+  height: 60px;
+  padding: 0 35px;
+  background-color: #009063;
+  opacity: 0.8;
+  color: #fff;
+  line-height: 60px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+}
+
+.button_wrapper {
+  display: flex;
+  justify-content: center;
 }

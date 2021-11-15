@@ -31,6 +31,8 @@
     @include modal.modal_wrapper();
     .commentmodal {
       @include modal.modal_block(500px, 400px);
+      animation: fadeIn ease-out 0.5s;
+
       .commentmodal__form {
         width: 400px;
         button {
@@ -53,5 +55,13 @@
         }
       }
     }
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

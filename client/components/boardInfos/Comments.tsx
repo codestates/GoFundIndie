@@ -32,7 +32,11 @@ export default function Comments({ comments }: { comments: Array<string> }) {
                 <div className={styles["comment-header"]}>
                   <div className={styles["fl-st"]}>
                     <div className={styles["image-mask"]}>
-                      <img src="https://static.remove.bg/remove-bg-web/194d453110e760e94498dbb94c5cfb329903342c/assets/start-1abfb4fe2980eabfbbaaa4365a0692539f7cd2725f324f904565a9a744f8e214.jpg" />
+                      {comment.profilePicture ? (
+                        <img src={comment.profilePicture} />
+                      ) : (
+                        <img src="/defaultprofile.png" />
+                      )}
                     </div>
                     <div className={styles.username}>
                       {comment.userNickname}
@@ -60,6 +64,7 @@ export default function Comments({ comments }: { comments: Array<string> }) {
                   className={styles.likebutton}
                   onClick={() => {
                     sendLike(comment.id);
+                    location.reload();
                   }}
                 >
                   좋아요

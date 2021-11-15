@@ -104,11 +104,13 @@ $buttoncolor: #bbbbbb;
 }
 .searchlist {
   position: absolute;
-  width: 30%;
+  width: 274px;
   text-align: start;
   padding: 1rem;
   background-color: #1b1b1b;
   color: white;
+  border-radius: 10px;
+  transition: all 0.3s;
   div {
     margin: 0.1rem 0 0 0;
   }

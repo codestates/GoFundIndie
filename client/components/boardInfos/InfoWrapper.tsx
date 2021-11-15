@@ -50,7 +50,7 @@ export default function InfoWrapper({ comments, stills, cast }: any) {
         <button value="cast" onClick={InfoStyler}>
           출연/제작
         </button>
-        <button value="stillcut" onClick={InfoStyler}>
+        <button id="stills" value="stillcut" onClick={InfoStyler}>
           포토
         </button>
         <button value="rating" onClick={InfoStyler}>
