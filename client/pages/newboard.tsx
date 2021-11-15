@@ -3,9 +3,6 @@ import { ChangeEvent, useState } from "react";
 import Setaxios from "../fetching/Setaxios";
 import styles from "../styles/mypage.module.scss";
 export default function Newboard({ board }: any) {
-  if (board === null) {
-    return <div className={styles.error}>로그인이 필요합니다</div>;
-  }
   const [movieData, setMovieData] = useState({
     boardId: board.CreateTempBoard.data.id,
     title: "",
@@ -18,6 +15,9 @@ export default function Newboard({ board }: any) {
     viewLink: "",
     infoSubtitle: true,
   });
+  if (board === null) {
+    return <div className={styles.error}>로그인이 필요합니다</div>;
+  }
   const handleInputValue =
     (key: string) => (e: ChangeEvent<HTMLInputElement>) => {
       setMovieData({ ...movieData, [key]: e.target.value });
