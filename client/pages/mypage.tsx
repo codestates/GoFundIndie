@@ -142,7 +142,7 @@ export default function Mypage({ userInfo, film }: any) {
                   onChange={(e) => {
                     let fd = new FormData();
                     fd.append("upload", e.target.value);
-                    Setaxios.postfileAxios(`image/user/`, fd)
+                    Setaxios.postfileAxios(`image/user`, fd)
                       .then((res) => console.log(res))
                       .catch((err) => console.log(err.response));
                     // const xhr = new XMLHttpRequest();
