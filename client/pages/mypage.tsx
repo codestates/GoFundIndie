@@ -141,10 +141,16 @@ export default function Mypage({ userInfo, film }: any) {
                   type="file"
                   onChange={(e) => {
                     let fd = new FormData();
-                    fd.append("upload", e.target.value);
-                    Setaxios.postfileAxios(`image/user/`, fd)
+                    if(e.target.files){
+                      if(e.target.files?.length > 0){
+                        fd.append("upload", e.target.files[0]);
+                      }
+                      Setaxios.postfileAxios(`image/user/`, fd)
                       .then((res) => console.log(res))
                       .catch((err) => console.log(err.response));
+                    } else {
+                      return;
+                    }
                     // const xhr = new XMLHttpRequest();
                     // xhr.open("POST", "https://localhost:8080/image/user", true);
                     // xhr.setRequestHeader(

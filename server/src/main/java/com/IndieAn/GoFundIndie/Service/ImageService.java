@@ -103,9 +103,14 @@ public class ImageService {
                        .orElseThrow(() -> new IllegalArgumentException("file convert fail"));
             return upload(file, dirName, oriFileName);
         } catch (IOException e) {
+            log.error("uploadStanBy IOException");
             return "IOException";
         } catch (MultipartException e) {
+            log.error("uploadStanBy MultipartException");
             return "MultipartException";
+        } catch (NullPointerException e) {
+            log.error("uploadStanBy NullPointerException");
+            return "NullPointerException";
         }
     }
 
@@ -123,6 +128,16 @@ public class ImageService {
         body.clear();
         body.put(key,value);
         return ResponseEntity.status(status).body(body);
+    }
+
+    private ResponseEntity<?> resultExport(String result) {
+        if(result.equals("IOException")) {
+            return singlePut(400, "code", 4008);
+        } else if(result.equals("MultipartException") || result.equals("NullPointerException")) {
+            return singlePut(400, "code", 4007);
+        } else {
+            return singlePut(200, "dir", result);
+        }
     }
 
     private int headerTokenCheck(Map<String, String> header) {
@@ -170,11 +185,7 @@ public class ImageService {
 
             userRepository.UpdateUserImg(user, result);
 
-            if(result.equals("IOException")) {
-                return singlePut(400, "code", 4008);
-            } else {
-                return singlePut(200, "dir", result);
-            }
+            return resultExport(result);
         } else {
             return singlePut(401, "code", code);
         }
@@ -204,11 +215,7 @@ public class ImageService {
             //add DB still info
             imageRepository.addStillInfo(board, result);
 
-            if(result.equals("IOException")) {
-                return singlePut(400, "code", 4008);
-            } else {
-                return singlePut(200, "dir", result);
-            }
+            return resultExport(result);
         } else {
             return singlePut(401, "code", code);
         }
@@ -247,11 +254,7 @@ public class ImageService {
                 //add DB casting info
                 castingRepository.updateCastingImage(casting, result);
 
-                if(result.equals("IOException")) {
-                    return singlePut(400, "code", 4008);
-                } else {
-                    return singlePut(200, "dir", result);
-                }
+                return resultExport(result);
             } catch (NullPointerException e) {
                 return singlePut(400, "code", 4401);
             }
@@ -292,11 +295,7 @@ public class ImageService {
 
             boardRepository.updateBoardImg(board, result);
 
-            if(result.equals("IOException")) {
-                return singlePut(400, "code", 4008);
-            } else {
-                return singlePut(200, "dir", result);
-            }
+            return resultExport(result);
         } else {
             return singlePut(401, "code", code);
         }
