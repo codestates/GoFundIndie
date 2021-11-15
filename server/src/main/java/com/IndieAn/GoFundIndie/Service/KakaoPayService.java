@@ -40,6 +40,9 @@ public class KakaoPayService {
     @Value("#{info['gofund.kko.adminkey']}")
     private String KKO_ADMIN_KEY;
 
+    @Value("#{info['gofund.kko.redirecturl']}")
+    private String KKO_REDIRECT_URL;
+
     @Autowired
     public KakaoPayService(PayRepository payRepository, UserService userService,
                            BoardService boardService, CommentRepository commentRepository) {
@@ -169,9 +172,9 @@ public class KakaoPayService {
         params.add("quantity", "1");
         params.add("total_amount", Integer.toString(amount));
         params.add("tax_free_amount", "0");
-        params.add("approval_url", "https://localhost:3000/approval");
-        params.add("cancel_url", "https://localhost:3000/approval");
-        params.add("fail_url", "https://localhost:3000/approval");
+        params.add("approval_url", KKO_REDIRECT_URL + "/approval");
+        params.add("cancel_url", KKO_REDIRECT_URL + "/approval");
+        params.add("fail_url", KKO_REDIRECT_URL + "/approval");
 
         HttpEntity<MultiValueMap<String, String>> postBody = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
