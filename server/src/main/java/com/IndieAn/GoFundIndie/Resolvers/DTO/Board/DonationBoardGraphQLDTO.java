@@ -4,15 +4,11 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
-import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Slf4j
 public class DonationBoardGraphQLDTO {
-
-    @NotBlank
     private long id;
-
     private boolean isApprove;
     private String title;
     private String posterImg;
