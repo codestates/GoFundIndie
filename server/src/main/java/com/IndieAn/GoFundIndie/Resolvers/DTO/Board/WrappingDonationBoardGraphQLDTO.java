@@ -1,13 +1,10 @@
 package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 
 import lombok.Builder;
-
-import javax.validation.constraints.NotBlank;
+import org.springframework.util.Assert;
 import java.util.List;
 
 public class WrappingDonationBoardGraphQLDTO {
-
-    @NotBlank
     private int code;
 
     private List<DonationBoardGraphQLDTO> data; // nullable
@@ -15,7 +12,9 @@ public class WrappingDonationBoardGraphQLDTO {
     public WrappingDonationBoardGraphQLDTO() {}
 
     @Builder
-    public WrappingDonationBoardGraphQLDTO(int code, List<DonationBoardGraphQLDTO> data) {
+    public WrappingDonationBoardGraphQLDTO(Integer code, List<DonationBoardGraphQLDTO> data) {
+        Assert.notNull(code, "code is not null");
+
         this.code = code;
         this.data = data;
     }
