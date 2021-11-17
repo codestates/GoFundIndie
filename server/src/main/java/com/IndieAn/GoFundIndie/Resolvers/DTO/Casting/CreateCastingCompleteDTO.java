@@ -1,23 +1,21 @@
 package com.IndieAn.GoFundIndie.Resolvers.DTO.Casting;
 
 import lombok.Builder;
-
-import javax.validation.constraints.NotBlank;
+import org.springframework.util.Assert;
 
 @Builder
 public class CreateCastingCompleteDTO {
-    @NotBlank
     private long castingId;
-
-    @NotBlank
     private String name;
-
-    @NotBlank
     private int position;
 
     public CreateCastingCompleteDTO() {}
 
-    public CreateCastingCompleteDTO(long castingId, String name, int position) {
+    public CreateCastingCompleteDTO(Long castingId, String name, Integer position) {
+        Assert.notNull(castingId, "castingId is not null");
+        Assert.notNull(name, "name is not null");
+        Assert.notNull(position, "position is not null");
+
         this.castingId = castingId;
         this.name = name;
         this.position = position;

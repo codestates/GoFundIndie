@@ -27,8 +27,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'com.google.code.gson:gson:2.8.6'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.6'
 
 	// JSON Parsing을 위해서 추가했습니다. (by 조현기)
 	implementation 'com.google.code.gson:gson:2.8.6'
