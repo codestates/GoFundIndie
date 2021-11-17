@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 //
 @Repository
-public interface CommentJPAInterface extends JpaRepository<Comment, Board> {
+public interface CommentJPAInterface extends JpaRepository<Comment, Long> {
     Page<Comment> findAll(Pageable pageable);
     Page<Comment> findByBoardId(Board boardId, Pageable pageable);
 }
