@@ -124,15 +124,13 @@ public class UserController {
     }
 
     @PostMapping(value = "/signout")
-    public ResponseEntity<?> UserSignOut(@RequestHeader Map<String, String> requestHeader, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> UserSignOut(@RequestHeader Map<String, String> requestHeader) {
         // 토큰 유효성 검사 후 유저를 로그아웃 시킨다.
         // access token 이 유효하면 모든 토큰을 만료시킨다.
-        Cookie[] cookies = request.getCookies();
-        String cookiesResult = "";
         try {
             body.clear();
-            // 헤더에 토큰이 없거나 refresh token이 없으면 응답코드 400을 응답한다.
-            if(requestHeader.get("accesstoken") == null || cookies == null) {
+            // 헤더에 access token이 없거나 refresh token이 없으면 응답코드 400을 응답한다.
+            if(requestHeader.get("accesstoken") == null || requestHeader.get("refreshtoken") == null) {
                 body.put("code", 4000);
                 return ResponseEntity.badRequest().body(body);
             }
@@ -143,8 +141,6 @@ public class UserController {
             if(checkToken.get("email") != null) {
                 // 유저 정보가 확인되면 token 키 값을 가진 쿠키가 제거돼야 한다.
                 // DB에 있는 유저 email과 refreshToken 값이 제거돼야 한다.
-                // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
-                cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
                 // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
@@ -152,15 +148,14 @@ public class UserController {
                     body.put("code", 4000);
                     return ResponseEntity.badRequest().body(body);
                 }
-                RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
+                RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), requestHeader.get("refreshtoken"));
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
                 if(rt == null) {
                     body.put("code", 4407);
                     return ResponseEntity.status(404).body(body);
                 }
-                // 모두 잘 처리됐다면 refresh token을 만료시킨다.
-                userService.ExpirationToken(response, "refreshToken");
+
                 body.put("code", 2000);
                 return ResponseEntity.ok().body(body);
             }
@@ -256,16 +251,13 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/user")
-    public ResponseEntity<?> DeleteUserinfo(@RequestHeader Map<String, String> requestHeader, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> DeleteUserinfo(@RequestHeader Map<String, String> requestHeader) {
         // 토큰 유효성 검사 후 해당 유저의 데이터를 전달한다.
         // access token이 유효하면 DB에서 동일한 email값을 가진 유저 데이터를 찾아 DB 데이터 삭제 후 응답한다.
-        // 쿠키에 토큰이 없으면 응답코드 400을 응답한다.
-        Cookie[] cookies = request.getCookies();
-        String cookiesResult = "";
         try {
             body.clear();
-            // 헤더에 토큰이 없거나 refresh token이 없으면 응답코드 400을 응답한다.
-            if(requestHeader.get("accesstoken") == null || cookies == null) {
+            // 헤더에 access token이 없거나 refresh token이 없으면 응답코드 400을 응답한다.
+            if(requestHeader.get("accesstoken") == null || requestHeader.get("refreshtoken") == null) {
                 body.put("code", 4000);
                 return ResponseEntity.badRequest().body(body);
             }
@@ -276,8 +268,6 @@ public class UserController {
             if(checkToken.get("email") != null) {
                 // 유저 정보가 확인되면 token 키 값을 가진 쿠키가 제거돼야 한다.
                 // DB에 있는 유저 email과 refreshToken 값이 제거돼야 한다.
-                // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
-                cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
 
                 User user = userService.FindUserUseEmail((String)checkToken.get("email"));
                 // 토큰으로 찾은 email이 DB에 존재하지 않으면 4000응답을 한다.
@@ -285,7 +275,7 @@ public class UserController {
                     body.put("code", 4000);
                     return ResponseEntity.badRequest().body(body);
                 }
-                RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), cookiesResult);
+                RefreshToken rt = userService.DeleteRefreshToken(user.getEmail(), requestHeader.get("refreshtoken"));
 
                 // refresh token ID를 찾을 수 없을 때 응답을 해준다.
                 if(rt == null) {
@@ -294,8 +284,7 @@ public class UserController {
                 }
                 // DB에 유저 email과 refresh token 쌍이 제거됐다면, 해당 email을 가진 유저를 DB에서 삭제한다.
                 userService.DeleteUserData((String)checkToken.get("email"));
-                // 유저 정보가 삭제되면 클라이언트에 token 키 값을 가진 쿠키가 제거돼야 한다.
-                userService.ExpirationToken(response, "refreshToken");
+
                 body.put("code", 2000);
                 return ResponseEntity.ok().body(body);
             }
@@ -308,23 +297,20 @@ public class UserController {
     }
 
     @GetMapping(value = "/reissuance")
-    public ResponseEntity<?> ReissueAccessToken(HttpServletRequest request) {
+    public ResponseEntity<?> ReissueAccessToken(@RequestHeader Map<String, String> requestHeader) {
         // access token이 만료됐을 때, refresh token을 검증해 새로운 access token을 발급받는다.
-        Cookie[] cookies = request.getCookies();
-        String cookiesResult = "";
         try {
             body.clear();
             data.clear();
 
             // 쿠키에 refresh token이 없으면 응답코드 400을 응답한다.
-            if(cookies == null || userService.getStringCookie(cookies, cookiesResult, "refreshToken").equals("")) {
+            if(requestHeader.get("refreshtoken") == null) {
                 body.put("code", 4000);
                 return ResponseEntity.badRequest().body(body);
             }
-            // 쿠키에 키 값이 "refreshToken"인 쿠키에 값을 찾아낸다.
-            cookiesResult = userService.getStringCookie(cookies, cookiesResult, "refreshToken");
-            // 쿠키에 존재하는 refresh token을 가지고 유효성 검증을 한다.
-            Map<String, Object> checkToken = userService.CheckToken(cookiesResult);
+
+            // 헤더에 존재하는 refresh token을 가지고 유효성 검증을 한다.
+            Map<String, Object> checkToken = userService.CheckToken(requestHeader.get("refreshtoken"));
 
             if(checkToken.get("email") != null) {
                 // 해당 refresh token이 가지고 있는 email로 다시 access token을 발급한다.
@@ -335,7 +321,7 @@ public class UserController {
                     return ResponseEntity.badRequest().body(body);
                 }
 
-                RefreshToken rt = userService.FindRefreshToken(user.getEmail(), cookiesResult);
+                RefreshToken rt = userService.FindRefreshToken(user.getEmail(), requestHeader.get("refreshtoken"));
 
                 // refresh token를 찾을 수 없을 때 응답을 해준다.
                 if(rt == null) {
