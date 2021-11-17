@@ -37,18 +37,11 @@ export default function Header() {
   //쿠키 리프레쉬 토큰확인하여 엑세스토큰 받아오기
   useEffect(() => {
     if (Cookies.get("refreshToken")) {
-      let res = fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + "reissuance", {
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
-      });
-      console.log(res);
       Setaxios.getAxios("reissuance")
         .then((res) => {
           const resData: any = res.data;
           Cookies.set("accesstoken", resData.data.accessToken, {
-            sameSite: "None",
-            secure: true,
+            sameSite: "lax",
           });
           axios.defaults.headers.common["accesstoken"] =
             resData.data.accessToken;
