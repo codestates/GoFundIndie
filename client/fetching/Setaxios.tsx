@@ -43,9 +43,7 @@ class Setaxios {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": process.env.NEXT_PUBLIC_SERVER_URL
-          ? process.env.NEXT_PUBLIC_SERVER_URL
-          : "*",
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET",
         "Access-Control-Allow-Credentials": "true",
       },
