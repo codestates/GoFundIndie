@@ -39,8 +39,6 @@ export default function Login({
         // const ref = Cookies.get("refreshToken");
         // if (ref) Cookies.set("refreshToken", ref);
         axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
-        axios.defaults.headers.common["refreshToken"] =
-          resData.data.refreshToken;
         alert("로그인에 성공하였습니다");
         //    location.reload();
         handleLoginModal();
