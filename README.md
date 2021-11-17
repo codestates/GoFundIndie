@@ -31,7 +31,7 @@
 
 <br>
 
-## 📎 [배포링크](https://go-fund-indie-six.vercel.app/)
+## 📎 [배포링크](https://go-fund-indie-seven.vercel.app/)
 
 <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8e7cef1d-401e-4295-a3b2-e83c12188745%2FNov-15-2021_16-59-44.gif?table=block&id=6ed56524-a49a-40c0-b5eb-ff3fe12f7a8e&spaceId=82d63a72-8254-4cde-bf1e-b2597b7c099c&userId=f9c910e1-fa0d-4f48-9573-3126f0ab0605&cache=v2" width=600px />
 
