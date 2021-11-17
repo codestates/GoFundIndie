@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 axios.defaults.withCredentials = true;
 class Setaxios {
@@ -8,6 +9,8 @@ class Setaxios {
     data: object = {},
     contentType: string = "application/json"
   ) => {
+    const accesstoken = Cookies.get("accesstoken");
+    const refreshtoken = Cookies.get("refreshToken");
     return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
       method: "POST",
       data: data,
@@ -17,6 +20,8 @@ class Setaxios {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST",
         "Access-Control-Allow-Credentials": "true",
+        accesstoken: accesstoken ? accesstoken : "",
+        refreshtoken: refreshtoken ? refreshtoken : "",
       },
       withCredentials: true,
     });
@@ -38,6 +43,8 @@ class Setaxios {
   };
 
   getAxios(endpoint: string) {
+    const accesstoken = Cookies.get("accesstoken");
+    const refreshtoken = Cookies.get("refreshToken");
     return axios(`${process.env.NEXT_PUBLIC_SERVER_URL}/` + endpoint, {
       method: "GET",
       headers: {
@@ -46,6 +53,8 @@ class Setaxios {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET",
         "Access-Control-Allow-Credentials": "true",
+        accesstoken: accesstoken ? accesstoken : "",
+        refreshtoken: refreshtoken ? refreshtoken : "",
       },
       withCredentials: true,
     });
