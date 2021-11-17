@@ -3,9 +3,6 @@ import { ChangeEvent, useState } from "react";
 import Setaxios from "../fetching/Setaxios";
 import styles from "../styles/mypage.module.scss";
 export default function Newboard({ board }: any) {
-  if (board === null) {
-    return <div className={styles.error}>로그인이 필요합니다</div>;
-  }
   const [movieData, setMovieData] = useState({
     boardId: board.CreateTempBoard.data.id,
     title: "",
@@ -18,11 +15,27 @@ export default function Newboard({ board }: any) {
     viewLink: "",
     infoSubtitle: true,
   });
+  if (board === null) {
+    return <div className={styles.error}>로그인이 필요합니다</div>;
+  }
   const handleInputValue =
     (key: string) => (e: ChangeEvent<HTMLInputElement>) => {
       setMovieData({ ...movieData, [key]: e.target.value });
     };
   const entitleMovie = () => {
+    // const castquery = `mutation CreateTempCasting ($boardId: ID!) {
+    //     CreateTempCasting (boardId: $boardId) {
+    //         code
+    //         data {
+    //             id
+    //         }
+    //     }
+    // }`;
+    // Setaxios.postGraphql(castquery, { boardId: movieData.boardId })
+    //   .then((res) => {
+    //     const data: any = res.data;
+    //   })
+    //   .catch((err) => alert(err));
     const query = `mutation CompleteBoard ($board: boardInput!) {
         CompleteBoard (board: $board) {
             code

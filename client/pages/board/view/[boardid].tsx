@@ -67,9 +67,16 @@ export default function BoarDetails({ film }: any) {
         <div className={styles["poster__img-positional"]}>
           <div className={styles["poster__img-wrapper"]}>
             {filmData.posterImg ? (
-              <img className={styles.poster__img} src={filmData.posterImg} />
+              <img
+                className={styles.poster__img}
+                onError={(e) => {
+                  const img: any = e.target;
+                  img.src = "/Poster.jpg";
+                }}
+                src={filmData.posterImg}
+              />
             ) : (
-              <img src="/noposter.png" loading="lazy" />
+              <img src="/Poster.jpg" loading="lazy" />
             )}
           </div>
         </div>
@@ -109,11 +116,7 @@ export default function BoarDetails({ film }: any) {
             </div>
           ) : null}
 
-          <InfoWrapper
-            cast={filmData.casting}
-            stills={filmData.still}
-            comments={filmData.comment}
-          />
+          <InfoWrapper filmData={filmData} />
         </div>
       </div>
     </div>

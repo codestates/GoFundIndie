@@ -509,6 +509,8 @@ INSERT INTO `still` (image, board_id) VALUES ("https://www.indieground.kr/fileFo
 INSERT INTO `still` (image, board_id) VALUES ("https://www.indieground.kr/fileFolder/s005_09.jpg", 94);
 INSERT INTO `still` (image, board_id) VALUES ("https://www.indieground.kr/fileFolder/s005_10.jpg", 94);
 INSERT INTO `still` (image, board_id) VALUES ("https://www.indieground.kr/fileFolder/s005_11.jpg", 94);
+<<<<<<< HEAD
+=======
 INSERT INTO `still` (image, board_id) VALUES ("https://i.ytimg.com/vi/_dApFdx_psg/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDlgs_qUfenghs2bk3mvCVEczdieg", 37);
 INSERT INTO `still` (image, board_id) VALUES ("https://i.ytimg.com/vi/zrsUszuLZ0I/maxresdefault.jpg", 39);
 INSERT INTO `still` (image, board_id) VALUES ("https://an2-img.amz.wtchn.net/image/v2/12f5638c95ab97e31a0422a5fdb96828.jpg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaVlXTnJaM0p2ZFc1a0lqcDdJbklpT2pJMU5Td2laeUk2TWpVMUxDSmlJam95TlRWOUxDSmpjbTl3SWpwMGNuVmxMQ0pvWldsbmFIUWlPakV3T0RBc0luQmhkR2dpT2lJdmRqSXZjM1J2Y21VdmFXMWhaMlV2TVRZeE5UZ3pOak15T1RRek1qVTBNVEEwTmlJc0luRjFZV3hwZEhraU9qZ3dMQ0ozYVdSMGFDSTZNVGt5TUgwLnAyeFVaWF95NEl5MnlrWkdQTFBjcWhPSjhVckZsWHRBdW85RWRhTmVKOTg", 40);
@@ -527,3 +529,4 @@ INSERT INTO `still` (image, board_id) VALUES ("https://search3.kakaocdn.net/argo
 INSERT INTO `still` (image, board_id) VALUES ("https://post-phinf.pstatic.net/MjAxNzAyMjdfMjY5/MDAxNDg4MTM0MTEzOTcw.OoZW9yuAZJTwE23NwkLAxSX3WT7PWBidm-KPo9uXHHAg.RlAroTBNgWS7lzgLG_u5VnrPQQhX29r6giL77xOq6pog.JPEG/%EC%96%BC%EC%9D%8C%EA%BD%83%282016%29_%EC%A0%80%EC%9A%A9%EB%9F%89__0000031313ms.jpg?type=w1200", 62);
 INSERT INTO `still` (image, board_id) VALUES ("http://ojsfile.ohmynews.com/CRI_T_IMG/2020/0613/A0002649804_T.jpg", 75);
 INSERT INTO `still` (image, board_id) VALUES ("http://t1.daumcdn.net/movie/ab26d1340337da6b13fff7bd624e8349538e51e8", 72);
+>>>>>>> 85c8a2028124956c1fb8a08dd8b2e7e9faebe310
