@@ -41,10 +41,6 @@ export default function Header() {
         .then((res) => {
           const resData: any = res.data;
           Cookies.set("accesstoken", resData.data.accessToken);
-          const refresh = Cookies.get("refreshToken");
-          if (refresh !== undefined) {
-            axios.defaults.headers.common["Cookie"] = refresh;
-          }
           axios.defaults.headers.common["accesstoken"] =
             resData.data.accessToken;
           setUserLoginStatus(true);

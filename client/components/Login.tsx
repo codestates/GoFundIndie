@@ -34,8 +34,12 @@ export default function Login({
     Setaxios.postAxios(endpoint, data)
       .then((res) => {
         const resData: any = res.data;
-        Cookies.set("refreshToken", resData.data.refreshToken);
-        Cookies.set("accesstoken", resData.data.accessToken);
+        Cookies.set("refreshToken", resData.data.refreshToken, {
+          sameSite: "None",
+        });
+        Cookies.set("accesstoken", resData.data.accessToken, {
+          sameSite: "None",
+        });
         axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
         alert("로그인에 성공하였습니다");
         //    location.reload();
