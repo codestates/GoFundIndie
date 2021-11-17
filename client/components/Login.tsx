@@ -35,8 +35,11 @@ export default function Login({
       .then((res) => {
         const resData: any = res.data;
         Cookies.set("accesstoken", resData.data.accessToken);
-        const ref = Cookies.get("refreshToken");
-        if (ref) Cookies.set("refreshToken", ref);
+        if (resData.data.refreshToken) {
+          Cookies.set("refreshToken", resData.data.refreshToken);
+        }
+        // const ref = Cookies.get("refreshToken");
+        // if (ref) Cookies.set("refreshToken", ref);
         axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
         alert("로그인에 성공하였습니다");
         //    location.reload();
