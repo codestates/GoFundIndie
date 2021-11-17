@@ -40,7 +40,9 @@ export default function Header() {
       Setaxios.getAxios("reissuance")
         .then((res) => {
           const resData: any = res.data;
-          Cookies.set("accesstoken", resData.data.accessToken);
+          Cookies.set("accesstoken", resData.data.accessToken, {
+            sameSite: "None",
+          });
           axios.defaults.headers.common["accesstoken"] =
             resData.data.accessToken;
           setUserLoginStatus(true);
