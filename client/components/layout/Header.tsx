@@ -42,6 +42,7 @@ export default function Header() {
           const resData: any = res.data;
           Cookies.set("accesstoken", resData.data.accessToken, {
             sameSite: "None",
+            secure: true,
           });
           axios.defaults.headers.common["accesstoken"] =
             resData.data.accessToken;
