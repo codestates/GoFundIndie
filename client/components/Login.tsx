@@ -40,6 +40,8 @@ export default function Login({
         Cookies.set("accesstoken", resData.data.accessToken, {
           sameSite: "lax",
         });
+        axios.defaults.headers.common["refreshtoken"] =
+          resData.data.refreshToken;
         axios.defaults.headers.common["accesstoken"] = resData.data.accessToken;
         alert("로그인에 성공하였습니다");
         //    location.reload();
