@@ -50,7 +50,6 @@ FindRandomBoard (Limit: 20) {
   }
 }
 }`;
-
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),

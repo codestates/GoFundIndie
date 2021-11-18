@@ -14,7 +14,7 @@ export default function Comments({ comments }: { comments: Array<string> }) {
   }
   function sendLike(commentid: number) {
     Setaxios.postAxios("rating", { commentId: Number(commentid) })
-      .then((res) => console.log(res))
+      .then((res) => location.reload())
       .catch((err) => {
         if (err.response.data.code === 4000) {
           alert("로그인이 필요합니다");
@@ -54,7 +54,13 @@ export default function Comments({ comments }: { comments: Array<string> }) {
 
               <div className={styles["comment"]}>
                 <div className={styles.like}>
-                  <img src="/like_icon.png" />
+                  {comment.donation !== 0 ? (
+                    <>
+                      <img src="/coin.png" />
+                      <div className={styles.donation}>₩{comment.donation}</div>
+                    </>
+                  ) : null}
+                  <img className={styles.likeimage} src="/like_icon.png" />
                   <div>{comment.like}</div>
                 </div>
                 <div className={styles["comment-body"]}>
@@ -64,7 +70,6 @@ export default function Comments({ comments }: { comments: Array<string> }) {
                   className={styles.likebutton}
                   onClick={() => {
                     sendLike(comment.id);
-                    location.reload();
                   }}
                 >
                   좋아요

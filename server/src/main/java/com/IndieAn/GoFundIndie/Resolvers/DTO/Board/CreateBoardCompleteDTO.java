@@ -4,27 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.util.Assert;
 
-import javax.validation.constraints.NotBlank;
-
 @Getter
 @Builder
 public class CreateBoardCompleteDTO {
-    @NotBlank
     private long boardId;
-
-    @NotBlank
     private String title;
-
-    @NotBlank
     private String infoCountry;
-
-    @NotBlank
     private String infoCreatedYear;
-
-    @NotBlank
     private int infoTime;
-
-    @NotBlank
     private String infoStory;
 
     private String producer;

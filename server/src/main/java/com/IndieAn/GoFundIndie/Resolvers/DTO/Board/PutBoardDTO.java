@@ -1,12 +1,10 @@
 package com.IndieAn.GoFundIndie.Resolvers.DTO.Board;
 
 import lombok.Builder;
-
-import javax.validation.constraints.NotBlank;
+import org.springframework.util.Assert;
 
 @Builder
 public class PutBoardDTO {
-    @NotBlank
     private long boardId;
 
     private String title;
@@ -24,7 +22,9 @@ public class PutBoardDTO {
 
     public PutBoardDTO() {}
 
-    public PutBoardDTO(long boardId, String title, String infoCountry, String infoCreatedYear, int infoTime, String infoStory, String producer, String distributor, String posterImg, String viewLink, int infoLimit, Boolean infoSubtitle, String infoCreatedDate) {
+    public PutBoardDTO(Long boardId, String title, String infoCountry, String infoCreatedYear, int infoTime, String infoStory, String producer, String distributor, String posterImg, String viewLink, int infoLimit, Boolean infoSubtitle, String infoCreatedDate) {
+        Assert.notNull(boardId, "boardId is not null");
+
         this.boardId = boardId;
         this.title = title;
         this.infoCountry = infoCountry;

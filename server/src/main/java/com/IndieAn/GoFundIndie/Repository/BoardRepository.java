@@ -30,7 +30,7 @@ public class BoardRepository extends EntityManagerExtend{
         if(id == null) return null;
         try {
             return entityManager.find(Board.class, id);
-        } catch (NullPointerException | IllegalArgumentException e) {
+        } catch (NullPointerException e) {
             return null;
         }
     }
@@ -132,7 +132,6 @@ public class BoardRepository extends EntityManagerExtend{
         return list.subList(0, limit);
     }
 
-    // TODO 관리자가 만들수 있게끔
     public List<BoardGraphQLDTO> findBoardsSeoul2020(int limit) {
         return entityManager.createQuery(
             SELECT_BoardGraphQLDTO +
